@@ -71,11 +71,52 @@ eas build --platform android
 eas build --platform ios
 ```
 
-## Next Steps
+## Authentication Setup
 
-- Install additional packages: `expo install <package-name>`
-- Connect to the Laravel backend API
-- Add navigation (React Navigation)
-- Implement authentication
-- Add your app screens and components
+The app includes complete authentication functionality with JWT:
+
+### Features Implemented
+- ✅ User Registration
+- ✅ User Login
+- ✅ Forgot Password
+- ✅ Token-based Authentication
+- ✅ Auto Token Refresh
+- ✅ Protected Routes
+
+### API Configuration
+
+1. **Update API Base URL** in `config/api.js`:
+   - For iOS Simulator: `http://localhost:8000/api`
+   - For Android Emulator: `http://10.0.2.2:8000/api`
+   - For Physical Device: Use your computer's local IP address
+     - Find your IP: `ifconfig` (Mac/Linux) or `ipconfig` (Windows)
+     - Example: `http://192.168.1.100:8000/api`
+
+2. **Ensure Backend is Running**:
+   ```bash
+   cd ../backend
+   php artisan serve
+   ```
+
+### Screens
+- **LoginScreen** - User login with email and password
+- **RegisterScreen** - New user registration
+- **ForgotPasswordScreen** - Password reset request
+- **HomeScreen** - Protected home screen (shown after login)
+
+### Navigation Flow
+- Unauthenticated users see: Login → Register → Forgot Password
+- Authenticated users see: Home (with logout option)
+
+## Project Structure
+
+- `App.js` - Main application component with navigation
+- `context/AuthContext.js` - Authentication state management
+- `services/api.js` - API service with axios for backend communication
+- `screens/` - All application screens
+  - `LoginScreen.js`
+  - `RegisterScreen.js`
+  - `ForgotPasswordScreen.js`
+  - `HomeScreen.js`
+- `config/api.js` - API configuration and endpoints
 
