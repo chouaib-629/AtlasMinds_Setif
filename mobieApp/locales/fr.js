@@ -1,0 +1,96 @@
+export default {
+  // Common
+  welcome: 'Bienvenue',
+  loading: 'Chargement...',
+  error: 'Erreur',
+  success: 'Succès',
+  cancel: 'Annuler',
+  confirm: 'Confirmer',
+  save: 'Enregistrer',
+  delete: 'Supprimer',
+  edit: 'Modifier',
+  back: 'Retour',
+  next: 'Suivant',
+  done: 'Terminé',
+  search: 'Rechercher',
+  close: 'Fermer',
+
+  // Authentication
+  welcomeBack: 'Bon retour',
+  signInContinue: 'Connectez-vous pour continuer',
+  createAccount: 'Créer un compte',
+  signUpStarted: 'Inscrivez-vous pour commencer',
+  email: 'E-mail',
+  password: 'Mot de passe',
+  fullName: 'Nom complet',
+  confirmPassword: 'Confirmer le mot de passe',
+  forgotPassword: 'Mot de passe oublié?',
+  signIn: 'Se connecter',
+  signUp: "S'inscrire",
+  signOut: 'Se déconnecter',
+  logout: 'Déconnexion',
+  dontHaveAccount: "Vous n'avez pas de compte?",
+  alreadyHaveAccount: 'Vous avez déjà un compte?',
+  continueWithGoogle: 'Continuer avec Google',
+  continueWithApple: 'Continuer avec Apple',
+  or: 'OU',
+
+  // Login Screen
+  enterEmail: 'Entrez votre e-mail',
+  enterPassword: 'Entrez votre mot de passe',
+  enterAddress: 'Entrez votre adresse complète',
+  enterPhone: 'Entrez votre numéro de téléphone',
+  loginFailed: 'Échec de la connexion',
+  invalidCredentials: 'Identifiants invalides',
+
+  // Register Screen
+  enterName: 'Entrez votre nom',
+  enterPasswordMin: 'Entrez votre mot de passe (min. 8 caractères)',
+  confirmPasswordPlaceholder: 'Confirmez votre mot de passe',
+  registrationFailed: "Échec de l'inscription",
+  registrationSuccessful: 'Inscription réussie!',
+  step1Title: 'Étape 1: Informations personnelles',
+  step2Title: 'Étape 2: Adresse',
+  step3Title: 'Étape 3: Contact et sécurité',
+  nom: 'Nom',
+  prenom: 'Prénom',
+  dateDeNaissance: 'Date de naissance',
+  adresse: 'Adresse',
+  commune: 'Commune',
+  wilaya: 'Wilaya',
+  numeroTelephone: 'Numéro de téléphone',
+  selectWilaya: 'Sélectionnez une wilaya',
+  selectCommune: 'Sélectionnez une commune',
+  selectWilayaFirst: 'Sélectionnez d\'abord une wilaya',
+  cancel: 'Annuler',
+  previous: 'Précédent',
+  next: 'Suivant',
+
+  // Forgot Password Screen
+  forgotPasswordTitle: 'Mot de passe oublié',
+  forgotPasswordSubtitle: 'Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
+  sendResetLink: 'Envoyer le lien de réinitialisation',
+  checkEmail: 'Vérifiez votre e-mail',
+  resetLinkSent: 'Nous avons envoyé un lien de réinitialisation de mot de passe à',
+  checkInbox: 'Veuillez vérifier votre boîte de réception et suivre les instructions.',
+  backToLogin: 'Retour à la connexion',
+
+  // Home Screen
+  youAreLoggedIn: 'Vous êtes connecté avec succès',
+  name: 'Nom',
+
+  // Validation Messages
+  fillAllFields: 'Veuillez remplir tous les champs',
+  validEmail: 'Veuillez entrer une adresse e-mail valide',
+  passwordMinLength: 'Le mot de passe doit contenir au moins 8 caractères',
+  passwordsDontMatch: 'Les mots de passe ne correspondent pas',
+  unexpectedError: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+
+  // Language
+  language: 'Langue',
+  selectLanguage: 'Sélectionner la langue',
+  english: 'Anglais',
+  french: 'Français',
+  arabic: 'Arabe',
+};
+

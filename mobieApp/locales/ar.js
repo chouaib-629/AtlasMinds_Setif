@@ -1,0 +1,96 @@
+export default {
+  // Common
+  welcome: 'مرحباً',
+  loading: 'جاري التحميل...',
+  error: 'خطأ',
+  success: 'نجح',
+  cancel: 'إلغاء',
+  confirm: 'تأكيد',
+  save: 'حفظ',
+  delete: 'حذف',
+  edit: 'تعديل',
+  back: 'رجوع',
+  next: 'التالي',
+  done: 'تم',
+  search: 'بحث',
+  close: 'إغلاق',
+
+  // Authentication
+  welcomeBack: 'مرحباً بعودتك',
+  signInContinue: 'قم بتسجيل الدخول للمتابعة',
+  createAccount: 'إنشاء حساب',
+  signUpStarted: 'سجل للبدء',
+  email: 'البريد الإلكتروني',
+  password: 'كلمة المرور',
+  fullName: 'الاسم الكامل',
+  confirmPassword: 'تأكيد كلمة المرور',
+  forgotPassword: 'نسيت كلمة المرور؟',
+  signIn: 'تسجيل الدخول',
+  signUp: 'التسجيل',
+  signOut: 'تسجيل الخروج',
+  logout: 'تسجيل الخروج',
+  dontHaveAccount: 'ليس لديك حساب؟',
+  alreadyHaveAccount: 'لديك حساب بالفعل؟',
+  continueWithGoogle: 'المتابعة مع Google',
+  continueWithApple: 'المتابعة مع Apple',
+  or: 'أو',
+
+  // Login Screen
+  enterEmail: 'أدخل بريدك الإلكتروني',
+  enterPassword: 'أدخل كلمة المرور',
+  enterAddress: 'أدخل عنوانك الكامل',
+  enterPhone: 'أدخل رقم هاتفك',
+  loginFailed: 'فشل تسجيل الدخول',
+  invalidCredentials: 'بيانات الدخول غير صحيحة',
+
+  // Register Screen
+  enterName: 'أدخل اسمك',
+  enterPasswordMin: 'أدخل كلمة المرور (8 أحرف على الأقل)',
+  confirmPasswordPlaceholder: 'أكد كلمة المرور',
+  registrationFailed: 'فشل التسجيل',
+  registrationSuccessful: 'تم التسجيل بنجاح!',
+  step1Title: 'الخطوة 1: المعلومات الشخصية',
+  step2Title: 'الخطوة 2: العنوان',
+  step3Title: 'الخطوة 3: الاتصال والأمان',
+  nom: 'الاسم',
+  prenom: 'الاسم الأول',
+  dateDeNaissance: 'تاريخ الميلاد',
+  adresse: 'العنوان',
+  commune: 'البلدية',
+  wilaya: 'الولاية',
+  numeroTelephone: 'رقم الهاتف',
+  selectWilaya: 'اختر الولاية',
+  selectCommune: 'اختر البلدية',
+  selectWilayaFirst: 'اختر الولاية أولاً',
+  cancel: 'إلغاء',
+  previous: 'السابق',
+  next: 'التالي',
+
+  // Forgot Password Screen
+  forgotPasswordTitle: 'نسيت كلمة المرور',
+  forgotPasswordSubtitle: 'أدخل عنوان بريدك الإلكتروني وسنرسل لك رابط لإعادة تعيين كلمة المرور.',
+  sendResetLink: 'إرسال رابط إعادة التعيين',
+  checkEmail: 'تحقق من بريدك الإلكتروني',
+  resetLinkSent: 'لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى',
+  checkInbox: 'يرجى التحقق من صندوق الوارد واتباع التعليمات.',
+  backToLogin: 'العودة لتسجيل الدخول',
+
+  // Home Screen
+  youAreLoggedIn: 'تم تسجيل الدخول بنجاح',
+  name: 'الاسم',
+
+  // Validation Messages
+  fillAllFields: 'يرجى ملء جميع الحقول',
+  validEmail: 'يرجى إدخال عنوان بريد إلكتروني صحيح',
+  passwordMinLength: 'يجب أن تكون كلمة المرور 8 أحرف على الأقل',
+  passwordsDontMatch: 'كلمات المرور غير متطابقة',
+  unexpectedError: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
+
+  // Language
+  language: 'اللغة',
+  selectLanguage: 'اختر اللغة',
+  english: 'الإنجليزية',
+  french: 'الفرنسية',
+  arabic: 'العربية',
+};
+

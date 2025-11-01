@@ -21,27 +21,78 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // Log incoming request for debugging
+        \Log::info('Registration attempt', $request->all());
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'date_de_naissance' => 'required|date|before:today',
+            'adresse' => 'required|string|max:500',
+            'commune' => 'required|string|max:255',
+            'wilaya' => 'required|string|max:255',
+            'numero_telephone' => 'required|string|max:20',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'nom.required' => 'Le nom est requis',
+            'prenom.required' => 'Le prénom est requis',
+            'date_de_naissance.required' => 'La date de naissance est requise',
+            'date_de_naissance.date' => 'La date de naissance doit être une date valide',
+            'date_de_naissance.before' => 'La date de naissance doit être dans le passé',
+            'adresse.required' => 'L\'adresse est requise',
+            'commune.required' => 'La commune est requise',
+            'wilaya.required' => 'La wilaya est requise',
+            'numero_telephone.required' => 'Le numéro de téléphone est requis',
+            'numero_telephone.max' => 'Le numéro de téléphone ne doit pas dépasser 20 caractères',
+            'email.required' => 'L\'email est requis',
+            'email.email' => 'L\'email doit être valide',
+            'email.unique' => 'Cet email est déjà utilisé',
+            'password.required' => 'Le mot de passe est requis',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas',
         ]);
 
         if ($validator->fails()) {
+            \Log::error('Validation failed', $validator->errors()->toArray());
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => 'Erreur de validation',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            // Create full name from nom and prenom
+            $fullName = trim($request->nom . ' ' . $request->prenom);
 
-        $token = JWTAuth::fromUser($user);
+            $user = User::create([
+                'name' => $fullName,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'date_de_naissance' => $request->date_de_naissance,
+                'adresse' => $request->adresse,
+                'commune' => $request->commune,
+                'wilaya' => $request->wilaya,
+                'numero_telephone' => $request->numero_telephone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            \Log::info('User created successfully', ['user_id' => $user->id]);
+
+            $token = JWTAuth::fromUser($user);
+        } catch (\Exception $e) {
+            \Log::error('Error creating user', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la création du compte: ' . $e->getMessage(),
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,

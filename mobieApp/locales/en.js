@@ -1,0 +1,96 @@
+export default {
+  // Common
+  welcome: 'Welcome',
+  loading: 'Loading...',
+  error: 'Error',
+  success: 'Success',
+  cancel: 'Cancel',
+  confirm: 'Confirm',
+  save: 'Save',
+  delete: 'Delete',
+  edit: 'Edit',
+  back: 'Back',
+  next: 'Next',
+  done: 'Done',
+  search: 'Search',
+  close: 'Close',
+
+  // Authentication
+  welcomeBack: 'Welcome Back',
+  signInContinue: 'Sign in to continue',
+  createAccount: 'Create Account',
+  signUpStarted: 'Sign up to get started',
+  email: 'Email',
+  password: 'Password',
+  fullName: 'Full Name',
+  confirmPassword: 'Confirm Password',
+  forgotPassword: 'Forgot Password?',
+  signIn: 'Sign In',
+  signUp: 'Sign Up',
+  signOut: 'Sign Out',
+  logout: 'Logout',
+  dontHaveAccount: "Don't have an account?",
+  alreadyHaveAccount: 'Already have an account?',
+  continueWithGoogle: 'Continue with Google',
+  continueWithApple: 'Continue with Apple',
+  or: 'OR',
+
+  // Login Screen
+  enterEmail: 'Enter your email',
+  enterPassword: 'Enter your password',
+  enterAddress: 'Enter your complete address',
+  enterPhone: 'Enter your phone number',
+  loginFailed: 'Login Failed',
+  invalidCredentials: 'Invalid credentials',
+
+  // Register Screen
+  enterName: 'Enter your name',
+  enterPasswordMin: 'Enter your password (min. 8 characters)',
+  confirmPasswordPlaceholder: 'Confirm your password',
+  registrationFailed: 'Registration Failed',
+  registrationSuccessful: 'Registration successful!',
+  step1Title: 'Step 1: Personal Information',
+  step2Title: 'Step 2: Address',
+  step3Title: 'Step 3: Contact & Security',
+  nom: 'Last Name',
+  prenom: 'First Name',
+  dateDeNaissance: 'Date of Birth',
+  adresse: 'Address',
+  commune: 'Commune',
+  wilaya: 'Wilaya',
+  numeroTelephone: 'Phone Number',
+  selectWilaya: 'Select a wilaya',
+  selectCommune: 'Select a commune',
+  selectWilayaFirst: 'Select a wilaya first',
+  cancel: 'Cancel',
+  previous: 'Previous',
+  next: 'Next',
+
+  // Forgot Password Screen
+  forgotPasswordTitle: 'Forgot Password',
+  forgotPasswordSubtitle: "Enter your email address and we'll send you a link to reset your password.",
+  sendResetLink: 'Send Reset Link',
+  checkEmail: 'Check Your Email',
+  resetLinkSent: "We've sent a password reset link to",
+  checkInbox: 'Please check your inbox and follow the instructions.',
+  backToLogin: 'Back to Login',
+
+  // Home Screen
+  youAreLoggedIn: "You're successfully logged in",
+  name: 'Name',
+
+  // Validation Messages
+  fillAllFields: 'Please fill in all fields',
+  validEmail: 'Please enter a valid email address',
+  passwordMinLength: 'Password must be at least 8 characters long',
+  passwordsDontMatch: 'Passwords do not match',
+  unexpectedError: 'An unexpected error occurred. Please try again.',
+
+  // Language
+  language: 'Language',
+  selectLanguage: 'Select Language',
+  english: 'English',
+  french: 'French',
+  arabic: 'Arabic',
+};
+

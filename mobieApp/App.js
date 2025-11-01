@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
@@ -61,10 +62,12 @@ const RootNavigator = () => {
 // Main App component
 export default function App() {
   return (
-    <AuthProvider>
-      <StatusBar style="auto" />
-      <RootNavigator />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <StatusBar style="auto" />
+        <RootNavigator />
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

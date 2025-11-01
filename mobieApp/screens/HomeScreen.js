@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,34 +7,68 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
+  const { t, language } = useLanguage();
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [buttonPosition, setButtonPosition] = useState(null);
+  const languageButtonRef = useRef(null);
 
   const handleLogout = async () => {
     await logout();
   };
 
+  const getLanguageDisplay = () => {
+    const langMap = {
+      en: 'EN',
+      fr: 'FR',
+      ar: 'AR',
+    };
+    return langMap[language] || 'EN';
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Welcome!</Text>
-        <Text style={styles.subtitle}>You are successfully logged in</Text>
+        <TouchableOpacity
+          ref={languageButtonRef}
+          style={styles.languageButton}
+          onPress={() => {
+            languageButtonRef.current?.measure((x, y, width, height, pageX, pageY) => {
+              setButtonPosition({ x: pageX, y: pageY, width, height });
+              setLanguageModalVisible(true);
+            });
+          }}
+        >
+          <Text style={styles.languageButtonText}>{getLanguageDisplay()}</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.title}>{t('welcome')}!</Text>
+        <Text style={styles.subtitle}>{t('youAreLoggedIn')}</Text>
         
         {user && (
           <View style={styles.userInfo}>
-            <Text style={styles.userLabel}>Name:</Text>
+            <Text style={styles.userLabel}>{t('name')}:</Text>
             <Text style={styles.userValue}>{user.name}</Text>
             
-            <Text style={styles.userLabel}>Email:</Text>
+            <Text style={styles.userLabel}>{t('email')}:</Text>
             <Text style={styles.userValue}>{user.email}</Text>
           </View>
         )}
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
+          <Text style={styles.logoutButtonText}>{t('logout')}</Text>
         </TouchableOpacity>
       </View>
+
+      <LanguageSwitcher
+        visible={languageModalVisible}
+        onClose={() => setLanguageModalVisible(false)}
+        buttonPosition={buttonPosition}
+      />
     </SafeAreaView>
   );
 };
@@ -48,6 +82,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
+  },
+  languageButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  languageButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#007AFF',
   },
   title: {
     fontSize: 32,

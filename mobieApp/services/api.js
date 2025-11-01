@@ -69,12 +69,18 @@ api.interceptors.response.use(
 // API Methods
 export const authAPI = {
   // Register
-  register: async (name, email, password, passwordConfirmation) => {
+  register: async (registerData) => {
     const response = await api.post(API_ENDPOINTS.register, {
-      name,
-      email,
-      password,
-      password_confirmation: passwordConfirmation,
+      nom: registerData.nom,
+      prenom: registerData.prenom,
+      date_de_naissance: registerData.date_de_naissance,
+      adresse: registerData.adresse,
+      commune: registerData.commune,
+      wilaya: registerData.wilaya,
+      numero_telephone: registerData.numero_telephone,
+      email: registerData.email,
+      password: registerData.password,
+      password_confirmation: registerData.password_confirmation,
     });
     return response.data;
   },
