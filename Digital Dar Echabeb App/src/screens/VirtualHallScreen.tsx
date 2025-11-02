@@ -5,7 +5,7 @@ import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { ArrowLeft, ArrowRight, Users, MessageCircle, Heart, Smile, ThumbsUp, Send, Gift, WifiOff } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface VirtualHallScreenProps {
   activityId: string;

@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
 import { ArrowLeft, ArrowRight, Calendar, Clock, Users, MapPin, DollarSign, Share2, Heart, MessageCircle } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface ActivityDetailScreenProps {
   activityId: string;

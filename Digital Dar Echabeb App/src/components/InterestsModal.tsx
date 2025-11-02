@@ -4,7 +4,7 @@ import { useApp } from '../lib/context';
 import { useAuth } from '../lib/authContext';
 import { Button } from './ui/button';
 import { Check, Loader2, X } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface InterestsModalProps {
   open: boolean;

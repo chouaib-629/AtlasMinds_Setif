@@ -6,7 +6,7 @@ import { Switch } from '../components/ui/switch';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { Settings, Moon, Sun, Languages, Bell, User as UserIcon, Trophy, Flame, Award, LogOut, Shield, Building } from 'lucide-react';
 import { useAuth } from '../lib/authContext';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface ProfileScreenProps {
   onOpenLocalAdmin?: () => void;
