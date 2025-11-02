@@ -116,122 +116,6 @@ export default function EventsPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // If editing, proceed directly without AI analysis
-    if (editingEvent) {
-      try {
-        const submitData: any = {
-          ...formData,
-        };
-        if (formData.has_price && formData.price) {
-          submitData.price = parseFloat(formData.price);
-        } else {
-          submitData.price = null;
-          submitData.has_price = false;
-        }
-        await apiService.updateEvent(editingEvent.id, submitData);
-        setShowModal(false);
-        setEditingEvent(null);
-        setFormData({
-          title: '',
-          description: '',
-          type: 'local',
-          attendance_type: 'in-person',
-          date: '',
-          location: '',
-          price: '',
-          has_price: false,
-        });
-        loadEvents();
-      } catch (error) {
-        console.error('Error saving event:', error);
-      }
-      return;
-    }
-
-    // For new events, show AI suggestions first
-    try {
-      setLoadingSuggestions(true);
-      setPendingFormData({ ...formData });
-      setShowModal(false);
-      setShowSuggestionsModal(true);
-
-      // Call Gemini API for analysis
-      const eventAnalysis = await analyzeEventWithGemini({
-        title: formData.title,
-        description: formData.description,
-        type: formData.type,
-        attendance_type: formData.attendance_type,
-        date: formData.date,
-        location: formData.location,
-        price: formData.price,
-        has_price: formData.has_price,
-      });
-
-      setSuggestions(eventAnalysis);
-    } catch (error: any) {
-      console.error('Error analyzing event:', error);
-      // Show error message to user
-      const errorMessage = error?.message || 'Failed to get AI suggestions. You can still proceed without them.';
-      alert(errorMessage);
-      // If Gemini fails, proceed with original submission
-      proceedWithEventCreation(formData);
-    } finally {
-      setLoadingSuggestions(false);
-    }
-  };
-
-  const proceedWithEventCreation = async (dataToUse: typeof formData) => {
-    try {
-      const submitData: any = {
-        ...dataToUse,
-      };
-      if (dataToUse.has_price && dataToUse.price) {
-        submitData.price = parseFloat(dataToUse.price);
-      } else {
-        submitData.price = null;
-        submitData.has_price = false;
-      }
-      await apiService.createEvent(submitData);
-      setShowSuggestionsModal(false);
-      setSuggestions(null);
-      setPendingFormData(null);
-      setShowModal(false);
-      setEditingEvent(null);
-      setFormData({
-        title: '',
-        description: '',
-        type: 'local',
-        attendance_type: 'in-person',
-        date: '',
-        location: '',
-        price: '',
-        has_price: false,
-      });
-      loadEvents();
-    } catch (error) {
-      console.error('Error saving event:', error);
-      alert('Failed to create event. Please try again.');
-    }
-  };
-
-  const handleAcceptSuggestions = () => {
-    if (pendingFormData && suggestions) {
-      proceedWithEventCreation({
-        ...pendingFormData,
-        title: suggestions.title,
-        description: suggestions.description,
-      });
-    }
-  };
-
-  const handleProceedWithout = () => {
-    if (pendingFormData) {
-      proceedWithEventCreation(pendingFormData);
-    }
-  };
   const handleDelete = async (id: number) => {
     const itemType = activeTab === 'events' ? 'event' : 
                      activeTab === 'education' ? 'education' :
@@ -620,6 +504,18 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
     
     const submitData: any = { ...formData };
     
+    // Process date - convert datetime-local format to ISO string
+    if (submitData.date) {
+      // If it's already in datetime-local format (YYYY-MM-DDTHH:mm), convert to ISO
+      if (submitData.date.includes('T')) {
+        submitData.date = new Date(submitData.date).toISOString();
+      }
+      // If editing events (no separate time field), use the date as-is
+      if (activeTab === 'events') {
+        submitData.date = new Date(submitData.date).toISOString();
+      }
+    }
+
     // Process price
     if (submitData.has_price && submitData.price) {
       submitData.price = parseFloat(submitData.price);
