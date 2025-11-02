@@ -61,22 +61,15 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   const handleLogout = async () => {
-    console.log('=== LOGOUT BUTTON CLICKED ===');
-    
     if (Platform.OS === 'web') {
       // On web, use confirm dialog
       const confirmed = window.confirm('Are you sure you want to logout?');
       if (confirmed) {
         try {
-          console.log('=== CONFIRM LOGOUT (WEB) ===');
           await logout();
-          console.log('=== LOGOUT COMPLETED ===');
         } catch (error) {
-          console.error('=== LOGOUT ERROR ===', error);
           alert('An error occurred during logout. Please try again.');
         }
-      } else {
-        console.log('Logout cancelled (web)');
       }
     } else {
       // On native platforms, use Alert
@@ -87,18 +80,14 @@ const ProfileScreen = ({ navigation }) => {
           { 
             text: t('cancel'), 
             style: 'cancel',
-            onPress: () => console.log('Logout cancelled')
           },
           {
             text: t('logout'),
             style: 'destructive',
             onPress: async () => {
               try {
-                console.log('=== CONFIRM LOGOUT PRESSED ===');
                 await logout();
-                console.log('=== LOGOUT COMPLETED ===');
               } catch (error) {
-                console.error('=== LOGOUT ERROR ===', error);
                 Alert.alert(t('error'), 'An error occurred during logout. Please try again.');
               }
             },
@@ -368,11 +357,7 @@ const ProfileScreen = ({ navigation }) => {
           {/* Logout Button */}
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => {
-              console.log('=== TOUCHABLE OPACITY PRESSED ===');
-              handleLogout();
-            }}
-            onPressIn={() => console.log('=== BUTTON PRESS IN ===')}
+            onPress={handleLogout}
             activeOpacity={0.8}
             disabled={false}
             testID="logout-button"

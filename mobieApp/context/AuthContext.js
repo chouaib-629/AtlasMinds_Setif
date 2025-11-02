@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         }
       }
     } catch (error) {
-      console.error('Auth check error:', error);
+      // Silent error handling
     } finally {
       setLoading(false);
     }
@@ -80,27 +80,21 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      console.log('Logout initiated...');
       // Clear local state first
       setUser(null);
       setIsAuthenticated(false);
       
       // Try to call logout API
       try {
-        console.log('Calling logout API...');
         await authAPI.logout();
-        console.log('Logout API call successful');
       } catch (apiError) {
-        console.error('Logout API error:', apiError);
         // Even if API fails, continue with local cleanup
       }
       
       // Clear AsyncStorage
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('user');
-      console.log('Logout completed - storage cleared');
     } catch (error) {
-      console.error('Logout error:', error);
       // Ensure cleanup even on error
       setUser(null);
       setIsAuthenticated(false);
@@ -108,7 +102,7 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.removeItem('authToken');
         await AsyncStorage.removeItem('user');
       } catch (storageError) {
-        console.error('Storage cleanup error:', storageError);
+        // Silent error handling
       }
     }
   };

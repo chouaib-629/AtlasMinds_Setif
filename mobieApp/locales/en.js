@@ -97,6 +97,11 @@ export default {
   locationPermission: 'Location Permission',
   enableLocation: 'Please enable location services to see activities on the map',
   allowLocation: 'Allow Location',
+  searchCenters: 'Search youth centers...',
+  showAll: 'Show All',
+  youthCenters: 'Youth Centers',
+  youthCenter: 'Youth Center',
+  inAlgeria: 'in Algeria',
   
   // Events/Activities Screen
   activities: 'Activities',

@@ -210,8 +210,6 @@ const RegisterScreen = ({ navigation }) => {
         password_confirmation: passwordConfirmation,
       };
 
-      console.log('Registering with data:', registerData); // Debug log
-
       const result = await register(registerData);
       if (result.success) {
         Alert.alert(t('success'), result.message || t('registrationSuccessful'));
@@ -227,7 +225,6 @@ const RegisterScreen = ({ navigation }) => {
         }
       }
     } catch (error) {
-      console.error('Registration error:', error); // Debug log
       const errorMessage = error.response?.data?.message || error.message || t('unexpectedError');
       const errorDetails = error.response?.data?.errors;
       if (errorDetails) {
@@ -395,7 +392,6 @@ const RegisterScreen = ({ navigation }) => {
                 }
               };
             } else {
-              console.log('Date picker button pressed');
               setShowDatePicker(true);
             }
           }}

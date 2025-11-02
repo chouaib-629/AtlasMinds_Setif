@@ -21,7 +21,7 @@ export const LanguageProvider = ({ children }) => {
         setLanguage(savedLanguage);
       }
     } catch (error) {
-      console.error('Error loading language:', error);
+      // Silent error handling
     } finally {
       setLoading(false);
     }
@@ -32,7 +32,7 @@ export const LanguageProvider = ({ children }) => {
       await AsyncStorage.setItem(STORAGE_KEY, lang);
       setLanguage(lang);
     } catch (error) {
-      console.error('Error saving language:', error);
+      // Silent error handling
     }
   };
 

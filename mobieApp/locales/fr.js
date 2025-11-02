@@ -97,6 +97,11 @@ export default {
   locationPermission: 'Autorisation de localisation',
   enableLocation: 'Veuillez activer les services de localisation pour voir les activités sur la carte',
   allowLocation: 'Autoriser la localisation',
+  searchCenters: 'Rechercher des maisons de jeunes...',
+  showAll: 'Afficher tout',
+  youthCenters: 'Maisons de Jeunes',
+  youthCenter: 'Maison de Jeunes',
+  inAlgeria: 'en Algérie',
   
   // Events/Activities Screen
   activities: 'Activités',

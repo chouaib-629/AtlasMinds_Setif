@@ -10,26 +10,38 @@ import {
   ActivityIndicator,
   Platform,
   Animated,
+  TextInput,
 } from 'react-native';
 import * as Location from 'expo-location';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import WaveSeparator from '../components/WaveSeparator';
-import { LocationIcon } from '../components/Icons';
+import { LocationIcon, MapIcon } from '../components/Icons';
+import LeafletMap from '../components/LeafletMap';
 import youthCentersData from '../data/youthCenters.json';
 
 // Conditionally import MapView only on native platforms
 let MapView, Marker, PROVIDER_GOOGLE, PROVIDER_DEFAULT;
 if (Platform.OS !== 'web') {
   try {
+    // Dynamic import to avoid web bundling issues
     const mapsModule = require('react-native-maps');
     MapView = mapsModule.default;
     Marker = mapsModule.Marker;
     PROVIDER_GOOGLE = mapsModule.PROVIDER_GOOGLE;
     PROVIDER_DEFAULT = mapsModule.PROVIDER_DEFAULT;
   } catch (e) {
-    console.warn('react-native-maps not available');
+    MapView = null;
+    Marker = null;
+    PROVIDER_GOOGLE = null;
+    PROVIDER_DEFAULT = null;
   }
+} else {
+  // Explicitly set to null on web to prevent any import evaluation
+  MapView = null;
+  Marker = null;
+  PROVIDER_GOOGLE = null;
+  PROVIDER_DEFAULT = null;
 }
 
 const MapScreen = ({ navigation }) => {
@@ -46,6 +58,8 @@ const MapScreen = ({ navigation }) => {
   const [youthCenters, setYouthCenters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCenter, setSelectedCenter] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const mapRef = useRef(null);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -148,7 +162,6 @@ const MapScreen = ({ navigation }) => {
             });
           } catch (e) {
             // If getting current location fails, use calculated bounds
-            console.log('Using calculated bounds:', mapBounds);
             setLocation(mapBounds);
           }
         } else {
@@ -158,7 +171,6 @@ const MapScreen = ({ navigation }) => {
 
         setLoading(false);
       } catch (error) {
-        console.error('Location error:', error);
         const bounds = calculateMapBounds(youthCentersData);
         setLocation(bounds);
         setLoading(false);
@@ -168,7 +180,29 @@ const MapScreen = ({ navigation }) => {
 
   const handleMarkerPress = (center) => {
     setSelectedCenter(center);
+    // Zoom to selected marker
+    if (mapRef.current && center.latitude && center.longitude) {
+      mapRef.current.animateToRegion({
+        latitude: center.latitude,
+        longitude: center.longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+      }, 500);
+    }
   };
+
+  const fitAllMarkers = () => {
+    if (mapRef.current && youthCenters.length > 0) {
+      const bounds = calculateMapBounds(youthCenters);
+      mapRef.current.animateToRegion(bounds, 1000);
+    }
+  };
+
+  const filteredCenters = searchQuery
+    ? youthCenters.filter(center =>
+        center.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : youthCenters;
 
   const handleRequestPermission = async () => {
     if (Platform.OS === 'web') {
@@ -205,7 +239,7 @@ const MapScreen = ({ navigation }) => {
     );
   }
 
-  // Web fallback - show activities list instead of map
+  // Web - show Leaflet map
   if (Platform.OS === 'web') {
     return (
       <SafeAreaView style={styles.container}>
@@ -243,44 +277,44 @@ const MapScreen = ({ navigation }) => {
           </Animated.View>
         </View>
 
-        <ScrollView style={styles.scrollView}>
-          <Animated.View
-            style={[
-              styles.contentContainer,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder={t('searchCenters') || 'Search youth centers...'}
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <TouchableOpacity
+            style={styles.fitAllButton}
+            onPress={() => {
+              // Scroll to map on web
+              const mapElement = document.querySelector('[data-map-container]');
+              if (mapElement) {
+                mapElement.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            activeOpacity={0.8}
           >
-            <Text style={styles.webNotice}>
-              Map view is available on iOS and Android devices
-            </Text>
-            <Text style={styles.sectionTitle}>{t('nearbyActivities')}</Text>
-            <Text style={styles.centerCount}>
-              {youthCenters.length} {t('youthCenters') || 'Youth Centers'} {t('inAlgeria') || 'in Algeria'}
-            </Text>
-            {youthCenters.slice(0, 20).map((center) => (
-              <TouchableOpacity
-                key={center.id}
-                style={styles.webActivityCard}
-                onPress={() => handleMarkerPress(center)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.webActivityTitle}>{center.name}</Text>
-                <View style={styles.webActivityLocationRow}>
-                  <LocationIcon size={14} color="#666" />
-                  <Text style={styles.webActivityLocation}>
-                    {center.latitude.toFixed(6)}, {center.longitude.toFixed(6)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </Animated.View>
-        </ScrollView>
+            <MapIcon size={20} color="#fff" />
+            <Text style={styles.fitAllButtonText}>{t('showAll') || 'Show All'}</Text>
+          </TouchableOpacity>
+        </View>
 
+        {/* Interactive Leaflet Map */}
+        <View style={styles.leafletMapContainer} data-map-container>
+          <LeafletMap
+            centers={filteredCenters}
+            selectedCenter={selectedCenter}
+            onMarkerClick={handleMarkerPress}
+            height="calc(100vh - 350px)"
+          />
+        </View>
+
+        {/* Selected Center Preview Card */}
         {selectedCenter && (
-          <View style={styles.activityCard}>
+          <View style={styles.webPreviewCard}>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setSelectedCenter(null)}
@@ -293,6 +327,15 @@ const MapScreen = ({ navigation }) => {
               <LocationIcon size={14} color="#666" />
               <Text style={styles.activityDate}>
                 {selectedCenter.latitude.toFixed(6)}, {selectedCenter.longitude.toFixed(6)}
+              </Text>
+            </View>
+            <View style={styles.previewInfo}>
+              <Text style={styles.previewLabel}>{t('location') || 'Location'}:</Text>
+              <Text style={styles.previewText}>
+                Latitude: {selectedCenter.latitude.toFixed(6)}
+              </Text>
+              <Text style={styles.previewText}>
+                Longitude: {selectedCenter.longitude.toFixed(6)}
               </Text>
             </View>
             <TouchableOpacity
@@ -312,6 +355,13 @@ const MapScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* Centers Count Info */}
+        <View style={styles.infoBar}>
+          <Text style={styles.infoText}>
+            {filteredCenters.length} {t('youthCenters') || 'Youth Centers'} {t('inAlgeria') || 'in Algeria'}
+          </Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -404,6 +454,25 @@ const MapScreen = ({ navigation }) => {
         </Animated.View>
       </View>
 
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder={t('searchCenters') || 'Search youth centers...'}
+          placeholderTextColor="#999"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        <TouchableOpacity
+          style={styles.fitAllButton}
+          onPress={fitAllMarkers}
+          activeOpacity={0.8}
+        >
+          <MapIcon size={20} color="#fff" />
+          <Text style={styles.fitAllButtonText}>{t('showAll') || 'Show All'}</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Map View */}
       <View style={styles.mapContainer}>
         {!MapView || !Marker ? (
@@ -445,6 +514,7 @@ const MapScreen = ({ navigation }) => {
           </View>
         ) : location ? (
           <MapView
+            ref={mapRef}
             provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
             style={styles.map}
             initialRegion={location}
@@ -463,22 +533,24 @@ const MapScreen = ({ navigation }) => {
             loadingIndicatorColor="#FF8A80"
             loadingBackgroundColor="#FFFFFF"
             onMapReady={() => {
-              console.log('Map is ready and loaded');
-              console.log('Map region:', location);
-              console.log('Youth centers count:', youthCenters.length);
               setLoading(false);
             }}
             onError={(error) => {
-              console.error('Map error:', error);
               setErrorMsg('Map failed to load. Please check your internet connection and try again.');
-              Alert.alert(t('error'), 'Map failed to load. Check console for details.');
+              Alert.alert(t('error'), 'Map failed to load. Please try again.');
             }}
             onLoad={() => {
-              console.log('Map loaded successfully');
               setLoading(false);
+              // Fit all markers after map is loaded
+              setTimeout(() => {
+                fitAllMarkers();
+              }, 500);
+            }}
+            onRegionChangeComplete={(region) => {
+              setLocation(region);
             }}
           >
-            {youthCenters.length > 0 && youthCenters.map((center) => (
+            {filteredCenters.length > 0 && filteredCenters.map((center) => (
               <Marker
                 key={center.id}
                 coordinate={{
@@ -535,24 +607,36 @@ const MapScreen = ({ navigation }) => {
         </View>
       )}
 
+      {/* Centers Count Info */}
+      <View style={styles.infoBar}>
+        <Text style={styles.infoText}>
+          {filteredCenters.length} {t('youthCenters') || 'Youth Centers'} {t('inAlgeria') || 'in Algeria'}
+        </Text>
+      </View>
+
       {/* Nearby Centers List */}
-      <ScrollView
-        horizontal
-        style={styles.nearbyList}
-        showsHorizontalScrollIndicator={false}
-      >
-        {youthCenters.slice(0, 10).map((center) => (
-          <TouchableOpacity
-            key={center.id}
-            style={styles.nearbyCard}
-            onPress={() => handleMarkerPress(center)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.nearbyCardTitle} numberOfLines={2}>{center.name}</Text>
-            <Text style={styles.nearbyCardType}>{t('youthCenter') || 'Youth Center'}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {selectedCenter && (
+        <ScrollView
+          horizontal
+          style={styles.nearbyList}
+          showsHorizontalScrollIndicator={false}
+        >
+          {filteredCenters.slice(0, 10).map((center) => (
+            <TouchableOpacity
+              key={center.id}
+              style={[
+                styles.nearbyCard,
+                selectedCenter.id === center.id && styles.nearbyCardSelected
+              ]}
+              onPress={() => handleMarkerPress(center)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.nearbyCardTitle} numberOfLines={2}>{center.name}</Text>
+              <Text style={styles.nearbyCardType}>{t('youthCenter') || 'Youth Center'}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -634,6 +718,110 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    padding: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    alignItems: 'center',
+  },
+  searchInput: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    fontSize: 14,
+    marginRight: 8,
+  },
+  fitAllButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FF8A80',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF8A80',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  fitAllButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  infoBar: {
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  infoText: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  leafletMapContainer: {
+    width: '100%',
+    backgroundColor: '#f0f0f0',
+    position: 'relative',
+    zIndex: 0,
+  },
+  webPreviewCard: {
+    position: 'fixed',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    maxWidth: 400,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+      },
+      default: {},
+    }),
+  },
+  previewInfo: {
+    marginTop: 12,
+    marginBottom: 15,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  previewLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 6,
+  },
+  previewText: {
+    fontSize: 13,
+    color: '#333',
+    marginBottom: 4,
+    ...Platform.select({
+      web: {
+        fontFamily: 'monospace',
+      },
+      default: {},
+    }),
   },
   mapContainer: {
     flex: 1,
@@ -891,6 +1079,11 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
+  },
+  nearbyCardSelected: {
+    borderColor: '#FF8A80',
+    borderWidth: 2,
+    backgroundColor: '#FFF5F5',
   },
   nearbyCardTitle: {
     fontSize: 14,

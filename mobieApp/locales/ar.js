@@ -97,6 +97,11 @@ export default {
   locationPermission: 'إذن الموقع',
   enableLocation: 'يرجى تفعيل خدمات الموقع لرؤية الأنشطة على الخريطة',
   allowLocation: 'السماح بالموقع',
+  searchCenters: 'ابحث عن دور الشباب...',
+  showAll: 'عرض الكل',
+  youthCenters: 'دور الشباب',
+  youthCenter: 'دار الشباب',
+  inAlgeria: 'في الجزائر',
   
   // Events/Activities Screen
   activities: 'الأنشطة',
