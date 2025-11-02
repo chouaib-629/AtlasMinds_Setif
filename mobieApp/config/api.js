@@ -17,5 +17,13 @@ export const API_ENDPOINTS = {
   refresh: '/refresh',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
+  // Home activities
+  homeActivities: '/home-activities',
+  educations: '/educations',
+  educationsFeatured: '/educations/featured',
+  clubs: '/clubs',
+  clubsFeatured: '/clubs/featured',
+  directActivities: '/direct-activities',
+  directActivitiesFeatured: '/direct-activities/featured',
 };
 

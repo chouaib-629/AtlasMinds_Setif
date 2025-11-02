@@ -9,16 +9,21 @@ import {
   Platform,
   Animated,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import AppHeader from '../components/AppHeader';
 import { HandshakeIcon, LightbulbIcon, CalendarIcon, LocationIcon, UsersIcon, ArrowRightIcon } from '../components/Icons';
+import { activitiesAPI } from '../services/api';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [notificationCount] = useState(3); // Mock notification count
+  const [featuredActivities, setFeaturedActivities] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -44,15 +49,48 @@ const HomeScreen = ({ navigation }) => {
         useNativeDriver: false,
       }),
     ]).start();
+
+    // Fetch activities from API
+    fetchActivities();
   }, []);
 
-  const getLanguageDisplay = () => {
-    const langMap = {
-      en: 'EN',
-      fr: 'FR',
-      ar: 'AR',
-    };
-    return langMap[language] || 'EN';
+  const fetchActivities = async () => {
+    try {
+      setLoading(true);
+      const response = await activitiesAPI.getHomeActivities();
+      
+      if (response.success && response.data) {
+        // Set featured activities (combined from all types)
+        const featured = response.data.featured_activities || [];
+        setFeaturedActivities(featured);
+
+        // Set upcoming events (combine educations, clubs, and direct activities)
+        const allActivities = [
+          ...(response.data.educations || []),
+          ...(response.data.clubs || []),
+          ...(response.data.direct_activities || []),
+        ];
+        // Sort by date and take first 2
+        const sorted = allActivities
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .slice(0, 2)
+          .map(item => ({
+            id: item.id,
+            title: item.title,
+            date: item.date,
+            time: item.time || '9:00 AM',
+            location: item.location || 'TBA',
+          }));
+        setUpcomingEvents(sorted);
+      }
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+      // Fallback to empty arrays on error
+      setFeaturedActivities([]);
+      setUpcomingEvents([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const quickActions = [
@@ -107,46 +145,27 @@ const HomeScreen = ({ navigation }) => {
     },
   ];
 
-  const featuredActivities = [
-    {
-      id: 1,
-      title: 'Youth Leadership Workshop',
-      category: 'Workshop',
-      date: 'Jan 15, 2024',
-      participants: 45,
-    },
-    {
-      id: 2,
-      title: 'Community Cleanup Day',
-      category: 'Volunteer',
-      date: 'Jan 25, 2024',
-      participants: 80,
-    },
-    {
-      id: 3,
-      title: 'Digital Skills Training',
-      category: 'Training',
-      date: 'Jan 20, 2024',
-      participants: 120,
-    },
-  ];
-
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: 'Tech Innovation Summit',
-      date: 'Feb 5, 2024',
-      time: '9:00 AM',
-      location: 'Convention Center',
-    },
-    {
-      id: 2,
-      title: 'Arts & Culture Festival',
-      date: 'Feb 10, 2024',
-      time: '2:00 PM',
-      location: 'City Park',
-    },
-  ];
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <AppHeader
+          notificationCount={notificationCount}
+          onProfilePress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              parent.navigate('Profile');
+            } else {
+              navigation.navigate('Profile');
+            }
+          }}
+        />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#FF8A80" />
+          <Text style={styles.loadingText}>{t('loading') || 'Loading...'}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -227,42 +246,48 @@ const HomeScreen = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
               style={styles.activitiesScroll}
             >
-              {featuredActivities.map((activity) => (
-                <TouchableOpacity
-                  key={activity.id}
-                  style={styles.activityCard}
-                  onPress={() => {
-                    const parent = navigation.getParent();
-                    if (parent) {
-                      parent.navigate('Events');
-                    } else {
-                      navigation.navigate('Events');
-                    }
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.activityImagePlaceholder}>
-                    <Text style={styles.activityImageText}>
-                      {activity.category === 'Workshop' ? '📚' : activity.category === 'Volunteer' ? '🌱' : '💻'}
-                    </Text>
-                  </View>
-                  <View style={styles.activityCardContent}>
-                    <Text style={styles.activityCardTitle} numberOfLines={2}>
-                      {activity.title}
-                    </Text>
-                    <Text style={styles.activityCardCategory}>{activity.category}</Text>
-                    <View style={styles.activityCardFooter}>
-                      <Text style={styles.activityCardDate}>{activity.date}</Text>
-                      <View style={styles.activityCardParticipantsRow}>
-                        <UsersIcon size={14} color="#666" />
-                        <Text style={styles.activityCardParticipants}>
-                          {activity.participants}
-                        </Text>
+              {featuredActivities.length > 0 ? (
+                featuredActivities.map((activity) => (
+                  <TouchableOpacity
+                    key={activity.id}
+                    style={styles.activityCard}
+                    onPress={() => {
+                      const parent = navigation.getParent();
+                      if (parent) {
+                        parent.navigate('Events');
+                      } else {
+                        navigation.navigate('Events');
+                      }
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.activityImagePlaceholder}>
+                      <Text style={styles.activityImageText}>
+                        {activity.category === 'Workshop' ? '📚' : activity.category === 'Volunteer' ? '🌱' : activity.category === 'Club' ? '👥' : '💻'}
+                      </Text>
+                    </View>
+                    <View style={styles.activityCardContent}>
+                      <Text style={styles.activityCardTitle} numberOfLines={2}>
+                        {activity.title}
+                      </Text>
+                      <Text style={styles.activityCardCategory}>{activity.category || 'Activity'}</Text>
+                      <View style={styles.activityCardFooter}>
+                        <Text style={styles.activityCardDate}>{activity.date || 'TBA'}</Text>
+                        <View style={styles.activityCardParticipantsRow}>
+                          <UsersIcon size={14} color="#666" />
+                          <Text style={styles.activityCardParticipants}>
+                            {activity.participants || 0}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>{t('noActivities') || 'No activities available'}</Text>
+                </View>
+              )}
             </ScrollView>
           </View>
 
@@ -283,34 +308,40 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.seeAllText}>{t('seeMore')}</Text>
               </TouchableOpacity>
             </View>
-            {upcomingEvents.map((event) => (
-              <TouchableOpacity
-                key={event.id}
-                style={styles.eventItem}
-                onPress={() => {
-                  const parent = navigation.getParent();
-                  if (parent) {
-                    parent.navigate('Events');
-                  } else {
-                    navigation.navigate('Events');
-                  }
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={styles.eventItemContent}>
-                  <Text style={styles.eventItemTitle}>{event.title}</Text>
-                  <View style={styles.eventItemDetailRow}>
-                    <CalendarIcon size={14} color="#666" />
-                    <Text style={styles.eventItemDetail}>{event.date} • {event.time}</Text>
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <TouchableOpacity
+                  key={event.id}
+                  style={styles.eventItem}
+                  onPress={() => {
+                    const parent = navigation.getParent();
+                    if (parent) {
+                      parent.navigate('Events');
+                    } else {
+                      navigation.navigate('Events');
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.eventItemContent}>
+                    <Text style={styles.eventItemTitle}>{event.title}</Text>
+                    <View style={styles.eventItemDetailRow}>
+                      <CalendarIcon size={14} color="#666" />
+                      <Text style={styles.eventItemDetail}>{event.date} • {event.time}</Text>
+                    </View>
+                    <View style={styles.eventItemDetailRow}>
+                      <LocationIcon size={14} color="#666" />
+                      <Text style={styles.eventItemDetail}>{event.location}</Text>
+                    </View>
                   </View>
-                  <View style={styles.eventItemDetailRow}>
-                    <LocationIcon size={14} color="#666" />
-                    <Text style={styles.eventItemDetail}>{event.location}</Text>
-                  </View>
-                </View>
-                <ArrowRightIcon size={24} color="#FF8A80" />
-              </TouchableOpacity>
-            ))}
+                  <ArrowRightIcon size={24} color="#FF8A80" />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>{t('noEvents') || 'No upcoming events'}</Text>
+              </View>
+            )}
           </View>
 
           {/* My Activities Section */}
@@ -556,6 +587,25 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
+  },
+  emptyContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
   },
 });
 
