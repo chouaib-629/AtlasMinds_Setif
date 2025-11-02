@@ -10,6 +10,8 @@ class Club extends Model
 {
     use HasFactory;
 
+    protected $table = 'clubs';
+
     protected $fillable = [
         'title',
         'description',
@@ -19,7 +21,10 @@ class Club extends Model
         'location',
         'attendance_type',
         'organizer',
+        'organizer_contact',
         'admin_id',
+        'center_id',
+        'center_name',
         'price',
         'has_price',
         'participants',
@@ -27,6 +32,9 @@ class Club extends Model
         'image_url',
         'is_featured',
         'is_active',
+        'status',
+        'duration',
+        'level',
     ];
 
     protected function casts(): array
@@ -48,5 +56,13 @@ class Club extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class);
+    }
+
+    /**
+     * Get all inscriptions for this club activity
+     */
+    public function inscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ClubInscription::class);
     }
 }

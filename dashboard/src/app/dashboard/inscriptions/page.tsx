@@ -4,31 +4,57 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
-import { apiService, EventInscription, Event } from '@/lib/api';
+import { apiService, EventInscription } from '@/lib/api';
 import { Check, X } from 'lucide-react';
+
+type InscriptionType = 'events' | 'education' | 'clubs' | 'direct-activities';
+
+interface Inscription extends EventInscription {
+  education?: any;
+  club?: any;
+  directActivity?: any;
+}
 
 export default function InscriptionsPage() {
   const { isSuperAdmin } = useAuth();
-  const [inscriptions, setInscriptions] = useState<EventInscription[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [activeTab, setActiveTab] = useState<InscriptionType>('events');
+  const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [eventFilter, setEventFilter] = useState<number | ''>('');
+  const [activityFilter, setActivityFilter] = useState<number | ''>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
 
   useEffect(() => {
     loadInscriptions();
-    loadEvents();
-  }, [eventFilter, statusFilter]);
+    loadActivities();
+  }, [activeTab, activityFilter, statusFilter]);
 
   const loadInscriptions = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getEventInscriptions(
-        eventFilter ? Number(eventFilter) : undefined,
-        statusFilter || undefined
-      );
+      let response;
+      const activityId = activityFilter ? Number(activityFilter) : undefined;
+      const status = statusFilter || undefined;
+
+      switch (activeTab) {
+        case 'events':
+          response = await apiService.getEventInscriptions(activityId, status);
+          break;
+        case 'education':
+          response = await apiService.getEducationInscriptions(activityId, status);
+          break;
+        case 'clubs':
+          response = await apiService.getClubInscriptions(activityId, status);
+          break;
+        case 'direct-activities':
+          response = await apiService.getDirectActivityInscriptions(activityId, status);
+          break;
+        default:
+          response = await apiService.getEventInscriptions();
+      }
+
       if (response.success && response.data) {
-        setInscriptions(response.data.inscriptions);
+        setInscriptions(response.data.inscriptions || []);
       }
     } catch (error) {
       console.error('Error loading inscriptions:', error);
@@ -37,25 +63,92 @@ export default function InscriptionsPage() {
     }
   };
 
-  const loadEvents = async () => {
+  const loadActivities = async () => {
     try {
-      const response = await apiService.getEvents(
-        isSuperAdmin ? {} : { type: 'local', attendance_type: 'in-person' }
-      );
-      if (response.success && response.data) {
-        setEvents(response.data.events);
+      let response;
+      switch (activeTab) {
+        case 'events':
+          response = await apiService.getEvents(
+            isSuperAdmin ? {} : { type: 'local', attendance_type: 'in-person' }
+          );
+          if (response.success && response.data) {
+            setActivities(response.data.events || []);
+          }
+          break;
+        case 'education':
+          response = await apiService.getEducations();
+          if (response.success && response.data) {
+            setActivities(response.data.educations || []);
+          }
+          break;
+        case 'clubs':
+          response = await apiService.getClubs();
+          if (response.success && response.data) {
+            setActivities(response.data.clubs || []);
+          }
+          break;
+        case 'direct-activities':
+          response = await apiService.getDirectActivities();
+          if (response.success && response.data) {
+            setActivities(response.data.direct_activities || []);
+          }
+          break;
       }
     } catch (error) {
-      console.error('Error loading events:', error);
+      console.error('Error loading activities:', error);
     }
   };
 
-  const handleStatusUpdate = async (inscriptionId: number, status: 'approved' | 'rejected') => {
+  const handleStatusUpdate = async (inscriptionId: number, status: 'approved' | 'rejected' | 'attended') => {
     try {
-      await apiService.updateInscriptionStatus(inscriptionId, status);
+      switch (activeTab) {
+        case 'events':
+          await apiService.updateInscriptionStatus(inscriptionId, status);
+          break;
+        case 'education':
+          await apiService.updateEducationInscriptionStatus(inscriptionId, status);
+          break;
+        case 'clubs':
+          await apiService.updateClubInscriptionStatus(inscriptionId, status);
+          break;
+        case 'direct-activities':
+          await apiService.updateDirectActivityInscriptionStatus(inscriptionId, status);
+          break;
+      }
       loadInscriptions();
     } catch (error) {
       console.error('Error updating inscription status:', error);
+      alert(error instanceof Error ? error.message : 'Failed to update inscription status');
+    }
+  };
+
+  const getActivityTitle = (inscription: Inscription) => {
+    switch (activeTab) {
+      case 'events':
+        return inscription.event?.title || 'N/A';
+      case 'education':
+        return inscription.education?.title || 'N/A';
+      case 'clubs':
+        return inscription.club?.title || 'N/A';
+      case 'direct-activities':
+        return inscription.directActivity?.title || 'N/A';
+      default:
+        return 'N/A';
+    }
+  };
+
+  const getActivityDate = (inscription: Inscription) => {
+    switch (activeTab) {
+      case 'events':
+        return inscription.event?.date;
+      case 'education':
+        return inscription.education?.date;
+      case 'clubs':
+        return inscription.club?.date;
+      case 'direct-activities':
+        return inscription.directActivity?.date;
+      default:
+        return null;
     }
   };
 
@@ -72,6 +165,13 @@ export default function InscriptionsPage() {
     }
   };
 
+  const tabs: { id: InscriptionType; label: string }[] = [
+    { id: 'events', label: 'Events' },
+    { id: 'education', label: 'Education' },
+    { id: 'clubs', label: 'Clubs/Groups' },
+    { id: 'direct-activities', label: 'Activities' },
+  ];
+
   return (
     <ProtectedRoute>
       <DashboardLayout>
@@ -80,11 +180,64 @@ export default function InscriptionsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Event Inscriptions
+                Inscriptions Management
               </h2>
               <p className="text-gray-600 mt-1">
-                Manage participant registrations for events and activities
+                Manage participant registrations for all activities
               </p>
+            </div>
+          </div>
+
+                    {/* Stats Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {inscriptions.length}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-2xl font-bold text-yellow-600">
+                {inscriptions.filter((i) => i.status === 'pending').length}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="text-sm text-gray-600">Approved</div>
+              <div className="text-2xl font-bold text-green-600">
+                {inscriptions.filter((i) => i.status === 'approved').length}
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="text-sm text-gray-600">Attended</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {inscriptions.filter((i) => i.status === 'attended').length}
+              </div>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="border-b border-gray-200">
+              <nav className="flex -mb-px">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setActivityFilter('');
+                      setStatusFilter('');
+                    }}
+                    className={`px-6 py-3 text-sm font-medium ${
+                      activeTab === tab.id
+                        ? 'border-b-2 border-indigo-600 text-indigo-600'
+                        : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
             </div>
           </div>
 
@@ -92,14 +245,14 @@ export default function InscriptionsPage() {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="flex gap-4 flex-wrap">
               <select
-                value={eventFilter}
-                onChange={(e) => setEventFilter(e.target.value ? Number(e.target.value) : '')}
+                value={activityFilter}
+                onChange={(e) => setActivityFilter(e.target.value ? Number(e.target.value) : '')}
                 className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               >
-                <option value="">All Events</option>
-                {events.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.title}
+                <option value="">All {activeTab === 'events' ? 'Events' : activeTab === 'education' ? 'Educations' : activeTab === 'clubs' ? 'Clubs' : 'Activities'}</option>
+                {activities.map((activity) => (
+                  <option key={activity.id} value={activity.id}>
+                    {activity.title}
                   </option>
                 ))}
               </select>
@@ -120,7 +273,7 @@ export default function InscriptionsPage() {
           {/* Inscriptions List */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <div className="inline-block rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
           ) : inscriptions.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
@@ -136,10 +289,7 @@ export default function InscriptionsPage() {
                         Participant
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Event
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Event Type
+                        Activity
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
@@ -157,32 +307,26 @@ export default function InscriptionsPage() {
                       <tr key={inscription.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
-                            {inscription.user.prenom} {inscription.user.nom}
+                            {inscription.user?.prenom} {inscription.user?.nom}
                           </div>
                           <div className="text-xs text-gray-500">
-                            {inscription.user.email}
+                            {inscription.user?.email}
                           </div>
-                          <div className="text-xs text-gray-500">
-                            {inscription.user.wilaya}
-                          </div>
+                          {inscription.user?.wilaya && (
+                            <div className="text-xs text-gray-500">
+                              {inscription.user.wilaya}
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {inscription.event.title}
+                            {getActivityTitle(inscription)}
                           </div>
-                          <div className="text-xs text-gray-500">
-                            {new Date(inscription.event.date).toLocaleDateString()}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex flex-col gap-1">
-                            <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs w-fit">
-                              {inscription.event.type}
-                            </span>
-                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs w-fit">
-                              {inscription.event.attendance_type}
-                            </span>
-                          </div>
+                          {getActivityDate(inscription) && (
+                            <div className="text-xs text-gray-500">
+                              {new Date(getActivityDate(inscription)).toLocaleDateString()}
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
@@ -215,7 +359,15 @@ export default function InscriptionsPage() {
                               </button>
                             </div>
                           )}
-                          {inscription.status !== 'pending' && (
+                          {inscription.status === 'approved' && (
+                            <button
+                              onClick={() => handleStatusUpdate(inscription.id, 'attended')}
+                              className="flex items-center gap-1 text-blue-600 hover:text-blue-900"
+                            >
+                              Mark Attended
+                            </button>
+                          )}
+                          {inscription.status !== 'pending' && inscription.status !== 'approved' && (
                             <span className="text-gray-400">-</span>
                           )}
                         </td>
@@ -226,37 +378,8 @@ export default function InscriptionsPage() {
               </div>
             </div>
           )}
-
-          {/* Stats Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Total</div>
-              <div className="text-2xl font-bold text-gray-900">
-                {inscriptions.length}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Pending</div>
-              <div className="text-2xl font-bold text-yellow-600">
-                {inscriptions.filter((i) => i.status === 'pending').length}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Approved</div>
-              <div className="text-2xl font-bold text-green-600">
-                {inscriptions.filter((i) => i.status === 'approved').length}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Attended</div>
-              <div className="text-2xl font-bold text-blue-600">
-                {inscriptions.filter((i) => i.status === 'attended').length}
-              </div>
-            </div>
-          </div>
         </div>
       </DashboardLayout>
     </ProtectedRoute>
   );
 }
-

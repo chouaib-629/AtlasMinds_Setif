@@ -35,5 +35,15 @@ export const API_ENDPOINTS = {
     LIVESTREAMS: '/admin/livestreams',
     EVENT_INSCRIPTIONS: '/admin/event-inscriptions',
   },
+  
+  // Home page
+  HOME: '/home',
+  
+  // Activities
+  ACTIVITIES: {
+    EDUCATION: '/educations',
+    CLUB: '/clubs',
+    DIRECT_ACTIVITY: '/direct-activities',
+  },
 };
 

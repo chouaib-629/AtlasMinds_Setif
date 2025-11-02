@@ -38,9 +38,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       icon: LayoutDashboard,
     },
     {
-      name: 'Events & Activities',
+      name: 'Activities',
       href: '/dashboard/events',
       icon: Calendar,
+    },
+    {
+      name: 'Inscriptions',
+      href: '/dashboard/inscriptions',
+      icon: FileText,
     },
     {
       name: 'Participants',
@@ -66,11 +71,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       name: 'Livestreams',
       href: '/dashboard/livestreams',
       icon: Video,
-    },
-    {
-      name: 'Event Inscriptions',
-      href: '/dashboard/inscriptions',
-      icon: FileText,
     },
     {
       name: 'Payments',

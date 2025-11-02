@@ -359,8 +359,56 @@ class ApiService {
     return this.request(`/admin/event-inscriptions${query ? `?${query}` : ''}`, { method: 'GET' });
   }
 
-  async updateInscriptionStatus(inscriptionId: number, status: 'approved' | 'rejected'): Promise<ApiResponse<{ inscription: EventInscription }>> {
+  async updateInscriptionStatus(inscriptionId: number, status: 'approved' | 'rejected' | 'attended'): Promise<ApiResponse<{ inscription: EventInscription }>> {
     return this.request(`/admin/event-inscriptions/${inscriptionId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // Education Inscriptions Methods
+  async getEducationInscriptions(educationId?: number, status?: string): Promise<ApiResponse<{ inscriptions: EventInscription[] }>> {
+    const queryParams = new URLSearchParams();
+    if (educationId) queryParams.append('education_id', educationId.toString());
+    if (status) queryParams.append('status', status);
+    const query = queryParams.toString();
+    return this.request(`/admin/education-inscriptions${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async updateEducationInscriptionStatus(inscriptionId: number, status: 'approved' | 'rejected' | 'attended'): Promise<ApiResponse<{ inscription: EventInscription }>> {
+    return this.request(`/admin/education-inscriptions/${inscriptionId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // Club Inscriptions Methods
+  async getClubInscriptions(clubId?: number, status?: string): Promise<ApiResponse<{ inscriptions: EventInscription[] }>> {
+    const queryParams = new URLSearchParams();
+    if (clubId) queryParams.append('club_id', clubId.toString());
+    if (status) queryParams.append('status', status);
+    const query = queryParams.toString();
+    return this.request(`/admin/club-inscriptions${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async updateClubInscriptionStatus(inscriptionId: number, status: 'approved' | 'rejected' | 'attended'): Promise<ApiResponse<{ inscription: EventInscription }>> {
+    return this.request(`/admin/club-inscriptions/${inscriptionId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // Direct Activity Inscriptions Methods
+  async getDirectActivityInscriptions(activityId?: number, status?: string): Promise<ApiResponse<{ inscriptions: EventInscription[] }>> {
+    const queryParams = new URLSearchParams();
+    if (activityId) queryParams.append('direct_activity_id', activityId.toString());
+    if (status) queryParams.append('status', status);
+    const query = queryParams.toString();
+    return this.request(`/admin/direct-activity-inscriptions${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async updateDirectActivityInscriptionStatus(inscriptionId: number, status: 'approved' | 'rejected' | 'attended'): Promise<ApiResponse<{ inscription: EventInscription }>> {
+    return this.request(`/admin/direct-activity-inscriptions/${inscriptionId}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     });
@@ -387,6 +435,102 @@ class ApiService {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     });
+  }
+
+  // Education CRUD Methods
+  async getEducations(params?: { category?: string; status?: string; is_active?: boolean }): Promise<ApiResponse<{ educations: any[] }>> {
+    const queryParams = new URLSearchParams();
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.is_active !== undefined) queryParams.append('is_active', params.is_active.toString());
+    const query = queryParams.toString();
+    return this.request(`/admin/educations${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async getEducation(id: number): Promise<ApiResponse<{ education: any }>> {
+    return this.request(`/admin/educations/${id}`, { method: 'GET' });
+  }
+
+  async createEducation(data: any): Promise<ApiResponse<{ education: any }>> {
+    return this.request('/admin/educations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateEducation(id: number, data: any): Promise<ApiResponse<{ education: any }>> {
+    return this.request(`/admin/educations/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteEducation(id: number): Promise<ApiResponse> {
+    return this.request(`/admin/educations/${id}`, { method: 'DELETE' });
+  }
+
+  // Club CRUD Methods
+  async getClubs(params?: { category?: string; status?: string; is_active?: boolean }): Promise<ApiResponse<{ clubs: any[] }>> {
+    const queryParams = new URLSearchParams();
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.is_active !== undefined) queryParams.append('is_active', params.is_active.toString());
+    const query = queryParams.toString();
+    return this.request(`/admin/clubs${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async getClub(id: number): Promise<ApiResponse<{ club: any }>> {
+    return this.request(`/admin/clubs/${id}`, { method: 'GET' });
+  }
+
+  async createClub(data: any): Promise<ApiResponse<{ club: any }>> {
+    return this.request('/admin/clubs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateClub(id: number, data: any): Promise<ApiResponse<{ club: any }>> {
+    return this.request(`/admin/clubs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteClub(id: number): Promise<ApiResponse> {
+    return this.request(`/admin/clubs/${id}`, { method: 'DELETE' });
+  }
+
+  // Direct Activity CRUD Methods
+  async getDirectActivities(params?: { category?: string; status?: string; is_active?: boolean }): Promise<ApiResponse<{ direct_activities: any[] }>> {
+    const queryParams = new URLSearchParams();
+    if (params?.category) queryParams.append('category', params.category);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.is_active !== undefined) queryParams.append('is_active', params.is_active.toString());
+    const query = queryParams.toString();
+    return this.request(`/admin/direct-activities${query ? `?${query}` : ''}`, { method: 'GET' });
+  }
+
+  async getDirectActivity(id: number): Promise<ApiResponse<{ direct_activity: any }>> {
+    return this.request(`/admin/direct-activities/${id}`, { method: 'GET' });
+  }
+
+  async createDirectActivity(data: any): Promise<ApiResponse<{ direct_activity: any }>> {
+    return this.request('/admin/direct-activities', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateDirectActivity(id: number, data: any): Promise<ApiResponse<{ direct_activity: any }>> {
+    return this.request(`/admin/direct-activities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteDirectActivity(id: number): Promise<ApiResponse> {
+    return this.request(`/admin/direct-activities/${id}`, { method: 'DELETE' });
   }
 }
 

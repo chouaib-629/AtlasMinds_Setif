@@ -81,4 +81,140 @@ class DirectActivityController extends Controller
             'data' => $formatted,
         ]);
     }
+
+    /**
+     * Get a single direct activity by ID
+     */
+    public function show(Request $request, $id)
+    {
+        $activity = DirectActivity::where('is_active', true)->find($id);
+
+        if (!$activity) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Direct activity not found',
+            ], 404);
+        }
+
+        // Get authenticated user if available
+        $user = auth('api')->user();
+        $userInscription = null;
+        
+        if ($user) {
+            $userInscription = \App\Models\DirectActivityInscription::where('user_id', $user->id)
+                ->where('direct_activity_id', $id)
+                ->first();
+        }
+
+        // Calculate participants from approved inscriptions
+        $participantsCount = $activity->inscriptions()->where('status', 'approved')->count();
+
+        $formatted = [
+            'id' => $activity->id,
+            'type' => 'direct_activity',
+            'title' => $activity->title,
+            'description' => $activity->description,
+            'category' => $activity->category,
+            'date' => $activity->date->format('Y-m-d'),
+            'time' => $activity->time ?? $activity->date->format('H:i'),
+            'location' => $activity->location,
+            'attendance_type' => $activity->attendance_type,
+            'organizer' => $activity->organizer ?? 'Youth Center',
+            'organizer_contact' => $activity->organizer_contact ?? $activity->organizer,
+            'center_id' => (string)($activity->center_id ?? $activity->id),
+            'center_name' => $activity->center_name ?? $activity->location ?? 'دار الشباب',
+            'has_price' => $activity->has_price,
+            'price' => $activity->has_price ? ($activity->price ? (float)$activity->price : null) : null,
+            'participants' => $participantsCount,
+            'capacity' => $activity->capacity,
+            'image_url' => $activity->image_url,
+            'status' => $activity->status ?? 'upcoming',
+            'votes' => $activity->votes ?? 0,
+            'target_audience' => $activity->target_audience,
+            'is_registered' => $userInscription !== null,
+            'registration_status' => $userInscription ? $userInscription->status : null,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $formatted,
+        ]);
+    }
+
+    /**
+     * Join/Register for a direct activity
+     */
+    public function join(Request $request, $id)
+    {
+        $activity = DirectActivity::where('is_active', true)->find($id);
+
+        if (!$activity) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Direct activity not found',
+            ], 404);
+        }
+
+        // Check if user is authenticated
+        $user = auth('api')->user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication required',
+            ], 401);
+        }
+
+        // Check if user is already registered
+        $existingInscription = \App\Models\DirectActivityInscription::where('user_id', $user->id)
+            ->where('direct_activity_id', $id)
+            ->first();
+
+        if ($existingInscription) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are already registered for this activity',
+                'data' => [
+                    'status' => $existingInscription->status,
+                    'participants' => $activity->inscriptions()->where('status', 'approved')->count(),
+                    'capacity' => $activity->capacity,
+                ],
+            ], 400);
+        }
+
+        // Check capacity (count approved inscriptions)
+        $approvedCount = $activity->inscriptions()->where('status', 'approved')->count();
+        if ($activity->capacity && $approvedCount >= $activity->capacity) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Activity is full',
+            ], 400);
+        }
+
+        // Create inscription with pending status
+        $inscription = \App\Models\DirectActivityInscription::create([
+            'user_id' => $user->id,
+            'direct_activity_id' => $id,
+            'status' => 'pending',
+        ]);
+
+        // Update participants count (total approved)
+        $activity->participants = $activity->inscriptions()->where('status', 'approved')->count();
+        $activity->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully registered for activity',
+            'data' => [
+                'inscription_id' => $inscription->id,
+                'status' => $inscription->status,
+                'participants' => $activity->participants,
+                'capacity' => $activity->capacity,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name ?? ($user->nom . ' ' . $user->prenom),
+                    'email' => $user->email,
+                ],
+            ],
+        ]);
+    }
 }

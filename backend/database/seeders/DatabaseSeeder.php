@@ -29,5 +29,12 @@ class DatabaseSeeder extends Seeder
             ChatSeeder::class,
             LivestreamSeeder::class,
         ]);
+
+        // Seed home page activities
+        $this->call([
+            EducationSeeder::class,
+            ClubSeeder::class,
+            DirectActivitySeeder::class,
+        ]);
     }
 }

@@ -10,6 +10,8 @@ class Education extends Model
 {
     use HasFactory;
 
+    protected $table = 'educations';
+
     protected $fillable = [
         'title',
         'description',
@@ -19,7 +21,10 @@ class Education extends Model
         'location',
         'attendance_type',
         'organizer',
+        'organizer_contact',
         'admin_id',
+        'center_id',
+        'center_name',
         'price',
         'has_price',
         'participants',
@@ -27,6 +32,9 @@ class Education extends Model
         'image_url',
         'is_featured',
         'is_active',
+        'status',
+        'duration',
+        'level',
     ];
 
     protected function casts(): array
@@ -48,5 +56,13 @@ class Education extends Model
     public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class);
+    }
+
+    /**
+     * Get all inscriptions for this education activity
+     */
+    public function inscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(EducationInscription::class);
     }
 }
