@@ -33,6 +33,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/clubs/{id}/join', [\App\Http\Controllers\Api\ClubController::class, 'join']);
     Route::post('/direct-activities/{id}/join', [\App\Http\Controllers\Api\DirectActivityController::class, 'join']);
     
+    // Leaderboard endpoint
+    Route::get('/leaderboard', [\App\Http\Controllers\Api\LeaderboardController::class, 'index']);
+    
     // Example protected route
     Route::get('/user', function (Request $request) {
         return $request->user();

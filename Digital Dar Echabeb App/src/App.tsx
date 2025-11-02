@@ -8,7 +8,7 @@ import { AuthScreen } from './screens/AuthScreen';
 import { InterestsSelectionScreen } from './screens/InterestsSelectionScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { InsightsScreen } from './screens/InsightsScreen';
-import { VirtualDarScreen } from './screens/VirtualDarScreen';
+import { LeaderboardScreen } from './screens/LeaderboardScreen';
 import { CenterDetailScreen } from './screens/CenterDetailScreen';
 import { MapScreen } from './screens/MapScreen';
 import { ActivityDetailScreen } from './screens/ActivityDetailScreen';
@@ -265,12 +265,8 @@ function AppContent() {
                 onChatsClick={handleOpenChats}
               />
             )}
-            {appState.activeTab === 'virtual-dar' && (
-              <VirtualDarScreen
-                onActivityClick={handleActivityClick}
-                onJoinSession={handleLiveSessionClick}
-                onCenterClick={handleCenterClick}
-              />
+            {appState.activeTab === 'leaderboard' && (
+              <LeaderboardScreen />
             )}
             {appState.activeTab === 'map' && (
               <MapScreen onCenterClick={handleCenterClick} />
@@ -322,7 +318,7 @@ function AppContent() {
         {appState.screen === 'live-player' && (
           <LivePlayerScreen
             sessionId={appState.sessionId}
-            onBack={() => handleBackToMain('virtual-dar')}
+            onBack={() => handleBackToMain('home')}
             onMinimize={handleMinimizeLivePlayer}
           />
         )}

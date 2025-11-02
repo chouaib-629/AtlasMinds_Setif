@@ -4,4 +4,5 @@ export * from './client';
 export * from './auth';
 export * from './home';
 export * from './activities';
+export * from './leaderboard';
 

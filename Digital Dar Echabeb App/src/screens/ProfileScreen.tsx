@@ -20,10 +20,16 @@ export function ProfileScreen({ onOpenLocalAdmin, onOpenCentralAdmin }: ProfileS
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success(t('تم تسجيل الخروج بنجاح', 'Logged out successfully'));
+      toast.success(
+        t('تم تسجيل الخروج بنجاح. نراك قريباً!', 'Logged out successfully. See you soon!', 'Déconnexion réussie. À bientôt!'),
+        { duration: 3000 }
+      );
       // Navigation will be handled by auth state change
     } catch (error) {
-      toast.error(t('حدث خطأ أثناء تسجيل الخروج', 'Error logging out'));
+      toast.error(
+        t('حدث خطأ أثناء تسجيل الخروج. يرجى المحاولة مرة أخرى', 'Error logging out. Please try again', 'Erreur lors de la déconnexion. Veuillez réessayer'),
+        { duration: 4000 }
+      );
     }
   };
 

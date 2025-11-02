@@ -128,13 +128,13 @@ export interface Reward {
 
 export interface LeaderboardEntry {
   rank: number;
-  userId: string;
-  userName: string;
-  points: number;
-  level: string;
+  user_id: number;
+  nom: string;
+  prenom: string;
   wilaya: string;
-  age: number;
-  field: string;
+  commune?: string;
+  score: number;
+  attended_events_count: number;
 }
 
 export interface VolunteerAssignment {

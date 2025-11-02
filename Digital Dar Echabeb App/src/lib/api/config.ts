@@ -39,6 +39,9 @@ export const API_ENDPOINTS = {
   // Home page
   HOME: '/home',
   
+  // Leaderboard
+  LEADERBOARD: '/leaderboard',
+  
   // Activities
   ACTIVITIES: {
     EDUCATION: '/educations',

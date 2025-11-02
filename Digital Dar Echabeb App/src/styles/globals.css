@@ -282,3 +282,36 @@ body {
 .nearest-marker {
   filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
 }
+
+/* Mobile Toast Notifications - Better positioning for mobile */
+[data-sonner-toaster] {
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
+  bottom: auto !important;
+  max-width: calc(100vw - 2rem) !important;
+  width: calc(100vw - 2rem) !important;
+  z-index: 9999 !important;
+}
+
+[data-sonner-toast] {
+  width: 100% !important;
+  max-width: calc(100vw - 2rem) !important;
+  margin: 0 auto !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.75rem !important;
+  font-size: 0.875rem !important;
+  padding: 0.875rem 1rem !important;
+}
+
+@media (min-width: 640px) {
+  [data-sonner-toast] {
+    max-width: 28rem !important;
+  }
+  
+  [data-sonner-toaster] {
+    max-width: 28rem !important;
+    width: auto !important;
+  }
+}

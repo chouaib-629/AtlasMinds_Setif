@@ -80,6 +80,8 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
   const [signupStep, setSignupStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [loginPassword, setLoginPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   
   // Step 1 fields
   const [firstName, setFirstName] = useState('');
@@ -113,20 +115,125 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
     return communes.sort(); // Sort alphabetically
   }, [wilaya]);
 
+  const validateEmail = (emailValue: string): boolean => {
+    if (!emailValue) {
+      setEmailError(t('البريد الإلكتروني مطلوب', 'Email is required', 'L\'email est requis'));
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      setEmailError(t('البريد الإلكتروني غير صحيح', 'Invalid email format', 'Format d\'email invalide'));
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
+
+  const validatePassword = (passwordValue: string): boolean => {
+    if (!passwordValue) {
+      setPasswordError(t('كلمة المرور مطلوبة', 'Password is required', 'Le mot de passe est requis'));
+      return false;
+    }
+    if (passwordValue.length < 8) {
+      setPasswordError(t('كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'Password must be at least 8 characters', 'Le mot de passe doit contenir au moins 8 caractères'));
+      return false;
+    }
+    setPasswordError('');
+    return true;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !loginPassword) {
-      toast.error(t('الرجاء إدخال البريد الإلكتروني وكلمة المرور', 'Please enter email and password'));
+    
+    // Clear previous errors
+    setEmailError('');
+    setPasswordError('');
+    
+    // Validate fields
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = validatePassword(loginPassword);
+    
+    if (!isEmailValid || !isPasswordValid) {
       return;
     }
 
     setIsLoading(true);
     try {
       await login({ email, password: loginPassword });
-      toast.success(t('تم تسجيل الدخول بنجاح', 'Login successful'));
+      toast.success(
+        t('مرحباً بك! تم تسجيل الدخول بنجاح', 'Welcome back! Login successful', 'Bon retour! Connexion réussie'),
+        { duration: 3000 }
+      );
       onComplete();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : t('فشل تسجيل الدخول', 'Login failed'));
+    } catch (error: any) {
+      let errorMessage = t('فشل تسجيل الدخول', 'Login failed', 'Échec de la connexion');
+      let passwordErrorMsg = '';
+      let emailErrorMsg = '';
+
+      // Check if it's an axios error with structured response
+      if (error?.response?.data) {
+        const responseData = error.response.data;
+        
+        // Check for field-specific errors in errors object
+        if (responseData.errors) {
+          if (responseData.errors.email) {
+            emailErrorMsg = Array.isArray(responseData.errors.email) 
+              ? responseData.errors.email[0] 
+              : responseData.errors.email;
+          }
+          if (responseData.errors.password) {
+            passwordErrorMsg = Array.isArray(responseData.errors.password) 
+              ? responseData.errors.password[0] 
+              : responseData.errors.password;
+          }
+        }
+        
+        // Get general error message
+        if (responseData.message) {
+          errorMessage = responseData.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      // Map common error messages to field-specific errors
+      const lowerErrorMessage = errorMessage.toLowerCase();
+      
+      // Check for email-related errors
+      if (lowerErrorMessage.includes('email') || 
+          lowerErrorMessage.includes('البريد') || 
+          lowerErrorMessage.includes('courriel') ||
+          emailErrorMsg) {
+        emailErrorMsg = emailErrorMsg || errorMessage;
+        setEmailError(emailErrorMsg);
+      }
+      
+      // Check for password-related errors or invalid credentials (usually means wrong password)
+      if (lowerErrorMessage.includes('password') || 
+          lowerErrorMessage.includes('كلمة المرور') || 
+          lowerErrorMessage.includes('mot de passe') ||
+          lowerErrorMessage.includes('invalid credentials') ||
+          lowerErrorMessage.includes('بيانات غير صحيحة') ||
+          lowerErrorMessage.includes('identifiants invalides') ||
+          lowerErrorMessage.includes('credentials') ||
+          lowerErrorMessage.includes('incorrect') ||
+          lowerErrorMessage.includes('غير صحيح') ||
+          passwordErrorMsg) {
+        // Translate "Invalid credentials" to a user-friendly password error message
+        if (lowerErrorMessage.includes('invalid credentials') || 
+            lowerErrorMessage.includes('بيانات غير صحيحة') ||
+            lowerErrorMessage.includes('identifiants invalides')) {
+          passwordErrorMsg = t('كلمة المرور غير صحيحة', 'Incorrect password', 'Mot de passe incorrect');
+        } else {
+          passwordErrorMsg = passwordErrorMsg || errorMessage;
+        }
+        setPasswordError(passwordErrorMsg);
+      }
+
+      // Only show toast if no inline errors were set (for non-field-specific errors)
+      if (!emailErrorMsg && !passwordErrorMsg) {
+        toast.error(errorMessage, { duration: 4000 });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +346,11 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
           </p>
         </div>
 
-        <Tabs defaultValue="login" className="w-full">
+        <Tabs defaultValue="login" className="w-full" onValueChange={() => {
+          // Clear errors when switching tabs
+          setEmailError('');
+          setPasswordError('');
+        }}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">{t('تسجيل الدخول', 'Login')}</TabsTrigger>
             <TabsTrigger value="signup">{t('حساب جديد', 'Sign Up')}</TabsTrigger>
@@ -254,9 +365,19 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
                   type="email"
                   placeholder="ahmed@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) {
+                      validateEmail(e.target.value);
+                    }
+                  }}
+                  onBlur={() => validateEmail(email)}
+                  className={emailError ? 'border-destructive' : ''}
                   required
                 />
+                {emailError && (
+                  <p className="text-sm text-destructive mt-1">{emailError}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -266,9 +387,19 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
                   type="password"
                   placeholder="••••••••"
                   value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
+                  onChange={(e) => {
+                    setLoginPassword(e.target.value);
+                    if (passwordError) {
+                      validatePassword(e.target.value);
+                    }
+                  }}
+                  onBlur={() => validatePassword(loginPassword)}
+                  className={passwordError ? 'border-destructive' : ''}
                   required
                 />
+                {passwordError && (
+                  <p className="text-sm text-destructive mt-1">{passwordError}</p>
+                )}
               </div>
 
               <button
