@@ -70,13 +70,13 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent
-        className="fixed bottom-0 left-0 right-0 top-auto z-50 max-h-[90vh] w-full translate-y-0 rounded-t-3xl border-b-0 border-x-0 border-t p-0 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] sm:max-w-lg sm:left-auto sm:right-auto sm:translate-x-0 sm:rounded-b-3xl sm:border-b"
+        className="fixed bottom-0 left-4 right-4 mb-6 top-auto z-50 max-h-[90vh] overflow-hidden w-[calc(100%-2rem)] max-w-none translate-x-0 translate-y-0 rounded-3xl p-0 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] sm:max-w-lg sm:left-[50%] sm:right-auto sm:translate-x-[-50%] sm:border-b"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <div className="flex h-full max-h-[90vh] flex-col overflow-hidden">
           {/* Header with drag handle */}
-          <div className="sticky top-0 z-10 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-6 pb-8">
+          <div className="sticky top-0 z-10 bg-primary text-primary-foreground p-6 pb-8">
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
                 <h2 className="text-2xl font-bold">
@@ -93,10 +93,10 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-primary-foreground hover:bg-primary-foreground/20 h-10 w-10"
+                className="text-primary-foreground hover:bg-primary-foreground/20"
                 onClick={onClose}
               >
-                <X className="h-5 w-5" />
+                <X className="h-100 w-100" />
               </Button>
             </div>
             
@@ -105,7 +105,7 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
           </div>
 
           {/* Progress indicator */}
-          <div className="bg-card border-b border-border px-6 py-4">
+          <div className="bg-card px-6 py-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
                 {t('المحدد', 'Selected', 'Sélectionné')}: {selectedInterests.length}
@@ -115,7 +115,7 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
               </span>
             </div>
             {selectedInterests.length >= 3 && (
-              <div className="mt-2 flex items-center gap-2 text-primary text-sm animate-in fade-in slide-in-from-top-2">
+              <div className="mt-2 flex items-center gap-2 text-primary text-sm">
                 <Check className="w-4 h-4" />
                 <span>{t('ممتاز! يمكنك المتابعة', 'Great! You can continue', 'Super! Vous pouvez continuer')}</span>
               </div>
@@ -123,7 +123,7 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
           </div>
 
           {/* Interests Grid */}
-          <div className="flex-1 overflow-y-auto p-6 pb-24">
+          <div className="flex-1 overflow-y-auto p-4">
             <div className="grid grid-cols-2 gap-4">
               {interests.map((interest) => {
                 const isSelected = selectedInterests.includes(interest.id);
@@ -133,21 +133,21 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
                   <button
                     key={interest.id}
                     onClick={() => toggleInterest(interest.id)}
-                    className={`relative p-6 rounded-2xl border-2 transition-all duration-200 transform ${
+                    className={`relative pt-6 pb-6 p-2 rounded-2xl border-2 transition-all ${
                       isSelected
-                        ? 'border-primary bg-primary/10 shadow-lg scale-[1.02]'
-                        : 'border-border bg-card hover:border-primary/50 hover:scale-[1.01] active:scale-[0.98]'
+                        ? 'border-primary bg-primary/10 shadow-lg scale-105'
+                        : 'border-border bg-card hover:border-primary/50'
                     }`}
                   >
                     {/* Selection indicator */}
                     {isSelected && (
-                      <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full p-1.5 animate-in zoom-in-50 duration-200">
+                      <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full p-1">
                         <Check className="w-4 h-4" />
                       </div>
                     )}
 
                     {/* Icon */}
-                    <div className={`text-5xl mb-3 transition-transform ${isSelected ? 'scale-110' : ''}`}>
+                    <div className="text-5xl mb-3">
                       {interest.icon}
                     </div>
 
@@ -166,7 +166,7 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
           </div>
 
           {/* Bottom Action */}
-          <div className="sticky bottom-0 border-t border-border bg-card p-6 backdrop-blur-sm bg-card/95">
+          <div className="sticky bg-card p-6 pt-2">
             <Button
               onClick={handleContinue}
               disabled={selectedInterests.length < 3 || isSaving}

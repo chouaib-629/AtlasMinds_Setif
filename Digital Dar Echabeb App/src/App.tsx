@@ -72,7 +72,7 @@ function AppContent() {
     }
   }, [isAuthenticated, user, isLoading, refreshUser]);
 
-  // Check preferences and show interests screen after login if missing (15 seconds delay)
+  // Check preferences and show interests screen after login if missing (10 seconds delay)
   useEffect(() => {
     // Only trigger for users on main screen who don't have preferences
     // Skip if user just completed interests selection (isNewUser flag)
@@ -80,7 +80,7 @@ function AppContent() {
       const hasPreferences = user.preferences && Array.isArray(user.preferences) && user.preferences.length > 0;
       
       if (!hasPreferences && !showInterestsAfterDelay) {
-        // Show interests modal after 15 seconds if no preferences
+        // Show interests modal after 10 seconds if no preferences
         const timer = setTimeout(() => {
           // Use functional update to check current state
           setAppState((currentState) => {
@@ -90,7 +90,7 @@ function AppContent() {
             }
             return currentState;
           });
-        }, 15000); // 15 seconds after reaching main screen
+        }, 10000); // 10 seconds after reaching main screen
 
         return () => clearTimeout(timer);
       } else if (hasPreferences) {
@@ -383,7 +383,7 @@ function AppContent() {
           />
         )}
 
-        {/* Interests Modal - Shows as animated popup after 15 seconds if no preferences */}
+        {/* Interests Modal - Shows as animated popup after 10 seconds if no preferences */}
         {showInterestsAfterDelay && appState.screen === 'main' && (
           <InterestsModal
             open={showInterestsAfterDelay}
