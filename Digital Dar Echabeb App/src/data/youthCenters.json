@@ -1,0 +1,1778 @@
+[
+  {
+    "id": 1,
+    "name": "Multi sport Nedroma",
+    "latitude": 35.0156922,
+    "longitude": -1.7468273
+  },
+  {
+    "id": 2,
+    "name": "Salle de Reunion du Village",
+    "latitude": 36.515294,
+    "longitude": 4.4119097
+  },
+  {
+    "id": 3,
+    "name": "Salle de sport Charef Khettab",
+    "latitude": 35.8629316,
+    "longitude": 0.0761419
+  },
+  {
+    "id": 4,
+    "name": "Salle des fêtes Walimate (El biar)",
+    "latitude": 36.7718406,
+    "longitude": 3.034794
+  },
+  {
+    "id": 5,
+    "name": "Salle omnisports Gherib",
+    "latitude": 33.7951912,
+    "longitude": 2.8776489
+  },
+  {
+    "id": 6,
+    "name": "Maison de Jeunes",
+    "latitude": 36.5257004,
+    "longitude": 2.8592151
+  },
+  {
+    "id": 7,
+    "name": "Salle des Fêtes Amira",
+    "latitude": 36.4861157,
+    "longitude": 2.8144172
+  },
+  {
+    "id": 8,
+    "name": "Maison de Jeunes Mouloud Kacem",
+    "latitude": 36.0410891,
+    "longitude": 6.5630339
+  },
+  {
+    "id": 9,
+    "name": "Salle des fêtes Rahou",
+    "latitude": 36.6648167,
+    "longitude": 2.7454713
+  },
+  {
+    "id": 10,
+    "name": "Salle des Fêtes",
+    "latitude": 36.485053,
+    "longitude": 2.8399735
+  },
+  {
+    "id": 11,
+    "name": "Maison des Jeunes دار الشباب",
+    "latitude": 36.7084716,
+    "longitude": 3.1627984
+  },
+  {
+    "id": 12,
+    "name": "Salle des fête Gardenia",
+    "latitude": 36.750198,
+    "longitude": 3.2095582
+  },
+  {
+    "id": 13,
+    "name": "Salle des fêtes Ichbilia",
+    "latitude": 36.7094426,
+    "longitude": 3.1603081
+  },
+  {
+    "id": 14,
+    "name": "Salle des fêtes",
+    "latitude": 36.744917,
+    "longitude": 3.0769049
+  },
+  {
+    "id": 15,
+    "name": "Salle des fête myrriam",
+    "latitude": 36.7766798,
+    "longitude": 3.0159753
+  },
+  {
+    "id": 16,
+    "name": "Salle des fêtes El Faraoula",
+    "latitude": 36.7897196,
+    "longitude": 3.0536524
+  },
+  {
+    "id": 17,
+    "name": "Salle des fêtes Chiffa",
+    "latitude": 36.4606113,
+    "longitude": 2.740194
+  },
+  {
+    "id": 18,
+    "name": "Palace Events Salle des fêtes",
+    "latitude": 36.7462079,
+    "longitude": 3.2351663
+  },
+  {
+    "id": 19,
+    "name": "Salle des fete firdous",
+    "latitude": 36.751499,
+    "longitude": 3.2123254
+  },
+  {
+    "id": 20,
+    "name": "Salle des fête Faraoula",
+    "latitude": 36.7893935,
+    "longitude": 3.0461271
+  },
+  {
+    "id": 21,
+    "name": "Salle des fêtes hamoudi",
+    "latitude": 36.3692243,
+    "longitude": 3.8879836
+  },
+  {
+    "id": 22,
+    "name": "قاعة حفلات",
+    "latitude": 36.2951449,
+    "longitude": 6.5305688
+  },
+  {
+    "id": 23,
+    "name": "Salle des fêtes El Woroud",
+    "latitude": 36.3116213,
+    "longitude": 2.1633277
+  },
+  {
+    "id": 24,
+    "name": "Salle des fétes",
+    "latitude": 36.2602953,
+    "longitude": 2.2159636
+  },
+  {
+    "id": 25,
+    "name": "Salle des fêtes Houari",
+    "latitude": 36.6482276,
+    "longitude": 2.6899227
+  },
+  {
+    "id": 26,
+    "name": "قاعة المحاضرات مصطفى مكي",
+    "latitude": 35.371803,
+    "longitude": 1.3199263
+  },
+  {
+    "id": 27,
+    "name": "Salle des fêtes Hamza (Dely Ibrahim)",
+    "latitude": 36.7630314,
+    "longitude": 2.9931497
+  },
+  {
+    "id": 28,
+    "name": "مركز رياضي بلبشير",
+    "latitude": 26.4703711,
+    "longitude": 8.4833469
+  },
+  {
+    "id": 29,
+    "name": "Salle des fêtes Andalucia",
+    "latitude": 36.7345612,
+    "longitude": 3.0828422
+  },
+  {
+    "id": 30,
+    "name": "Salle des fêtes Olympique",
+    "latitude": 36.7506593,
+    "longitude": 2.9871575
+  },
+  {
+    "id": 31,
+    "name": "Salle des fêtes - Restaurent Bois Des Cars",
+    "latitude": 36.7548763,
+    "longitude": 2.9783713
+  },
+  {
+    "id": 32,
+    "name": "Salle des fêtes Randa",
+    "latitude": 36.7539355,
+    "longitude": 2.9888881
+  },
+  {
+    "id": 33,
+    "name": "Salle des fêtes Hotel El Mehdi",
+    "latitude": 36.7554143,
+    "longitude": 2.8856234
+  },
+  {
+    "id": 34,
+    "name": "Salle des fêtes UGTA",
+    "latitude": 36.7536114,
+    "longitude": 3.0649183
+  },
+  {
+    "id": 35,
+    "name": "Salle des fêtes Meroua",
+    "latitude": 36.7091211,
+    "longitude": 3.085463
+  },
+  {
+    "id": 36,
+    "name": "Salle des fêtes Bachdjerah",
+    "latitude": 36.7297935,
+    "longitude": 3.1267558
+  },
+  {
+    "id": 37,
+    "name": "Salle des Fetes Podium Birkhadem",
+    "latitude": 36.7076557,
+    "longitude": 3.0589147
+  },
+  {
+    "id": 38,
+    "name": "Salle des fêtes N67 Attatba",
+    "latitude": 36.5728682,
+    "longitude": 2.6754328
+  },
+  {
+    "id": 39,
+    "name": "Salle des fêtes Merwa Blida",
+    "latitude": 36.4856754,
+    "longitude": 2.8142188
+  },
+  {
+    "id": 40,
+    "name": "Salle des fêtes Al Afrah Réghaïa",
+    "latitude": 36.7555719,
+    "longitude": 3.3490433
+  },
+  {
+    "id": 41,
+    "name": "Salle des fetes BOUNOUA Ouled Moussa",
+    "latitude": 36.6939134,
+    "longitude": 3.364073
+  },
+  {
+    "id": 42,
+    "name": "Salle des fêtes l'olivier",
+    "latitude": 36.7351116,
+    "longitude": 3.0832114
+  },
+  {
+    "id": 43,
+    "name": "Maison de jeunes",
+    "latitude": 34.8614505,
+    "longitude": 0.1498686
+  },
+  {
+    "id": 44,
+    "name": "Salle des Fêtes",
+    "latitude": 34.8458341,
+    "longitude": 0.155124
+  },
+  {
+    "id": 45,
+    "name": "Salle des fêtes",
+    "latitude": 36.5061354,
+    "longitude": 7.4338791
+  },
+  {
+    "id": 46,
+    "name": "Salle OMS - قاعة متعددة الرياضات",
+    "latitude": 35.2984926,
+    "longitude": 7.3454051
+  },
+  {
+    "id": 47,
+    "name": "Salle des fêtes Le Diamant Bleu Dergana",
+    "latitude": 36.7781086,
+    "longitude": 3.2601414
+  },
+  {
+    "id": 48,
+    "name": "Salle des Fêtes 20 Août 1958",
+    "latitude": 36.6664049,
+    "longitude": 5.1665918
+  },
+  {
+    "id": 49,
+    "name": "Mairie",
+    "latitude": 35.5548142,
+    "longitude": 5.6110836
+  },
+  {
+    "id": 50,
+    "name": "Salle des fêtes",
+    "latitude": 35.5508497,
+    "longitude": 5.615911
+  },
+  {
+    "id": 52,
+    "name": "قاعة حفلات دوماك",
+    "latitude": 34.6553526,
+    "longitude": 3.2600934
+  },
+  {
+    "id": 53,
+    "name": "Maison de jeunes",
+    "latitude": 36.5628662,
+    "longitude": 3.5941407
+  },
+  {
+    "id": 54,
+    "name": "Maison des jeunes",
+    "latitude": 36.6034975,
+    "longitude": 2.1815192
+  },
+  {
+    "id": 56,
+    "name": "Meliani",
+    "latitude": 34.8506649,
+    "longitude": -1.7310008
+  },
+  {
+    "id": 57,
+    "name": "دار الشباب",
+    "latitude": 35.702655,
+    "longitude": -0.6339446
+  },
+  {
+    "id": 58,
+    "name": "Salle des fêtes MIMEX",
+    "latitude": 36.6390316,
+    "longitude": 4.0360363
+  },
+  {
+    "id": 59,
+    "name": "Salle des fêtes Nour el Manar",
+    "latitude": 36.8108188,
+    "longitude": 2.9517538
+  },
+  {
+    "id": 60,
+    "name": "Salle des fêtes SI AFIF",
+    "latitude": 36.1008886,
+    "longitude": 0.4134331
+  },
+  {
+    "id": 61,
+    "name": "Salle de sport",
+    "latitude": 36.586339,
+    "longitude": 2.1255933
+  },
+  {
+    "id": 62,
+    "name": "دار الشباب عين البيضاء",
+    "latitude": 35.7959512,
+    "longitude": 7.3968739
+  },
+  {
+    "id": 63,
+    "name": "Salle des fêtes Dounia Parc",
+    "latitude": 36.7422173,
+    "longitude": 2.9842941
+  },
+  {
+    "id": 66,
+    "name": "Salle des Fetes Cherchour",
+    "latitude": 36.1709393,
+    "longitude": 5.3355519
+  },
+  {
+    "id": 67,
+    "name": "قاعة الأفراح أولاد الكرمي",
+    "latitude": 36.1585353,
+    "longitude": 5.388008
+  },
+  {
+    "id": 69,
+    "name": "ميموزا",
+    "latitude": 36.7367917,
+    "longitude": 3.1827343
+  },
+  {
+    "id": 70,
+    "name": "Salle des fetes Le cristal",
+    "latitude": 35.7524846,
+    "longitude": -0.5485958
+  },
+  {
+    "id": 71,
+    "name": "Salle des fêtes Vivo",
+    "latitude": 36.7537054,
+    "longitude": 3.4716399
+  },
+  {
+    "id": 72,
+    "name": "Salle des fètes Maya",
+    "latitude": 36.7600612,
+    "longitude": 6.8937681
+  },
+  {
+    "id": 73,
+    "name": "Salle Des fètes AWAD",
+    "latitude": 36.7655833,
+    "longitude": 6.8916292
+  },
+  {
+    "id": 74,
+    "name": "SAlle des fêtes Boufeneche",
+    "latitude": 36.7520421,
+    "longitude": 6.8996841
+  },
+  {
+    "id": 75,
+    "name": "Salle des fêtes Miraa",
+    "latitude": 36.7668022,
+    "longitude": 2.9465979
+  },
+  {
+    "id": 76,
+    "name": "asndline",
+    "latitude": 36.7960515,
+    "longitude": 3.0019417
+  },
+  {
+    "id": 77,
+    "name": "Salle des Fêtes DGSN",
+    "latitude": 36.7995457,
+    "longitude": 2.976433
+  },
+  {
+    "id": 78,
+    "name": "Salle des fêtes YASMINE",
+    "latitude": 35.7604549,
+    "longitude": -0.7955376
+  },
+  {
+    "id": 79,
+    "name": "Ouzbiha",
+    "latitude": 36.7671367,
+    "longitude": 5.0565328
+  },
+  {
+    "id": 80,
+    "name": "Salle des Fetes l'Opera",
+    "latitude": 36.7561495,
+    "longitude": 4.3186115
+  },
+  {
+    "id": 81,
+    "name": "Salle des fêtes Wafa",
+    "latitude": 36.6752584,
+    "longitude": 2.7916015
+  },
+  {
+    "id": 82,
+    "name": "Salle des fêtes Cercles de finances",
+    "latitude": 36.7727382,
+    "longitude": 3.0601203
+  },
+  {
+    "id": 83,
+    "name": "Salle des fêtes Safir",
+    "latitude": 36.6415754,
+    "longitude": 2.7627718
+  },
+  {
+    "id": 84,
+    "name": "Salle des fêtes Boulboul",
+    "latitude": 36.7348335,
+    "longitude": 3.0831316
+  },
+  {
+    "id": 85,
+    "name": "Salle des fêtes chahrazed",
+    "latitude": 36.7173564,
+    "longitude": 3.2079635
+  },
+  {
+    "id": 86,
+    "name": "Salle de diner Afrah El Djazair",
+    "latitude": 36.7256344,
+    "longitude": 3.1915727
+  },
+  {
+    "id": 87,
+    "name": "Salle des fêtes Sabrina",
+    "latitude": 36.7409528,
+    "longitude": 3.0969783
+  },
+  {
+    "id": 88,
+    "name": "Salle des fêtes Halil",
+    "latitude": 36.5003645,
+    "longitude": 2.8631808
+  },
+  {
+    "id": 89,
+    "name": "Salle des fêtes",
+    "latitude": 36.5037197,
+    "longitude": 1.2504495
+  },
+  {
+    "id": 90,
+    "name": "Salle des fête El Amel",
+    "latitude": 36.750138,
+    "longitude": 3.2093935
+  },
+  {
+    "id": 91,
+    "name": "Salle des fêtes",
+    "latitude": 36.7346766,
+    "longitude": 3.0535313
+  },
+  {
+    "id": 92,
+    "name": "Boudjadi",
+    "latitude": 36.6493585,
+    "longitude": 2.6919194
+  },
+  {
+    "id": 93,
+    "name": "salle palais des fête la princesse",
+    "latitude": 36.7026385,
+    "longitude": 3.0801997
+  },
+  {
+    "id": 94,
+    "name": "Salle des fêtes Bourdjaoui",
+    "latitude": 36.6537191,
+    "longitude": 4.9063182
+  },
+  {
+    "id": 95,
+    "name": "Salle des fêtes Besma",
+    "latitude": 36.7358936,
+    "longitude": 3.040436
+  },
+  {
+    "id": 96,
+    "name": "Centre culturel Islamique",
+    "latitude": 35.9278898,
+    "longitude": 5.2954508
+  },
+  {
+    "id": 97,
+    "name": "Salle Des Fetes El Gazel",
+    "latitude": 36.7733186,
+    "longitude": 3.2519058
+  },
+  {
+    "id": 98,
+    "name": "Salle des fêtes",
+    "latitude": 35.4675536,
+    "longitude": 2.9055701
+  },
+  {
+    "id": 99,
+    "name": "Maison de jeunes دار الشباب",
+    "latitude": 35.4257575,
+    "longitude": 0.1437744
+  },
+  {
+    "id": 101,
+    "name": "Salle des fêtes Dziria",
+    "latitude": 36.5550451,
+    "longitude": 3.1060773
+  },
+  {
+    "id": 102,
+    "name": "Salle des fêtes Perla",
+    "latitude": 36.5232428,
+    "longitude": 2.8071006
+  },
+  {
+    "id": 103,
+    "name": "Salle des fêtes Souhaib",
+    "latitude": 36.5260744,
+    "longitude": 2.8111416
+  },
+  {
+    "id": 104,
+    "name": "Karima",
+    "latitude": 34.8885757,
+    "longitude": -1.3310863
+  },
+  {
+    "id": 105,
+    "name": "Croissant Rouge Algérien",
+    "latitude": 36.747912,
+    "longitude": 5.0570074
+  },
+  {
+    "id": 106,
+    "name": "Salle des Fêtes El Fourouh",
+    "latitude": 36.6830478,
+    "longitude": 4.2836222
+  },
+  {
+    "id": 107,
+    "name": "Salle des fêtes Eden Park",
+    "latitude": 36.6821466,
+    "longitude": 4.2913657
+  },
+  {
+    "id": 108,
+    "name": "مركز الراحة للمجاهدين",
+    "latitude": 36.8953604,
+    "longitude": 8.4243568
+  },
+  {
+    "id": 109,
+    "name": "Salle des fêtes El Afrah",
+    "latitude": 36.7583638,
+    "longitude": 2.8888947
+  },
+  {
+    "id": 110,
+    "name": "مركب رياضي الجواري بعين ماضي",
+    "latitude": 33.7975732,
+    "longitude": 2.3077857
+  },
+  {
+    "id": 111,
+    "name": "Maison de jeunes",
+    "latitude": 36.6156147,
+    "longitude": 4.7737228
+  },
+  {
+    "id": 112,
+    "name": "Salle des fêtes Hôtel Ziri",
+    "latitude": 35.0962113,
+    "longitude": -1.8742609
+  },
+  {
+    "id": 113,
+    "name": "Salle des fêtes Nouara",
+    "latitude": 36.7767779,
+    "longitude": 3.2480049
+  },
+  {
+    "id": 114,
+    "name": "Salle des fêtes El Moustaqbil",
+    "latitude": 36.261094,
+    "longitude": 6.5905801
+  },
+  {
+    "id": 116,
+    "name": "Maison de jeunes",
+    "latitude": 35.3187344,
+    "longitude": 6.7435029
+  },
+  {
+    "id": 117,
+    "name": "Maison de jeunes",
+    "latitude": 36.4581079,
+    "longitude": 4.525843
+  },
+  {
+    "id": 118,
+    "name": "Salle des fêtes El Yasmine",
+    "latitude": 36.6974491,
+    "longitude": 3.290431
+  },
+  {
+    "id": 119,
+    "name": "Salle des fêtes Lemat Lahbab",
+    "latitude": 36.7035807,
+    "longitude": 3.0714315
+  },
+  {
+    "id": 120,
+    "name": "المركز الثقافي و دار الشباب",
+    "latitude": 36.5377871,
+    "longitude": 2.8229704
+  },
+  {
+    "id": 121,
+    "name": "حي بلغويني",
+    "latitude": 35.1779138,
+    "longitude": 1.4927283
+  },
+  {
+    "id": 122,
+    "name": "المرحلة الثالثة",
+    "latitude": 35.1802652,
+    "longitude": 1.4998443
+  },
+  {
+    "id": 123,
+    "name": "البناء الجاهز",
+    "latitude": 35.1765765,
+    "longitude": 1.4972437
+  },
+  {
+    "id": 124,
+    "name": "عمارات الولاية",
+    "latitude": 35.1745743,
+    "longitude": 1.4945649
+  },
+  {
+    "id": 125,
+    "name": "حي كاسطور",
+    "latitude": 35.1796549,
+    "longitude": 1.4951141
+  },
+  {
+    "id": 126,
+    "name": "الجمعية الثقافية عبد الحميد بن باديس",
+    "latitude": 35.9267748,
+    "longitude": 4.3757206
+  },
+  {
+    "id": 127,
+    "name": "دار الشباب 11 ديسمبر 1960",
+    "latitude": 36.1938246,
+    "longitude": 5.4393829
+  },
+  {
+    "id": 128,
+    "name": "Salle des fêtes Dar El Djoudi",
+    "latitude": 36.778966,
+    "longitude": 3.0141886
+  },
+  {
+    "id": 129,
+    "name": "المركز الترفيهي العلمي",
+    "latitude": 35.5332389,
+    "longitude": -0.1899269
+  },
+  {
+    "id": 130,
+    "name": "salle des fêtes",
+    "latitude": 36.7522417,
+    "longitude": 2.85517
+  },
+  {
+    "id": 131,
+    "name": "حي 109 مسكن",
+    "latitude": 36.0761996,
+    "longitude": 4.7753492
+  },
+  {
+    "id": 132,
+    "name": "Salle des fêtes Al Yasmine",
+    "latitude": 36.7186255,
+    "longitude": 4.0481642
+  },
+  {
+    "id": 133,
+    "name": "Binakli",
+    "latitude": 36.5443491,
+    "longitude": 3.9602511
+  },
+  {
+    "id": 134,
+    "name": "قاعة الحفلات ربيحة",
+    "latitude": 36.76125,
+    "longitude": 2.9280683
+  },
+  {
+    "id": 135,
+    "name": "Maison de jeunes de Birkhadem",
+    "latitude": 36.7154768,
+    "longitude": 3.0453924
+  },
+  {
+    "id": 136,
+    "name": "مسجد العتيق",
+    "latitude": 34.9111536,
+    "longitude": 1.1096461
+  },
+  {
+    "id": 138,
+    "name": "الجمعية الخيرية كافل اليتيم الوطنية",
+    "latitude": 27.1105386,
+    "longitude": 1.909045
+  },
+  {
+    "id": 139,
+    "name": "بيت الشباب بوغراري محمد",
+    "latitude": 27.1968992,
+    "longitude": 2.479646
+  },
+  {
+    "id": 140,
+    "name": "إقامة جامعية 3",
+    "latitude": 36.2171137,
+    "longitude": 5.4465565
+  },
+  {
+    "id": 141,
+    "name": "المركب الرياضي الجواري لخرايف أحمد",
+    "latitude": 27.0982488,
+    "longitude": 1.9046494
+  },
+  {
+    "id": 142,
+    "name": "Complexe omnisport",
+    "latitude": 36.1006422,
+    "longitude": 0.3258862
+  },
+  {
+    "id": 143,
+    "name": "Maison de jeunes",
+    "latitude": 36.5700159,
+    "longitude": 2.9161106
+  },
+  {
+    "id": 144,
+    "name": "قاعة متعددة النشاطات",
+    "latitude": 35.0690029,
+    "longitude": 5.8451096
+  },
+  {
+    "id": 145,
+    "name": "Salle Restaurant Traiteur Younes",
+    "latitude": 36.694392,
+    "longitude": 3.0758512
+  },
+  {
+    "id": 148,
+    "name": "Salle des fêtes Ennakhil",
+    "latitude": 36.3045233,
+    "longitude": 6.69082
+  },
+  {
+    "id": 149,
+    "name": "مسجد علي بن ابي طالب",
+    "latitude": 36.4377767,
+    "longitude": 5.4135568
+  },
+  {
+    "id": 150,
+    "name": "قاعة محمد بوراس",
+    "latitude": 27.1072296,
+    "longitude": 1.9093047
+  },
+  {
+    "id": 152,
+    "name": "Salle des fêtes",
+    "latitude": 36.7522686,
+    "longitude": 2.8595553
+  },
+  {
+    "id": 153,
+    "name": "Cité Ouazar",
+    "latitude": 36.5147583,
+    "longitude": 4.2031884
+  },
+  {
+    "id": 154,
+    "name": "دار الشباب بادي محمد",
+    "latitude": 35.4384548,
+    "longitude": 5.5596654
+  },
+  {
+    "id": 156,
+    "name": "Salle des fêtes Karkache",
+    "latitude": 35.8010877,
+    "longitude": -0.2717347
+  },
+  {
+    "id": 157,
+    "name": "مركز التكوين المهني والتمهين ماوكلان",
+    "latitude": 36.3960665,
+    "longitude": 5.0773446
+  },
+  {
+    "id": 158,
+    "name": "ONDA",
+    "latitude": 35.7012281,
+    "longitude": -0.6433068
+  },
+  {
+    "id": 159,
+    "name": "Salle des fêtes SAIDI",
+    "latitude": 35.8111687,
+    "longitude": -0.2797019
+  },
+  {
+    "id": 160,
+    "name": "R T O",
+    "latitude": 35.8085154,
+    "longitude": -0.2728686
+  },
+  {
+    "id": 161,
+    "name": "SORFERT",
+    "latitude": 35.8065836,
+    "longitude": -0.2710927
+  },
+  {
+    "id": 162,
+    "name": "M I P",
+    "latitude": 35.807983,
+    "longitude": -0.2747845
+  },
+  {
+    "id": 163,
+    "name": "قاعة الحفلات غاني بيش",
+    "latitude": 36.8056567,
+    "longitude": 2.9299402
+  },
+  {
+    "id": 164,
+    "name": "APC",
+    "latitude": 35.6042255,
+    "longitude": 0.5889923
+  },
+  {
+    "id": 165,
+    "name": "Complèxe sportif",
+    "latitude": 35.8284709,
+    "longitude": 2.4547683
+  },
+  {
+    "id": 166,
+    "name": "Hai M'haissar",
+    "latitude": 35.8858127,
+    "longitude": 2.7616806
+  },
+  {
+    "id": 167,
+    "name": "محافظة الكشافة الإسلامية الجزائرية",
+    "latitude": 35.8770363,
+    "longitude": 7.1259369
+  },
+  {
+    "id": 168,
+    "name": "جمعية العلماء المسلمين الجزائريين",
+    "latitude": 35.7297927,
+    "longitude": 0.5565252
+  },
+  {
+    "id": 169,
+    "name": "Cite 50 logts",
+    "latitude": 35.8952729,
+    "longitude": 6.3874807
+  },
+  {
+    "id": 170,
+    "name": "بلدية بوزوران",
+    "latitude": 35.5627518,
+    "longitude": 6.1962411
+  },
+  {
+    "id": 171,
+    "name": "Mairie de Ben Azzouz",
+    "latitude": 36.8606784,
+    "longitude": 7.2937854
+  },
+  {
+    "id": 172,
+    "name": "بلدية وادي النجاء",
+    "latitude": 36.4277819,
+    "longitude": 6.1201691
+  },
+  {
+    "id": 173,
+    "name": "Centre de Staih",
+    "latitude": 35.2083928,
+    "longitude": 4.1791174
+  },
+  {
+    "id": 174,
+    "name": "Maison des jeunes",
+    "latitude": 36.5297477,
+    "longitude": 2.9946656
+  },
+  {
+    "id": 175,
+    "name": "Salle des Fêtes",
+    "latitude": 36.8607502,
+    "longitude": 7.2959655
+  },
+  {
+    "id": 176,
+    "name": "فرقة الزرازرية",
+    "latitude": 36.2417054,
+    "longitude": 2.9406478
+  },
+  {
+    "id": 177,
+    "name": "دار الشباب",
+    "latitude": 29.2482742,
+    "longitude": 0.2250784
+  },
+  {
+    "id": 178,
+    "name": "Salle des fêtes Yassa",
+    "latitude": 36.4858114,
+    "longitude": 2.846531
+  },
+  {
+    "id": 179,
+    "name": "le 8eme",
+    "latitude": 36.9278773,
+    "longitude": 7.716314
+  },
+  {
+    "id": 180,
+    "name": "edough",
+    "latitude": 36.9064595,
+    "longitude": 7.6632296
+  },
+  {
+    "id": 182,
+    "name": "Salle des fêtes",
+    "latitude": 36.2624302,
+    "longitude": 1.9723371
+  },
+  {
+    "id": 183,
+    "name": "Salle des fêtes -cycliste-",
+    "latitude": 36.2633702,
+    "longitude": 1.9778355
+  },
+  {
+    "id": 184,
+    "name": "قاعة الحفلات - معزوزي -",
+    "latitude": 36.2586016,
+    "longitude": 1.9618199
+  },
+  {
+    "id": 185,
+    "name": "Salle des fêtes Elhadj El Arbi",
+    "latitude": 36.2662908,
+    "longitude": 1.9743368
+  },
+  {
+    "id": 186,
+    "name": "قاعة حفلات",
+    "latitude": 36.575231,
+    "longitude": 2.0542026
+  },
+  {
+    "id": 188,
+    "name": "قاعة الأفراح بابيلون",
+    "latitude": 36.8889965,
+    "longitude": 7.7262159
+  },
+  {
+    "id": 189,
+    "name": "دار البلدية",
+    "latitude": 35.6861658,
+    "longitude": 5.3748514
+  },
+  {
+    "id": 190,
+    "name": "دار الشباب",
+    "latitude": 34.1129094,
+    "longitude": 2.0965999
+  },
+  {
+    "id": 191,
+    "name": "Assurance CAAR",
+    "latitude": 36.7362572,
+    "longitude": 3.2807163
+  },
+  {
+    "id": 192,
+    "name": "دوار المعارفية",
+    "latitude": 35.9237031,
+    "longitude": 0.9553166
+  },
+  {
+    "id": 193,
+    "name": "Village Sidi Mejdoub",
+    "latitude": 35.8504878,
+    "longitude": 0.0665470000001
+  },
+  {
+    "id": 194,
+    "name": "THAGOURTH TEZGUI",
+    "latitude": 36.5106405,
+    "longitude": 4.4166407
+  },
+  {
+    "id": 195,
+    "name": "Sotramo",
+    "latitude": 35.8098083,
+    "longitude": -0.2767823
+  },
+  {
+    "id": 196,
+    "name": "Cité 129logts tounsi foubourg",
+    "latitude": 35.2919525,
+    "longitude": -1.1372647
+  },
+  {
+    "id": 197,
+    "name": "Ligue de football de wilaya",
+    "latitude": 35.9319745,
+    "longitude": 0.0905248
+  },
+  {
+    "id": 198,
+    "name": "Croissant rouge",
+    "latitude": 35.9314396,
+    "longitude": 0.0868791
+  },
+  {
+    "id": 199,
+    "name": "Salle des fêtes Massaya",
+    "latitude": 35.8836593,
+    "longitude": 0.0684183000001
+  },
+  {
+    "id": 200,
+    "name": "Cité des 50 Logements",
+    "latitude": 36.2519893,
+    "longitude": 4.0428874
+  },
+  {
+    "id": 201,
+    "name": "Salle polyvalente (Ahl el ksar)",
+    "latitude": 36.2516516,
+    "longitude": 4.0430107
+  },
+  {
+    "id": 202,
+    "name": "Salle Omnisports",
+    "latitude": 35.8602353,
+    "longitude": 5.9955345
+  },
+  {
+    "id": 203,
+    "name": "مجمع الشباب",
+    "latitude": 36.4137372,
+    "longitude": 3.3106496
+  },
+  {
+    "id": 204,
+    "name": "مقر بلدية قاوس",
+    "latitude": 36.7715308,
+    "longitude": 5.8115039
+  },
+  {
+    "id": 205,
+    "name": "الفرع البلدي بوعفرون",
+    "latitude": 36.6897918,
+    "longitude": 5.9071254
+  },
+  {
+    "id": 206,
+    "name": "Salle des fêtes Warda El Djazairia",
+    "latitude": 35.702218,
+    "longitude": -0.6234027
+  },
+  {
+    "id": 207,
+    "name": "marche de la volontariat.",
+    "latitude": 36.4659302,
+    "longitude": 7.4252776
+  },
+  {
+    "id": 212,
+    "name": "Centre des loisirs scientifiques de Blida",
+    "latitude": 36.4734183,
+    "longitude": 2.8310213
+  },
+  {
+    "id": 213,
+    "name": "دار البلدية",
+    "latitude": 36.1223658,
+    "longitude": 5.9864507
+  },
+  {
+    "id": 214,
+    "name": "Maison de jeunes",
+    "latitude": 36.5947761,
+    "longitude": 4.0072387
+  },
+  {
+    "id": 215,
+    "name": "قاعة للحفلات كعوان",
+    "latitude": 36.1890929,
+    "longitude": 5.702974
+  },
+  {
+    "id": 216,
+    "name": "Eden park reo",
+    "latitude": 35.9458681,
+    "longitude": 5.0348487
+  },
+  {
+    "id": 217,
+    "name": "SAMU SOCIAL",
+    "latitude": 35.552438,
+    "longitude": 6.1480234
+  },
+  {
+    "id": 218,
+    "name": "A.P.C",
+    "latitude": 36.201976,
+    "longitude": 1.2660745
+  },
+  {
+    "id": 220,
+    "name": "مقر بلدية تاجنانت",
+    "latitude": 36.1223305,
+    "longitude": 5.9860349
+  },
+  {
+    "id": 221,
+    "name": "Maison de jeunes دار الشباب",
+    "latitude": 36.654349,
+    "longitude": 3.0910124
+  },
+  {
+    "id": 222,
+    "name": "مركز معاقين حركيا",
+    "latitude": 35.7962201,
+    "longitude": 7.3846596
+  },
+  {
+    "id": 223,
+    "name": "الهلال الاحمر",
+    "latitude": 35.878633,
+    "longitude": 7.124644
+  },
+  {
+    "id": 224,
+    "name": "دار الشباب سعيدي جموعي",
+    "latitude": 35.790719,
+    "longitude": 7.3940596
+  },
+  {
+    "id": 227,
+    "name": "حي سوالم",
+    "latitude": 31.9365938,
+    "longitude": 5.3943459
+  },
+  {
+    "id": 229,
+    "name": "قعدة الأفراح",
+    "latitude": 35.7562741,
+    "longitude": 0.2055384
+  },
+  {
+    "id": 230,
+    "name": "معهد موسقى",
+    "latitude": 36.7291437,
+    "longitude": 3.0813401
+  },
+  {
+    "id": 232,
+    "name": "قاعة حفلات معيوف",
+    "latitude": 36.4594811,
+    "longitude": 2.8117456
+  },
+  {
+    "id": 233,
+    "name": "قاعة حفلات هدى",
+    "latitude": 36.4658503,
+    "longitude": 2.8108115
+  },
+  {
+    "id": 234,
+    "name": "مركز شباب سوف",
+    "latitude": 33.3672427,
+    "longitude": 6.8532063
+  },
+  {
+    "id": 236,
+    "name": "Salle des fêtes Mezîane",
+    "latitude": 36.6373341,
+    "longitude": 5.2446828
+  },
+  {
+    "id": 237,
+    "name": "إقامة الإصلاح",
+    "latitude": 36.7272478,
+    "longitude": 3.0335871
+  },
+  {
+    "id": 238,
+    "name": "Salle des fêtes",
+    "latitude": 36.6389847,
+    "longitude": 2.7561348
+  },
+  {
+    "id": 239,
+    "name": "Salle des fêtes Palais Saib",
+    "latitude": 36.6894875,
+    "longitude": 4.0816797
+  },
+  {
+    "id": 240,
+    "name": "Miyabrod",
+    "latitude": 34.8926502,
+    "longitude": -1.3223919
+  },
+  {
+    "id": 241,
+    "name": "Eurl Miyabrod",
+    "latitude": 34.892255,
+    "longitude": -1.3228317
+  },
+  {
+    "id": 242,
+    "name": "قاعة أعراس",
+    "latitude": 35.1994717,
+    "longitude": 4.1564467
+  },
+  {
+    "id": 243,
+    "name": "Salle des fêtes Royale",
+    "latitude": 36.5784562,
+    "longitude": 2.9114012
+  },
+  {
+    "id": 244,
+    "name": "Siège de la commune",
+    "latitude": 35.9455198,
+    "longitude": 4.6854123
+  },
+  {
+    "id": 248,
+    "name": "Salle des fêtes la rêveuse",
+    "latitude": 36.7103305,
+    "longitude": 3.2601232
+  },
+  {
+    "id": 249,
+    "name": "المركز الثقافي محمد البشير الإبراهيمي",
+    "latitude": 35.8739147,
+    "longitude": 5.0745747
+  },
+  {
+    "id": 250,
+    "name": "Centre de Loisirs Scientifique",
+    "latitude": 35.553927,
+    "longitude": 6.1603611
+  },
+  {
+    "id": 251,
+    "name": "Maison de jeunes",
+    "latitude": 33.0100319,
+    "longitude": 6.0133438
+  },
+  {
+    "id": 253,
+    "name": "Salle des fêtes",
+    "latitude": 36.8158431,
+    "longitude": 5.7467769
+  },
+  {
+    "id": 255,
+    "name": "Centre commercial",
+    "latitude": 27.6773286,
+    "longitude": -8.1344965
+  },
+  {
+    "id": 256,
+    "name": "مجمع التبريد بيق إندكس",
+    "latitude": 27.6562378,
+    "longitude": -8.1294351
+  },
+  {
+    "id": 258,
+    "name": "Salle des fêtes el afrah tinhinan",
+    "latitude": 36.8012486,
+    "longitude": 3.0373989
+  },
+  {
+    "id": 259,
+    "name": "مدرسة الشبان المكفوفين",
+    "latitude": 36.7320856,
+    "longitude": 2.9931685
+  },
+  {
+    "id": 260,
+    "name": "الهزة شوادن",
+    "latitude": 28.0436888,
+    "longitude": 9.5866019
+  },
+  {
+    "id": 261,
+    "name": "Dar el saada",
+    "latitude": 36.7563787,
+    "longitude": 3.2253231
+  },
+  {
+    "id": 263,
+    "name": "دار البلدية",
+    "latitude": 34.8973105,
+    "longitude": 2.3101032
+  },
+  {
+    "id": 264,
+    "name": "دار الشباب maison de jeune",
+    "latitude": 36.0397191,
+    "longitude": 6.5685615
+  },
+  {
+    "id": 266,
+    "name": "Salle des fêtes Seboui",
+    "latitude": 35.0793934,
+    "longitude": -1.8388809
+  },
+  {
+    "id": 267,
+    "name": "Salle des fêtes Lalla Maghnia",
+    "latitude": 35.3263425,
+    "longitude": -1.12267
+  },
+  {
+    "id": 268,
+    "name": "Maison de jeunes",
+    "latitude": 35.9612101,
+    "longitude": 0.1014657
+  },
+  {
+    "id": 269,
+    "name": "Salle de sport",
+    "latitude": 36.2356696,
+    "longitude": 1.2459056
+  },
+  {
+    "id": 270,
+    "name": "Maison de jeunes",
+    "latitude": 35.1637597,
+    "longitude": -0.6935784
+  },
+  {
+    "id": 271,
+    "name": "Salle Omnisport",
+    "latitude": 35.2587467,
+    "longitude": 7.7606579
+  },
+  {
+    "id": 272,
+    "name": "Scouts musulmans algériens الكشافة الاسلامية الجزائرية",
+    "latitude": 36.6373005,
+    "longitude": 2.7714447
+  },
+  {
+    "id": 273,
+    "name": "دار البلدية",
+    "latitude": 36.2515671,
+    "longitude": 6.5836933
+  },
+  {
+    "id": 275,
+    "name": "المجاهد صديقي إدريس",
+    "latitude": 22.7707821,
+    "longitude": 5.5445177
+  },
+  {
+    "id": 279,
+    "name": "Salle des fêtes Racha",
+    "latitude": 36.2724467,
+    "longitude": 2.7401775
+  },
+  {
+    "id": 281,
+    "name": "CAM",
+    "latitude": 36.8975264,
+    "longitude": 7.752662
+  },
+  {
+    "id": 282,
+    "name": "نادي متعدد اللغات سطيف",
+    "latitude": 36.1908634,
+    "longitude": 5.4120709
+  },
+  {
+    "id": 283,
+    "name": "دار الشباب أحمد بتشين",
+    "latitude": 36.7668461,
+    "longitude": 8.3098966
+  },
+  {
+    "id": 284,
+    "name": "مركز التكوين المهني",
+    "latitude": 35.1158589,
+    "longitude": 0.0866519
+  },
+  {
+    "id": 285,
+    "name": "Salle des fêtes Silini",
+    "latitude": 36.8616825,
+    "longitude": 6.9184275
+  },
+  {
+    "id": 286,
+    "name": "بلدية بنايرية",
+    "latitude": 36.3536118,
+    "longitude": 1.3728819
+  },
+  {
+    "id": 287,
+    "name": "Salle des fetes Alicia ZIZI",
+    "latitude": 36.6443925,
+    "longitude": 5.2242243
+  },
+  {
+    "id": 288,
+    "name": "Salle des fêtes Beldi Events",
+    "latitude": 36.6997582,
+    "longitude": 2.8067995
+  },
+  {
+    "id": 289,
+    "name": "Salle des fêtes قاعة الحفلات",
+    "latitude": 36.6389142,
+    "longitude": 2.7794565
+  },
+  {
+    "id": 290,
+    "name": "تاوريرت لمصافة",
+    "latitude": 27.43887,
+    "longitude": -0.2520215
+  },
+  {
+    "id": 291,
+    "name": "Salle des fêtes",
+    "latitude": 36.3690495,
+    "longitude": 3.8813077
+  },
+  {
+    "id": 292,
+    "name": "مركز التعليم المكثف للغات سابقا قسم الإنجليزية قاعات الدراسة",
+    "latitude": 34.8461432,
+    "longitude": 5.7488426
+  },
+  {
+    "id": 293,
+    "name": "قرية الوسطية كيمل تكوت باتنة",
+    "latitude": 35.127715,
+    "longitude": 6.4286307
+  },
+  {
+    "id": 294,
+    "name": "Salle des fêtes La Belle Terrasse",
+    "latitude": 36.7116525,
+    "longitude": 4.0592959
+  },
+  {
+    "id": 295,
+    "name": "Dar Tidjani",
+    "latitude": 34.8635839,
+    "longitude": 5.7098502
+  },
+  {
+    "id": 296,
+    "name": "Salle de conférence de l'APC",
+    "latitude": 36.128028,
+    "longitude": 5.0768153
+  },
+  {
+    "id": 298,
+    "name": "Salle des fêtes lala zohra",
+    "latitude": 35.2048754,
+    "longitude": -0.6266201
+  },
+  {
+    "id": 299,
+    "name": "سيدي لخضر بن خلوف",
+    "latitude": 36.1650304,
+    "longitude": 0.440243
+  },
+  {
+    "id": 300,
+    "name": "مسجد أبي ذر الغفاري",
+    "latitude": 36.3684232,
+    "longitude": 3.4384582
+  },
+  {
+    "id": 301,
+    "name": "دار الشباب صيفور أحمد",
+    "latitude": 36.8230357,
+    "longitude": 5.9579057
+  },
+  {
+    "id": 302,
+    "name": "مركز آفاد بولاية السمارة",
+    "latitude": 27.4925924,
+    "longitude": -7.8267459
+  },
+  {
+    "id": 305,
+    "name": "السنيترة المنظر الجميل",
+    "latitude": 36.7235489,
+    "longitude": 3.0827009
+  },
+  {
+    "id": 306,
+    "name": "كارتي شينوا، المنظر الجميل",
+    "latitude": 36.7226991,
+    "longitude": 3.0849284
+  },
+  {
+    "id": 307,
+    "name": "Salle des fêtes Razan",
+    "latitude": 35.7357271,
+    "longitude": 4.5499398
+  },
+  {
+    "id": 310,
+    "name": "الهلال الاحمر الجزائري",
+    "latitude": 34.726512,
+    "longitude": 5.3844939
+  },
+  {
+    "id": 312,
+    "name": "Community Media Trust",
+    "latitude": 34.7083185,
+    "longitude": -0.0761631999999
+  },
+  {
+    "id": 313,
+    "name": "Kisumu Yatch Club",
+    "latitude": 34.7454566,
+    "longitude": -0.1232187
+  },
+  {
+    "id": 314,
+    "name": "Mission of Love Support",
+    "latitude": 34.762695,
+    "longitude": -0.0775083
+  },
+  {
+    "id": 315,
+    "name": "Obunga Social Hall",
+    "latitude": 34.76546,
+    "longitude": -0.0809649999999
+  },
+  {
+    "id": 316,
+    "name": "United Destiny Shapers",
+    "latitude": 34.7640733,
+    "longitude": -0.1198867
+  },
+  {
+    "id": 317,
+    "name": "Agape Children's Ministry",
+    "latitude": 34.7684063,
+    "longitude": -0.0959781999999
+  },
+  {
+    "id": 318,
+    "name": "Nyalenda Vocational Training Center",
+    "latitude": 34.7693783,
+    "longitude": -0.1131867
+  },
+  {
+    "id": 319,
+    "name": "St. Edward Nyalenda Catholic Centre",
+    "latitude": 34.7703067,
+    "longitude": -0.1130433
+  },
+  {
+    "id": 320,
+    "name": "Makasembo Social Hall",
+    "latitude": 34.7692167,
+    "longitude": -0.1014483
+  },
+  {
+    "id": 321,
+    "name": "Kisumu Innovation Centre Kenya",
+    "latitude": 34.7671653,
+    "longitude": -0.0956833
+  },
+  {
+    "id": 322,
+    "name": "Manyatta Community Social Centre",
+    "latitude": 34.7816967,
+    "longitude": -0.0890717
+  },
+  {
+    "id": 323,
+    "name": "Nyaweri Deaf Centre",
+    "latitude": 34.77177,
+    "longitude": -0.09064
+  },
+  {
+    "id": 324,
+    "name": "Raila Hall",
+    "latitude": 34.767538,
+    "longitude": -0.0931701
+  },
+  {
+    "id": 325,
+    "name": "Salle des fêtes",
+    "latitude": 36.7865583,
+    "longitude": 3.2493264
+  },
+  {
+    "id": 326,
+    "name": "salle des fêtes roustomia",
+    "latitude": 36.7732387,
+    "longitude": 3.0027008
+  },
+  {
+    "id": 327,
+    "name": "salle des fêtes rostomia",
+    "latitude": 36.7729716,
+    "longitude": 3.0027714
+  },
+  {
+    "id": 329,
+    "name": "دار الشباب",
+    "latitude": 35.6473729,
+    "longitude": -0.5697036
+  },
+  {
+    "id": 330,
+    "name": "قاعة متعددة الرياضات نكروفي قويدر",
+    "latitude": 34.9022988,
+    "longitude": -1.035975
+  },
+  {
+    "id": 331,
+    "name": "CNEG",
+    "latitude": 35.7008006,
+    "longitude": -0.6441922
+  },
+  {
+    "id": 333,
+    "name": "Salle des fêtes Ysref",
+    "latitude": 36.6379974,
+    "longitude": 3.6919336
+  },
+  {
+    "id": 334,
+    "name": "Salle des fêtes Assirem",
+    "latitude": 36.7196572,
+    "longitude": 4.9614996
+  },
+  {
+    "id": 337,
+    "name": "village bel ahcen",
+    "latitude": 34.7148862,
+    "longitude": -1.5117684
+  },
+  {
+    "id": 338,
+    "name": "Maison de Jeunes",
+    "latitude": 35.3042043,
+    "longitude": -1.3851147
+  },
+  {
+    "id": 340,
+    "name": "salle des fêtes Houri",
+    "latitude": 36.3167417,
+    "longitude": 5.403471
+  },
+  {
+    "id": 350,
+    "name": "الملحقة البلدية بني مسلم",
+    "latitude": 36.8346418,
+    "longitude": 6.133398
+  },
+  {
+    "id": 354,
+    "name": "المركز الثقافي الشهيد سعيود بوجمعة",
+    "latitude": 36.7087865,
+    "longitude": 6.2035276
+  },
+  {
+    "id": 356,
+    "name": "الفرع البلدي جيمار",
+    "latitude": 36.8029442,
+    "longitude": 5.9473666
+  },
+  {
+    "id": 357,
+    "name": "الفرع البلدي المنازل أولاد عسكر",
+    "latitude": 36.6450681,
+    "longitude": 6.0624631
+  }
+]
