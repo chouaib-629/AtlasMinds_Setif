@@ -117,10 +117,10 @@ export default function LivestreamsPage() {
           {/* Header */}
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-semibold text-gray-900">
                 Livestreams Management
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-gray-600 mt-1">
                 Create and manage livestreams for events and activities
               </p>
             </div>
@@ -145,30 +145,30 @@ export default function LivestreamsPage() {
           {/* Livestreams List */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
           ) : livestreams.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600 dark:text-gray-400">No livestreams found</p>
+            <div className="bg-white rounded-lg shadow p-12 text-center">
+              <p className="text-gray-600">No livestreams found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {livestreams.map((livestream) => (
                 <div
                   key={livestream.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6"
+                  className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         {livestream.title}
                       </h3>
                       <div className="flex items-center gap-2 mt-2">
                         <span
                           className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${
                             livestream.is_live
-                              ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 animate-pulse'
-                              : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                              ? 'bg-red-100 text-red-800 animate-pulse'
+                              : 'bg-gray-100 text-gray-800'
                           }`}
                         >
                           {livestream.is_live && <Radio className="h-3 w-3 fill-current" />}
@@ -194,24 +194,24 @@ export default function LivestreamsPage() {
                     </div>
                   </div>
                   {livestream.description && (
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    <p className="text-gray-600 text-sm mb-4">
                       {livestream.description}
                     </p>
                   )}
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500 dark:text-gray-400">URL:</span>
+                      <span className="text-gray-500">URL:</span>
                       <a
                         href={livestream.stream_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-600 dark:text-indigo-400 hover:underline truncate"
+                        className="text-indigo-600 hover:underline truncate"
                       >
                         {livestream.stream_url}
                       </a>
                     </div>
                     {livestream.event_id && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-gray-500">
                         Event ID: {livestream.event_id}
                       </p>
                     )}
@@ -224,13 +224,13 @@ export default function LivestreamsPage() {
           {/* Modal */}
           {showModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {editingLivestream ? 'Edit Livestream' : 'Create Livestream'}
                 </h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Title
                     </label>
                     <input
@@ -238,22 +238,22 @@ export default function LivestreamsPage() {
                       required
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Description
                     </label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       rows={3}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Stream URL
                     </label>
                     <input
@@ -261,18 +261,18 @@ export default function LivestreamsPage() {
                       required
                       value={formData.stream_url}
                       onChange={(e) => setFormData({ ...formData, stream_url: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       placeholder="https://..."
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Event (Optional)
                     </label>
                     <select
                       value={formData.event_id}
                       onChange={(e) => setFormData({ ...formData, event_id: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                     >
                       <option value="">No Event</option>
                       {events.map((event) => (
@@ -290,7 +290,7 @@ export default function LivestreamsPage() {
                       onChange={(e) => setFormData({ ...formData, is_live: e.target.checked })}
                       className="mr-2"
                     />
-                    <label htmlFor="is_live" className="text-sm text-gray-700 dark:text-gray-300">
+                    <label htmlFor="is_live" className="text-sm text-gray-700">
                       Currently Live
                     </label>
                   </div>
@@ -307,7 +307,7 @@ export default function LivestreamsPage() {
                         setShowModal(false);
                         setEditingLivestream(null);
                       }}
-                      className="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                      className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300"
                     >
                       Cancel
                     </button>

@@ -86,13 +86,13 @@ export default function PaymentsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200';
+        return 'bg-green-100 text-green-800';
       case 'failed':
-        return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200';
+        return 'bg-red-100 text-red-800';
       case 'refunded':
-        return 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200';
+        return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200';
+        return 'bg-yellow-100 text-yellow-800';
     }
   };
 
@@ -121,16 +121,16 @@ export default function PaymentsPage() {
           {/* Header */}
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-semibold text-gray-900">
                 Payment History
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-gray-600 mt-1">
                 Track and manage payments for symbolic price events
               </p>
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <Filter className="h-4 w-4" />
               Filters
@@ -139,86 +139,86 @@ export default function PaymentsPage() {
 
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Payments</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                  <p className="text-sm text-gray-600">Total Payments</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">
                     {stats.total}
                   </p>
                 </div>
-                <DollarSign className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+                <DollarSign className="h-8 w-8 text-indigo-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
-                  <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
+                  <p className="text-sm text-gray-600">Completed</p>
+                  <p className="text-2xl font-bold text-green-600 mt-1">
                     {stats.completed}
                   </p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Pending</p>
-                  <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
+                  <p className="text-sm text-gray-600">Pending</p>
+                  <p className="text-2xl font-bold text-yellow-600 mt-1">
                     {stats.pending}
                   </p>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
+                <Clock className="h-8 w-8 text-yellow-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Failed</p>
-                  <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
+                  <p className="text-sm text-gray-600">Failed</p>
+                  <p className="text-2xl font-bold text-red-600 mt-1">
                     {stats.failed}
                   </p>
                 </div>
-                <XCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+                <XCircle className="h-8 w-8 text-red-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Refunded</p>
-                  <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">
+                  <p className="text-sm text-gray-600">Refunded</p>
+                  <p className="text-2xl font-bold text-orange-600 mt-1">
                     {stats.refunded}
                   </p>
                 </div>
-                <RefreshCw className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                <RefreshCw className="h-8 w-8 text-orange-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</p>
-                  <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
+                  <p className="text-sm text-gray-600">Total Revenue</p>
+                  <p className="text-2xl font-bold text-indigo-600 mt-1">
                     {(stats.totalAmount || 0).toFixed(2)} DA
                   </p>
                 </div>
-                <DollarSign className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+                <DollarSign className="h-8 w-8 text-indigo-600" />
               </div>
             </div>
           </div>
 
           {/* Filters */}
           {showFilters && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Event
                   </label>
                   <select
                     value={filters.event_id}
                     onChange={(e) => setFilters({ ...filters, event_id: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
                     <option value="">All Events</option>
                     {events.map((event) => (
@@ -229,13 +229,13 @@ export default function PaymentsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Status
                   </label>
                   <select
                     value={filters.status}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
                     <option value="">All Statuses</option>
                     <option value="pending">Pending</option>
@@ -245,31 +245,31 @@ export default function PaymentsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Start Date
                   </label>
                   <input
                     type="date"
                     value={filters.start_date}
                     onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     End Date
                   </label>
                   <input
                     type="date"
                     value={filters.end_date}
                     onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   />
                 </div>
               </div>
               <button
                 onClick={() => setFilters({ event_id: '', status: '', start_date: '', end_date: '' })}
-                className="mt-4 text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                className="mt-4 text-sm text-indigo-600 hover:text-indigo-700"
               >
                 Clear Filters
               </button>
@@ -279,74 +279,74 @@ export default function PaymentsPage() {
           {/* Payments Table */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <div className="inline-block rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
           ) : payments.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
+            <div className="bg-white rounded-lg shadow p-12 text-center">
               <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 dark:text-gray-400">No payments found</p>
+              <p className="text-gray-600">No payments found</p>
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Payment ID
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Participant
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Event
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Amount
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Payment Method
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Transaction ID
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Date
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="bg-white divide-y divide-gray-200">
                     {payments.map((payment) => (
-                      <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <tr key={payment.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          <div className="text-sm font-medium text-gray-900">
                             #{payment.id}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          <div className="text-sm font-medium text-gray-900">
                             {payment.user.prenom} {payment.user.nom}
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                          <div className="text-xs text-gray-500">
                             {payment.user.email}
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900 dark:text-white">
+                          <div className="text-sm text-gray-900">
                             {payment.event.title}
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                          <div className="text-xs text-gray-500">
                             {new Date(payment.event.date).toLocaleDateString()}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                          <div className="text-sm font-semibold text-gray-900">
                             {typeof payment.amount === 'number' 
                               ? payment.amount.toFixed(2) 
                               : (parseFloat(payment.amount) || 0).toFixed(2)} DA
@@ -361,17 +361,17 @@ export default function PaymentsPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-gray-500">
                             {payment.payment_method || '-'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-mono text-gray-500 dark:text-gray-400">
+                          <div className="text-sm font-mono text-gray-500">
                             {payment.transaction_id || '-'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-gray-500">
                             {payment.paid_at
                               ? new Date(payment.paid_at).toLocaleDateString()
                               : new Date(payment.created_at).toLocaleDateString()}
@@ -382,14 +382,14 @@ export default function PaymentsPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleStatusUpdate(payment.id, 'completed')}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                                className="text-green-600 hover:text-green-900"
                                 title="Mark as Completed"
                               >
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleStatusUpdate(payment.id, 'failed')}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                className="text-red-600 hover:text-red-900"
                                 title="Mark as Failed"
                               >
                                 <XCircle className="h-4 w-4" />
@@ -399,7 +399,7 @@ export default function PaymentsPage() {
                           {payment.status === 'completed' && (
                             <button
                               onClick={() => handleStatusUpdate(payment.id, 'refunded')}
-                              className="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300"
+                              className="text-orange-600 hover:text-orange-900"
                               title="Mark as Refunded"
                             >
                               <RefreshCw className="h-4 w-4" />

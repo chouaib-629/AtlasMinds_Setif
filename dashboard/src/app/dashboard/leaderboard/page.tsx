@@ -46,10 +46,10 @@ export default function LeaderboardPage() {
   };
 
   const getRankColor = (rank: number) => {
-    if (rank === 1) return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700';
-    if (rank === 2) return 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600';
-    if (rank === 3) return 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700';
-    return 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700';
+    if (rank === 1) return 'bg-yellow-100 border-yellow-300';
+    if (rank === 2) return 'bg-gray-100 border-gray-300';
+    if (rank === 3) return 'bg-orange-100 border-orange-300';
+    return 'bg-white border-gray-200';
   };
 
   return (
@@ -58,10 +58,10 @@ export default function LeaderboardPage() {
         <div className="space-y-6">
           {/* Header */}
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-2xl font-semibold text-gray-900">
               Leaderboard
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-gray-600 mt-1">
               {isSuperAdmin
                 ? 'View global, Algeria-wide, or wilaya-specific leaderboards'
                 : 'View leaderboard for your youth house participants'}
@@ -69,14 +69,14 @@ export default function LeaderboardPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg shadow p-4">
             <div className="flex gap-4 flex-wrap">
               {isSuperAdmin && (
                 <>
                   <select
                     value={scope}
                     onChange={(e) => setScope(e.target.value as 'global' | 'algeria' | 'wilaya')}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
                     <option value="global">Global Leaderboard</option>
                     <option value="algeria">Algeria Leaderboard</option>
@@ -88,7 +88,7 @@ export default function LeaderboardPage() {
                       placeholder="Enter Wilaya Name"
                       value={wilayaFilter}
                       onChange={(e) => setWilayaFilter(e.target.value)}
-                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                     />
                   )}
                 </>
@@ -99,63 +99,63 @@ export default function LeaderboardPage() {
           {/* Leaderboard */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
           ) : leaderboard.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600 dark:text-gray-400">No leaderboard data available</p>
+            <div className="bg-white rounded-lg shadow p-12 text-center">
+              <p className="text-gray-600">No leaderboard data available</p>
             </div>
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Rank
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Participant
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Wilaya
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Score
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Events Attended
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="bg-white divide-y divide-gray-200">
                     {leaderboard.map((entry) => (
                       <tr
                         key={entry.user_id}
-                        className={`hover:bg-gray-50 dark:hover:bg-gray-700 border-l-4 ${getRankColor(entry.rank)}`}
+                        className={`border-l-4 ${getRankColor(entry.rank)}`}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-lg font-bold text-gray-900 dark:text-white">
+                          <div className="flex items-center text-lg font-bold text-gray-900">
                             {getRankIcon(entry.rank)}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          <div className="text-sm font-medium text-gray-900">
                             {entry.prenom} {entry.nom}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-gray-500">
                             {entry.wilaya}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
+                          <div className="text-lg font-semibold text-indigo-600">
                             {entry.score} pts
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-gray-500">
                             {entry.attended_events_count} events
                           </div>
                         </td>
