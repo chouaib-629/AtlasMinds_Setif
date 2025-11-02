@@ -33,6 +33,22 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
+// Admin routes (with /admin prefix)
+Route::prefix('admin')->group(function () {
+    // Public admin routes
+    Route::post('/register', [\App\Http\Controllers\AdminAuthController::class, 'register']);
+    Route::post('/login', [\App\Http\Controllers\AdminAuthController::class, 'login']);
+    Route::post('/forgot-password', [\App\Http\Controllers\AdminAuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [\App\Http\Controllers\AdminAuthController::class, 'resetPassword']);
+
+    // Protected admin routes
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/me', [\App\Http\Controllers\AdminAuthController::class, 'me']);
+        Route::post('/logout', [\App\Http\Controllers\AdminAuthController::class, 'logout']);
+        Route::post('/refresh', [\App\Http\Controllers\AdminAuthController::class, 'refresh']);
+    });
+});
+
 // Example public API route
 Route::get('/test', function () {
     return response()->json([
