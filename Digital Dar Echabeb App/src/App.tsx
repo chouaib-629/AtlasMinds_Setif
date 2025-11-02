@@ -151,16 +151,19 @@ function AppContent() {
     setAppState({ screen: 'main', activeTab: tab });
   };
 
-  const handleBookingComplete = (qrCode: string) => {
+  const handleBookingComplete = (qrCode: string, activityData?: any) => {
+    // Get user info dynamically
+    const userName = user?.name || (user?.nom && user?.prenom ? `${user.nom} ${user.prenom}` : user?.email || 'User');
+    
     setAppState({
       screen: 'qr-ticket',
       qrData: {
         qrCode,
-        activityTitle: 'ورشة البرمجة للمبتدئين',
-        activityDate: '2025-11-08',
-        activityTime: '14:00',
-        centerName: 'دار الشباب المركزي',
-        userName: 'أحمد محمد',
+        activityTitle: activityData?.title || 'ورشة البرمجة للمبتدئين',
+        activityDate: activityData?.date || new Date().toISOString().split('T')[0],
+        activityTime: activityData?.time || '14:00',
+        centerName: activityData?.center_name || 'دار الشباب المركزي',
+        userName: userName,
       },
     });
   };
@@ -284,6 +287,7 @@ function AppContent() {
             activityId={appState.activityId}
             onBack={() => handleBackToMain('home')}
             onBookingComplete={handleBookingComplete}
+            onCenterClick={handleCenterClick}
           />
         )}
 

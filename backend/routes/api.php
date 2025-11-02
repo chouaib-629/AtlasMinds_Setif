@@ -28,6 +28,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::put('/preferences', [AuthController::class, 'updatePreferences']);
     
+    // Activity registration/join endpoints
+    Route::post('/educations/{id}/join', [\App\Http\Controllers\Api\EducationController::class, 'join']);
+    Route::post('/clubs/{id}/join', [\App\Http\Controllers\Api\ClubController::class, 'join']);
+    Route::post('/direct-activities/{id}/join', [\App\Http\Controllers\Api\DirectActivityController::class, 'join']);
+    
     // Example protected route
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -87,79 +92,57 @@ Route::prefix('admin')->group(function () {
         // Event Inscriptions routes
         Route::get('/event-inscriptions', [\App\Http\Controllers\Admin\EventInscriptionController::class, 'index']);
         Route::patch('/event-inscriptions/{id}/status', [\App\Http\Controllers\Admin\EventInscriptionController::class, 'updateStatus']);
+
+        // Education Inscriptions routes
+        Route::get('/education-inscriptions', [\App\Http\Controllers\Admin\EducationInscriptionController::class, 'index']);
+        Route::patch('/education-inscriptions/{id}/status', [\App\Http\Controllers\Admin\EducationInscriptionController::class, 'updateStatus']);
+
+        // Club Inscriptions routes
+        Route::get('/club-inscriptions', [\App\Http\Controllers\Admin\ClubInscriptionController::class, 'index']);
+        Route::patch('/club-inscriptions/{id}/status', [\App\Http\Controllers\Admin\ClubInscriptionController::class, 'updateStatus']);
+
+        // Direct Activity Inscriptions routes
+        Route::get('/direct-activity-inscriptions', [\App\Http\Controllers\Admin\DirectActivityInscriptionController::class, 'index']);
+        Route::patch('/direct-activity-inscriptions/{id}/status', [\App\Http\Controllers\Admin\DirectActivityInscriptionController::class, 'updateStatus']);
+
+        // Education CRUD routes
+        Route::get('/educations', [\App\Http\Controllers\Admin\EducationController::class, 'index']);
+        Route::post('/educations', [\App\Http\Controllers\Admin\EducationController::class, 'store']);
+        Route::get('/educations/{id}', [\App\Http\Controllers\Admin\EducationController::class, 'show']);
+        Route::put('/educations/{id}', [\App\Http\Controllers\Admin\EducationController::class, 'update']);
+        Route::delete('/educations/{id}', [\App\Http\Controllers\Admin\EducationController::class, 'destroy']);
+
+        // Club CRUD routes
+        Route::get('/clubs', [\App\Http\Controllers\Admin\ClubController::class, 'index']);
+        Route::post('/clubs', [\App\Http\Controllers\Admin\ClubController::class, 'store']);
+        Route::get('/clubs/{id}', [\App\Http\Controllers\Admin\ClubController::class, 'show']);
+        Route::put('/clubs/{id}', [\App\Http\Controllers\Admin\ClubController::class, 'update']);
+        Route::delete('/clubs/{id}', [\App\Http\Controllers\Admin\ClubController::class, 'destroy']);
+
+        // Direct Activity CRUD routes
+        Route::get('/direct-activities', [\App\Http\Controllers\Admin\DirectActivityController::class, 'index']);
+        Route::post('/direct-activities', [\App\Http\Controllers\Admin\DirectActivityController::class, 'store']);
+        Route::get('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'show']);
+        Route::put('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'update']);
+        Route::delete('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'destroy']);
     });
 });
 
 // Public routes for mobile app - Education, Clubs, Direct Activities
 Route::get('/educations', [\App\Http\Controllers\Api\EducationController::class, 'index']);
 Route::get('/educations/featured', [\App\Http\Controllers\Api\EducationController::class, 'featured']);
+Route::get('/educations/{id}', [\App\Http\Controllers\Api\EducationController::class, 'show']);
 
 Route::get('/clubs', [\App\Http\Controllers\Api\ClubController::class, 'index']);
 Route::get('/clubs/featured', [\App\Http\Controllers\Api\ClubController::class, 'featured']);
+Route::get('/clubs/{id}', [\App\Http\Controllers\Api\ClubController::class, 'show']);
 
 Route::get('/direct-activities', [\App\Http\Controllers\Api\DirectActivityController::class, 'index']);
 Route::get('/direct-activities/featured', [\App\Http\Controllers\Api\DirectActivityController::class, 'featured']);
+Route::get('/direct-activities/{id}', [\App\Http\Controllers\Api\DirectActivityController::class, 'show']);
 
-// Combined endpoint for home screen
-Route::get('/home-activities', function () {
-    $educations = \App\Models\Education::where('is_active', true)
-        ->where('is_featured', true)
-        ->orderBy('date', 'asc')
-        ->limit(3)
-        ->get()
-        ->map(function ($education) {
-            return [
-                'id' => $education->id,
-                'title' => $education->title,
-                'category' => $education->category,
-                'date' => $education->date->format('M d, Y'),
-                'participants' => $education->participants,
-                'image_url' => $education->image_url,
-            ];
-        });
-
-    $clubs = \App\Models\Club::where('is_active', true)
-        ->where('is_featured', true)
-        ->orderBy('date', 'asc')
-        ->limit(3)
-        ->get()
-        ->map(function ($club) {
-            return [
-                'id' => $club->id,
-                'title' => $club->title,
-                'category' => $club->category,
-                'date' => $club->date->format('M d, Y'),
-                'participants' => $club->participants,
-                'image_url' => $club->image_url,
-            ];
-        });
-
-    $directActivities = \App\Models\DirectActivity::where('is_active', true)
-        ->where('is_featured', true)
-        ->orderBy('date', 'asc')
-        ->limit(3)
-        ->get()
-        ->map(function ($activity) {
-            return [
-                'id' => $activity->id,
-                'title' => $activity->title,
-                'category' => $activity->category,
-                'date' => $activity->date->format('M d, Y'),
-                'participants' => $activity->participants,
-                'image_url' => $activity->image_url,
-            ];
-        });
-
-    return response()->json([
-        'success' => true,
-        'data' => [
-            'educations' => $educations,
-            'clubs' => $clubs,
-            'direct_activities' => $directActivities,
-            'featured_activities' => $educations->concat($clubs)->concat($directActivities)->shuffle()->take(3),
-        ],
-    ]);
-});
+// Home screen endpoint
+Route::get('/home', [\App\Http\Controllers\Api\HomeController::class, 'index']);
 
 // Example public API route
 Route::get('/test', function () {

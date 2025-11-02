@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../lib/context';
 import { mockActivities } from '../lib/data';
+import { homeService, HomeEvent, LearningProgram, CommunityProject } from '../lib/api';
 import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
@@ -16,158 +17,41 @@ interface HomeScreenProps {
 
 export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick }: HomeScreenProps) {
   const { t, language } = useApp();
+  const [eventsData, setEventsData] = useState<HomeEvent[]>([]);
+  const [learningData, setLearningData] = useState<LearningProgram[]>([]);
+  const [communityData, setCommunityData] = useState<CommunityProject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Live & Upcoming Events Data
-  const eventsData = [
-    {
-      id: 'e1',
-      title: 'ندوة القيادة الشبابية',
-      description: 'لقاء تفاعلي مع قادة محليين ومتحدثين ملهمين',
-      category: 'social',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 123 456',
-      date: '2025-11-15',
-      time: '18:00',
-      status: 'live',
-      image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'e2',
-      title: 'ورشة التصميم الجرافيكي',
-      description: 'تعلم أساسيات التصميم باستخدام Adobe Photoshop',
-      category: 'learning',
-      centerName: 'دار الشباب وهران',
-      centerId: '2',
-      organizerContact: '+213 555 234 567',
-      date: '2025-11-17',
-      time: '15:00',
-      status: 'upcoming',
-      image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'e3',
-      title: 'جلسة تطوير الذات',
-      description: 'استراتيجيات النجاح والتطوير الشخصي',
-      category: 'social',
-      centerName: 'دار الشباب قسنطينة',
-      centerId: '3',
-      organizerContact: '+213 555 345 678',
-      date: '2025-11-12',
-      time: '19:00',
-      status: 'upcoming',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'e4',
-      title: 'البرمجة بلغة Python',
-      description: 'دورة متقدمة في البرمجة للمبتدئين',
-      category: 'learning',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 456 789',
-      date: '2025-11-20',
-      time: '16:00',
-      status: 'upcoming',
-      image: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=600&h=400&fit=crop',
-    },
-  ];
+  // Fetch home data from API
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const data = await homeService.getHomeData();
+        setEventsData(data.events || []);
+        setLearningData(data.learning || []);
+        setCommunityData(data.community || []);
+      } catch (err) {
+        console.error('Failed to fetch home data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load home data');
+        // Fallback to empty arrays on error
+        setEventsData([]);
+        setLearningData([]);
+        setCommunityData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Learning Programs Data
-  const learningData = [
-    {
-      id: 'l1',
-      title: 'برنامج القيادة الشبابية',
-      description: 'برنامج متقدم لتطوير مهارات القيادة والإدارة',
-      duration: '6 أسابيع',
-      level: 'متقدم',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 111 222',
-      image: 'https://images.unsplash.com/photo-1759523146335-0069847ceb16?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'l2',
-      title: 'مهارات التواصل الفعال',
-      description: 'تعلم فن التواصل والتأثير في الآخرين',
-      duration: '4 أسابيع',
-      level: 'مبتدئ',
-      centerName: 'دار الشباب وهران',
-      centerId: '2',
-      organizerContact: '+213 555 222 333',
-      image: 'https://images.unsplash.com/photo-1545886082-e66c6b9e011a?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'l3',
-      title: 'إدارة المشاريع الحديثة',
-      description: 'أسس إدارة المشاريع وأفضل الممارسات العالمية',
-      duration: '8 أسابيع',
-      level: 'متوسط',
-      centerName: 'دار الشباب قسنطينة',
-      centerId: '3',
-      organizerContact: '+213 555 333 444',
-      image: 'https://images.unsplash.com/photo-1758599669406-d5179ccefcb9?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'l4',
-      title: 'التسويق الرقمي للمبتدئين',
-      description: 'استراتيجيات التسويق الرقمي ووسائل التواصل الاجتماعي',
-      duration: '5 أسابيع',
-      level: 'مبتدئ',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 444 555',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
-    },
-  ];
+    fetchHomeData();
+  }, []);
 
-  // Community Projects Data
-  const communityData = [
-    {
-      id: 'c1',
-      title: 'مختبر الروبوتات للشباب',
-      description: 'تعلم البرمجة وبناء روبوتات بسيطة في مختبر مجهز',
-      votes: 142,
-      targetAudience: 'الشباب 15-25 سنة',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 666 777',
-      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'c2',
-      title: 'مركز الفنون والحرف اليدوية',
-      description: 'تعليم الفنون التقليدية الجزائرية والحرف اليدوية',
-      votes: 98,
-      targetAudience: 'جميع الأعمار',
-      centerName: 'دار الشباب وهران',
-      centerId: '2',
-      organizerContact: '+213 555 777 888',
-      image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'c3',
-      title: 'حديقة حضرية مجتمعية',
-      description: 'مساحة خضراء لزراعة الخضروات وتعزيز الوعي البيئي',
-      votes: 87,
-      targetAudience: 'الشباب والعائلات',
-      centerName: 'دار الشباب قسنطينة',
-      centerId: '3',
-      organizerContact: '+213 555 888 999',
-      image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&h=400&fit=crop',
-    },
-    {
-      id: 'c4',
-      title: 'أكاديمية الرياضات الإلكترونية',
-      description: 'تدريب احترافي للرياضات الإلكترونية مع معدات حديثة',
-      votes: 156,
-      targetAudience: 'الشباب 14-30 سنة',
-      centerName: 'دار الشباب المركزي',
-      centerId: '1',
-      organizerContact: '+213 555 999 000',
-      image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&h=400&fit=crop',
-    },
-  ];
+  // Use API data, with empty arrays as fallback
+  const displayEvents = eventsData.length > 0 ? eventsData : [];
+  const displayLearning = learningData.length > 0 ? learningData : [];
+  const displayCommunity = communityData.length > 0 ? communityData : [];
 
   const handleContactOrganizer = (contact: string) => {
     window.open(`tel:${contact}`, '_blank');
@@ -215,7 +99,29 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
       </div>
 
       <div className="space-y-6 py-6 overflow-x-hidden">
+        {/* Loading State */}
+        {isLoading && (
+          <div className="px-4 py-8 text-center text-muted-foreground">
+            <p>{t('جاري التحميل...', 'Loading...')}</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="px-4 py-8 text-center">
+            <p className="text-destructive text-sm mb-2">{error}</p>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => window.location.reload()}
+            >
+              {t('إعادة المحاولة', 'Retry')}
+            </Button>
+          </div>
+        )}
+
         {/* Section 1: Live & Upcoming Events */}
+        {!isLoading && (
         <div>
           <div className="flex items-center justify-between px-4 mb-3 gap-2">
             <h2 className="flex items-center gap-2 text-lg font-semibold flex-1 min-w-0">
@@ -236,9 +142,10 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
             </Button>
           </div>
           
+          {displayEvents.length > 0 ? (
           <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
             <div className="flex gap-4 pb-4 w-max sm:w-full">
-              {eventsData.map((event) => (
+              {displayEvents.map((event) => (
                 <Card 
                   key={event.id} 
                   className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -306,9 +213,16 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
               ))}
             </div>
           </div>
+          ) : (
+            <div className="px-4 py-4 text-center text-muted-foreground text-sm">
+              {t('لا توجد أنشطة متاحة حالياً', 'No events available at the moment')}
+            </div>
+          )}
         </div>
+        )}
 
         {/* Section 2: Learning Programs */}
+        {!isLoading && (
         <div>
           <div className="flex items-center justify-between px-4 mb-3">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -329,9 +243,10 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
             </Button>
           </div>
           
+          {displayLearning.length > 0 ? (
           <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
             <div className="flex gap-4 pb-4 w-max sm:w-full">
-              {learningData.map((program) => (
+              {displayLearning.map((program) => (
                 <Card 
                   key={program.id} 
                   className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -390,9 +305,16 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
               ))}
             </div>
           </div>
+          ) : (
+            <div className="px-4 py-4 text-center text-muted-foreground text-sm">
+              {t('لا توجد برامج تعليمية متاحة حالياً', 'No learning programs available at the moment')}
+            </div>
+          )}
         </div>
+        )}
 
         {/* Section 3: Community Projects */}
+        {!isLoading && (
         <div>
           <div className="flex items-center justify-between px-4 mb-3">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -413,9 +335,10 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
             </Button>
           </div>
           
+          {displayCommunity.length > 0 ? (
           <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
             <div className="flex gap-4 pb-4 w-max sm:w-full">
-              {communityData.map((project) => (
+              {displayCommunity.map((project) => (
                 <Card 
                   key={project.id} 
                   className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -475,7 +398,13 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
               ))}
             </div>
           </div>
+          ) : (
+            <div className="px-4 py-4 text-center text-muted-foreground text-sm">
+              {t('لا توجد مشاريع مجتمعية متاحة حالياً', 'No community projects available at the moment')}
+            </div>
+          )}
         </div>
+        )}
       </div>
     </div>
   );

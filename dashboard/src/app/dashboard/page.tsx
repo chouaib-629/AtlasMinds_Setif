@@ -365,58 +365,6 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             </ChartCard>
           </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="space-y-3">
-                <a
-                  href="/dashboard/events"
-                  className="flex items-center p-4 bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-lg hover:from-indigo-100 hover:to-indigo-200 transition-all duration-200 group"
-                >
-                  <Calendar className="h-5 w-5 mr-3 text-indigo-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-gray-900 font-medium">Manage Events & Activities</span>
-                </a>
-                <a
-                  href="/dashboard/participants"
-                  className="flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg hover:from-blue-100 hover:to-blue-200 transition-all duration-200 group"
-                >
-                  <Users className="h-5 w-5 mr-3 text-blue-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-gray-900 font-medium">View Participants</span>
-                </a>
-                <a
-                  href="/dashboard/leaderboard"
-                  className="flex items-center p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg hover:from-yellow-100 hover:to-yellow-200 transition-all duration-200 group"
-                >
-                  <Trophy className="h-5 w-5 mr-3 text-yellow-600 group-hover:scale-110 transition-transform" />
-                  <span className="text-gray-900 font-medium">View Leaderboard</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Role Information</h3>
-              <div className="space-y-3">
-                <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Your Role</p>
-                  <p className="font-semibold text-gray-900">
-                    {isSuperAdmin ? 'Super Admin' : 'Youth House Director'}
-                  </p>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Access Level</p>
-                  <p className="font-semibold text-gray-900">
-                    {isSuperAdmin ? 'National & Virtual House' : 'Local Youth House'}
-                  </p>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Email</p>
-                  <p className="font-semibold text-gray-900">{admin?.email}</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </DashboardLayout>
     </ProtectedRoute>

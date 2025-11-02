@@ -3,34 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\EventInscription;
-use App\Models\Event;
+use App\Models\ClubInscription;
+use App\Models\Club;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class EventInscriptionController extends Controller
+class ClubInscriptionController extends Controller
 {
     /**
-     * Display a listing of event inscriptions
+     * Display a listing of club inscriptions
      */
     public function index(Request $request)
     {
         $admin = Auth::guard('admin')->user();
         
-        $query = EventInscription::with(['user', 'event.admin']);
+        $query = ClubInscription::with(['user', 'club.admin']);
 
-        // Filter by event_id
-        if ($request->has('event_id') && $request->event_id) {
-            $query->where('event_id', $request->event_id);
+        // Filter by club_id
+        if ($request->has('club_id') && $request->club_id) {
+            $query->where('club_id', $request->club_id);
             
             // Role-based check
             if (!$admin->is_super_admin) {
-                $event = Event::find($request->event_id);
-                if (!$event || $event->admin_id !== $admin->id) {
+                $club = Club::find($request->club_id);
+                if (!$club || $club->admin_id !== $admin->id) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Accès non autorisé à cet événement',
+                        'message' => 'Accès non autorisé à ce club',
                     ], 403);
                 }
             }
@@ -43,8 +43,8 @@ class EventInscriptionController extends Controller
 
         // Role-based filtering
         if (!$admin->is_super_admin) {
-            // Regular admin can only see inscriptions for their events
-            $query->whereHas('event', function ($q) use ($admin) {
+            // Regular admin can only see inscriptions for their clubs
+            $query->whereHas('club', function ($q) use ($admin) {
                 $q->where('admin_id', $admin->id);
             });
         }
@@ -66,13 +66,13 @@ class EventInscriptionController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         
-        $inscription = EventInscription::with('event')->findOrFail($id);
+        $inscription = ClubInscription::with('club')->findOrFail($id);
 
         // Role-based access check
-        if (!$admin->is_super_admin && $inscription->event->admin_id !== $admin->id) {
+        if (!$admin->is_super_admin && $inscription->club->admin_id !== $admin->id) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez modifier que les inscriptions de vos événements',
+                'message' => 'Vous ne pouvez modifier que les inscriptions de vos clubs',
             ], 403);
         }
 
@@ -91,14 +91,27 @@ class EventInscriptionController extends Controller
             ], 422);
         }
 
+        $oldStatus = $inscription->status;
         $inscription->status = $request->status;
         $inscription->save();
+
+        // Update participants count if status changed to/from approved
+        $club = $inscription->club;
+        if ($oldStatus !== 'approved' && $request->status === 'approved') {
+            // Increment
+            $club->participants = $club->inscriptions()->where('status', 'approved')->count();
+            $club->save();
+        } elseif ($oldStatus === 'approved' && $request->status !== 'approved') {
+            // Decrement
+            $club->participants = $club->inscriptions()->where('status', 'approved')->count();
+            $club->save();
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Statut de l\'inscription mis à jour avec succès',
             'data' => [
-                'inscription' => $inscription->load(['user', 'event.admin']),
+                'inscription' => $inscription->load(['user', 'club.admin']),
             ],
         ]);
     }
