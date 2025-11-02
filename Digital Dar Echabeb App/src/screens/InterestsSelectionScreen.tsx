@@ -142,7 +142,7 @@ export function InterestsSelectionScreen({ onComplete }: InterestsSelectionScree
           >
             {isSaving ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 mr-2 " />
                 {t('جاري الحفظ...', 'Saving...', 'Enregistrement...')}
               </>
             ) : (

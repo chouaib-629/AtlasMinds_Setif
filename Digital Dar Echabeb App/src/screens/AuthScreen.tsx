@@ -281,7 +281,7 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
               <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-4 w-4 mr-2 " />
                     {t('جاري تسجيل الدخول...', 'Logging in...')}
                   </>
                 ) : (
@@ -488,7 +488,7 @@ export function AuthScreen({ onComplete }: AuthScreenProps) {
                   <Button type="submit" className="flex-1" size="lg" disabled={isLoading}>
                     {isLoading ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Loader2 className="h-4 w-4 mr-2 " />
                         {t('جاري الإنشاء...', 'Creating...')}
                       </>
                     ) : (

@@ -175,7 +175,7 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
             >
               {isSaving ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  <Loader2 className="w-5 h-5 mr-2 " />
                   {t('جاري الحفظ...', 'Saving...', 'Enregistrement...')}
                 </>
               ) : (
