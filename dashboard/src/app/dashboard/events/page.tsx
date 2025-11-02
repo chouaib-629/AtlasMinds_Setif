@@ -108,8 +108,11 @@ export default function EventsPage() {
       });
 
       setSuggestions(eventAnalysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error analyzing event:', error);
+      // Show error message to user
+      const errorMessage = error?.message || 'Failed to get AI suggestions. You can still proceed without them.';
+      alert(errorMessage);
       // If Gemini fails, proceed with original submission
       proceedWithEventCreation(formData);
     } finally {

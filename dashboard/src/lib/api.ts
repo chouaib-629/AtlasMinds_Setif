@@ -107,6 +107,7 @@ export interface Livestream {
   title: string;
   description?: string;
   stream_url: string;
+  channel_name?: string;
   is_live: boolean;
   event_id?: number;
   youth_house_id?: number;
@@ -165,9 +166,85 @@ class ApiService {
         headers,
       });
 
-      const data = await response.json();
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      
+      // Always try to parse as JSON first, regardless of content-type
+      // Sometimes servers return JSON but with wrong content-type header
+      let data: any = {};
+      try {
+        const text = await response.text();
+        if (text.trim() === '') {
+          // Empty response - might be valid for some endpoints
+          data = {};
+        } else {
+          // Try to parse as JSON
+          try {
+            data = JSON.parse(text);
+          } catch (jsonError) {
+            // If content-type says JSON but parsing fails, or if it's HTML
+            console.error('JSON Parse Error:', jsonError);
+            console.error('Response text:', text.substring(0, 500));
+            console.error('Content-Type:', contentType);
+            console.error('Status:', response.status);
+            
+            // Check if it's an HTML error page
+            if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+              // Check if it's an authentication error (401/403)
+              if (response.status === 401 || response.status === 403) {
+                // Clear invalid token
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('admin_token');
+                  // Redirect to login after a short delay
+                  setTimeout(() => {
+                    window.location.href = '/login';
+                  }, 2000);
+                }
+                return {
+                  success: false,
+                  message: 'Your session has expired. Please log in again. Redirecting to login...',
+                };
+              }
+              return {
+                success: false,
+                message: `Server returned HTML error page (${response.status}). This usually means an authentication or server configuration error. Please check your login status.`,
+              };
+            }
+            
+            // Otherwise return the raw text (first 500 chars)
+            return {
+              success: false,
+              message: `Invalid JSON response from server (${response.status}): ${text.substring(0, 500)}`,
+            };
+          }
+        }
+      } catch (textError) {
+        // Failed to read response text
+        console.error('Error reading response:', textError);
+        return {
+          success: false,
+          message: `Failed to read server response (${response.status})`,
+        };
+      }
 
       if (!response.ok) {
+        // Handle authentication errors specifically
+        if (response.status === 401 || response.status === 403) {
+          // Clear invalid token
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('admin_token');
+            // Redirect to login after a short delay
+            setTimeout(() => {
+              window.location.href = '/login';
+            }, 2000);
+          }
+          return {
+            success: false,
+            message: data.message || 'Your session has expired. Please log in again. Redirecting to login...',
+            errors: data.errors,
+          };
+        }
+        
         return {
           success: false,
           message: data.message || 'An error occurred',
@@ -180,6 +257,7 @@ class ApiService {
         ...data,
       };
     } catch (error) {
+      console.error('API Request Error:', error);
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Network error occurred',
@@ -348,6 +426,77 @@ class ApiService {
 
   async deleteLivestream(id: number): Promise<ApiResponse> {
     return this.request(`/admin/livestreams/${id}`, { method: 'DELETE' });
+  }
+
+  // Agora Token Methods (client-side API calls to Next.js API routes)
+  async getRtcToken(params: {
+    channelName: string;
+    uid?: number;
+    role?: 'broadcaster' | 'audience';
+  }): Promise<ApiResponse<{
+    token: string;
+    appId: string;
+    channelName: string;
+    uid: number;
+    role: string;
+    expirationTimestamp: number;
+  }>> {
+    // Call Next.js API route (relative to current domain)
+    const response = await fetch('/api/agora/rtc-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+    return data;
+  }
+
+  async getRtmToken(params: { userId: string }): Promise<ApiResponse<{
+    token: string;
+    appId: string;
+    userId: string;
+    expirationTimestamp: number;
+  }>> {
+    const response = await fetch('/api/agora/rtm-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+    return data;
+  }
+
+  async getAgoraTokens(params: {
+    channelName: string;
+    userId: string;
+    uid?: number;
+    role?: 'broadcaster' | 'audience';
+  }): Promise<ApiResponse<{
+    rtcToken: string;
+    rtmToken: string;
+    appId: string;
+    channelName: string;
+    userId: string;
+    uid: number;
+    role: string;
+    expirationTimestamp: number;
+  }>> {
+    const response = await fetch('/api/agora/tokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+    return data;
   }
 
   // Event Inscriptions Methods
