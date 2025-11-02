@@ -96,7 +96,45 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          {/* Leaderboard */}
+          {/* Top 3 Highlight Cards */}
+          {!loading && leaderboard.length >= 3 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {leaderboard.slice(0, 3).map((entry, index) => (
+                <div
+                  key={entry.user_id}
+                  className={`rounded-lg shadow-lg p-6 ${
+                    index === 0
+                      ? 'bg-gradient-to-br from-yellow-400 to-yellow-600'
+                      : index === 1
+                      ? 'bg-gradient-to-br from-gray-300 to-gray-500'
+                      : 'bg-gradient-to-br from-orange-400 to-orange-600'
+                  } text-white`}
+                >
+                  <div className="text-center">
+                    <div className="flex justify-center mb-2">
+                      {index === 0 ? (
+                        <Trophy className="h-10 w-10" />
+                      ) : index === 1 ? (
+                        <Award className="h-10 w-10" />
+                      ) : (
+                        <Medal className="h-10 w-10" />
+                      )}
+                    </div>
+                    <div className="text-xl font-bold mb-1">
+                      {entry.prenom} {entry.nom}
+                    </div>
+                    <div className="text-sm opacity-90 mb-3">{entry.wilaya}</div>
+                    <div className="text-2xl font-bold">{entry.score} pts</div>
+                    <div className="text-sm opacity-90 mt-1">
+                      {entry.attended_events_count} events
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Leaderboard Table */}
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
@@ -164,44 +202,6 @@ export default function LeaderboardPage() {
                   </tbody>
                 </table>
               </div>
-            </div>
-          )}
-
-          {/* Top 3 Highlight Cards */}
-          {leaderboard.length >= 3 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {leaderboard.slice(0, 3).map((entry, index) => (
-                <div
-                  key={entry.user_id}
-                  className={`rounded-lg shadow-lg p-6 ${
-                    index === 0
-                      ? 'bg-gradient-to-br from-yellow-400 to-yellow-600'
-                      : index === 1
-                      ? 'bg-gradient-to-br from-gray-300 to-gray-500'
-                      : 'bg-gradient-to-br from-orange-400 to-orange-600'
-                  } text-white`}
-                >
-                  <div className="text-center">
-                    <div className="flex justify-center mb-2">
-                      {index === 0 ? (
-                        <Trophy className="h-10 w-10" />
-                      ) : index === 1 ? (
-                        <Award className="h-10 w-10" />
-                      ) : (
-                        <Medal className="h-10 w-10" />
-                      )}
-                    </div>
-                    <div className="text-xl font-bold mb-1">
-                      {entry.prenom} {entry.nom}
-                    </div>
-                    <div className="text-sm opacity-90 mb-3">{entry.wilaya}</div>
-                    <div className="text-2xl font-bold">{entry.score} pts</div>
-                    <div className="text-sm opacity-90 mt-1">
-                      {entry.attended_events_count} events
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
           )}
         </div>
