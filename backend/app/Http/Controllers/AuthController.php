@@ -320,5 +320,62 @@ class AuthController extends Controller
             'error' => __($status),
         ], 400);
     }
+
+    /**
+     * Update user preferences
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updatePreferences(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'preferences' => 'required|array',
+            'preferences.*' => 'string',
+        ], [
+            'preferences.required' => 'Preferences are required',
+            'preferences.array' => 'Preferences must be an array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            $user->preferences = $request->preferences;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Preferences updated successfully',
+                'data' => [
+                    'user' => $user,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error updating preferences', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not update preferences',
+            ], 500);
+        }
+    }
 }
 

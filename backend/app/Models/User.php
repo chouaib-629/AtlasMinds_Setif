@@ -31,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'score',
         'attended_events_count',
+        'preferences',
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
             'score' => 'integer',
             'attended_events_count' => 'integer',
+            'preferences' => 'array',
         ];
     }
 

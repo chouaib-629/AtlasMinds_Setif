@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::put('/preferences', [AuthController::class, 'updatePreferences']);
     
     // Example protected route
     Route::get('/user', function (Request $request) {
