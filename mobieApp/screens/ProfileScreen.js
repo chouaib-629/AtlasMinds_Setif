@@ -14,6 +14,18 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import WaveSeparator from '../components/WaveSeparator';
+import {
+  ClipboardIcon,
+  HandshakeIcon,
+  LightbulbIcon,
+  ThumbsUpIcon,
+  CreditCardIcon,
+  SettingsIcon,
+  HelpIcon,
+  InfoIcon,
+  CalendarIcon,
+  ClockIcon,
+} from '../components/Icons';
 
 const ProfileScreen = ({ navigation }) => {
   const { t, language } = useLanguage();
@@ -49,20 +61,52 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   const handleLogout = async () => {
-    Alert.alert(
-      t('logout'),
-      'Are you sure you want to logout?',
-      [
-        { text: t('cancel'), style: 'cancel' },
-        {
-          text: t('logout'),
-          style: 'destructive',
-          onPress: async () => {
-            await logout();
+    console.log('=== LOGOUT BUTTON CLICKED ===');
+    
+    if (Platform.OS === 'web') {
+      // On web, use confirm dialog
+      const confirmed = window.confirm('Are you sure you want to logout?');
+      if (confirmed) {
+        try {
+          console.log('=== CONFIRM LOGOUT (WEB) ===');
+          await logout();
+          console.log('=== LOGOUT COMPLETED ===');
+        } catch (error) {
+          console.error('=== LOGOUT ERROR ===', error);
+          alert('An error occurred during logout. Please try again.');
+        }
+      } else {
+        console.log('Logout cancelled (web)');
+      }
+    } else {
+      // On native platforms, use Alert
+      Alert.alert(
+        t('logout'),
+        'Are you sure you want to logout?',
+        [
+          { 
+            text: t('cancel'), 
+            style: 'cancel',
+            onPress: () => console.log('Logout cancelled')
           },
-        },
-      ]
-    );
+          {
+            text: t('logout'),
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                console.log('=== CONFIRM LOGOUT PRESSED ===');
+                await logout();
+                console.log('=== LOGOUT COMPLETED ===');
+              } catch (error) {
+                console.error('=== LOGOUT ERROR ===', error);
+                Alert.alert(t('error'), 'An error occurred during logout. Please try again.');
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
   };
 
   const getLanguageDisplay = () => {
@@ -78,7 +122,7 @@ const ProfileScreen = ({ navigation }) => {
     {
       id: 1,
       title: t('myActivities'),
-      icon: '📋',
+      icon: ClipboardIcon,
       onPress: () => {
         const parent = navigation.getParent();
         if (parent) {
@@ -91,52 +135,52 @@ const ProfileScreen = ({ navigation }) => {
     {
       id: 2,
       title: t('volunteerHistory'),
-      icon: '🤝',
+      icon: HandshakeIcon,
       onPress: () => {},
     },
     {
       id: 3,
       title: t('myProjects'),
-      icon: '💡',
+      icon: LightbulbIcon,
       onPress: () => {},
     },
     {
       id: 4,
       title: t('suggestedProjects'),
-      icon: '👍',
+      icon: ThumbsUpIcon,
       onPress: () => {},
     },
     {
       id: 5,
       title: t('paymentHistory'),
-      icon: '💳',
+      icon: CreditCardIcon,
       onPress: () => {},
     },
     {
       id: 6,
       title: t('settings'),
-      icon: '⚙️',
+      icon: SettingsIcon,
       onPress: () => {},
     },
     {
       id: 7,
       title: t('help'),
-      icon: '❓',
+      icon: HelpIcon,
       onPress: () => {},
     },
     {
       id: 8,
       title: t('about'),
-      icon: 'ℹ️',
+      icon: InfoIcon,
       onPress: () => {},
     },
   ];
 
   const stats = [
-    { label: t('activitiesJoined'), value: '12', icon: '📅' },
-    { label: t('hoursVolunteered'), value: '48', icon: '⏰' },
-    { label: t('projectsSuggested'), value: '3', icon: '💡' },
-    { label: t('projectsUpvoted'), value: '15', icon: '👍' },
+    { label: t('activitiesJoined'), value: '12', icon: CalendarIcon },
+    { label: t('hoursVolunteered'), value: '48', icon: ClockIcon },
+    { label: t('projectsSuggested'), value: '3', icon: LightbulbIcon },
+    { label: t('projectsUpvoted'), value: '15', icon: ThumbsUpIcon },
   ];
 
   return (
@@ -193,6 +237,8 @@ const ProfileScreen = ({ navigation }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
       >
         <Animated.View
           style={[
@@ -202,6 +248,7 @@ const ProfileScreen = ({ navigation }) => {
               transform: [{ translateY: slideAnim }],
             },
           ]}
+          pointerEvents="box-none"
         >
           {/* User Info Card */}
           <View style={styles.userCard}>
@@ -230,13 +277,18 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('statistics')}</Text>
             <View style={styles.statsGrid}>
-              {stats.map((stat, index) => (
-                <View key={index} style={styles.statCard}>
-                  <Text style={styles.statIcon}>{stat.icon}</Text>
-                  <Text style={styles.statValue}>{stat.value}</Text>
-                  <Text style={styles.statLabel}>{stat.label}</Text>
-                </View>
-              ))}
+              {stats.map((stat, index) => {
+                const IconComponent = stat.icon;
+                return (
+                  <View key={index} style={styles.statCard}>
+                    <View style={styles.statIconContainer}>
+                      <IconComponent size={24} color="#FF8A80" />
+                    </View>
+                    <Text style={styles.statValue}>{stat.value}</Text>
+                    <Text style={styles.statLabel}>{stat.label}</Text>
+                  </View>
+                );
+              })}
             </View>
           </View>
 
@@ -294,25 +346,36 @@ const ProfileScreen = ({ navigation }) => {
 
           {/* Menu Items */}
           <View style={styles.section}>
-            {menuItems.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.menuItem}
-                onPress={item.onPress}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.menuItemIcon}>{item.icon}</Text>
-                <Text style={styles.menuItemText}>{item.title}</Text>
-                <Text style={styles.menuItemArrow}>›</Text>
-              </TouchableOpacity>
-            ))}
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.menuItem}
+                  onPress={item.onPress}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.menuItemIconContainer}>
+                    <IconComponent size={24} color="#333" />
+                  </View>
+                  <Text style={styles.menuItemText}>{item.title}</Text>
+                  <Text style={styles.menuItemArrow}>›</Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
           {/* Logout Button */}
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={handleLogout}
+            onPress={() => {
+              console.log('=== TOUCHABLE OPACITY PRESSED ===');
+              handleLogout();
+            }}
+            onPressIn={() => console.log('=== BUTTON PRESS IN ===')}
             activeOpacity={0.8}
+            disabled={false}
+            testID="logout-button"
           >
             <Text style={styles.logoutButtonText}>{t('logout')}</Text>
           </TouchableOpacity>
@@ -489,9 +552,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
   },
-  statIcon: {
-    fontSize: 24,
+  statIconContainer: {
     marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   statValue: {
     fontSize: 24,
@@ -540,9 +604,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
   },
-  menuItemIcon: {
-    fontSize: 24,
+  menuItemIconContainer: {
     marginRight: 15,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   menuItemText: {
     flex: 1,

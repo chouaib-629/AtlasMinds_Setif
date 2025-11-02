@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
+import { CheckmarkIcon } from './Icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -128,7 +129,7 @@ const LanguageSwitcher = ({ visible, onClose, buttonPosition }) => {
                 </View>
                 {language === lang.code && (
                   <View style={styles.checkmarkContainer}>
-                    <Text style={styles.checkmark}>✓</Text>
+                    <CheckmarkIcon size={14} color="#fff" />
                   </View>
                 )}
               </TouchableOpacity>

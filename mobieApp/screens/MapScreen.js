@@ -15,6 +15,7 @@ import * as Location from 'expo-location';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import WaveSeparator from '../components/WaveSeparator';
+import { LocationIcon } from '../components/Icons';
 import youthCentersData from '../data/youthCenters.json';
 
 // Conditionally import MapView only on native platforms
@@ -267,9 +268,12 @@ const MapScreen = ({ navigation }) => {
                 activeOpacity={0.7}
               >
                 <Text style={styles.webActivityTitle}>{center.name}</Text>
-                <Text style={styles.webActivityLocation}>
-                  📍 {center.latitude.toFixed(6)}, {center.longitude.toFixed(6)}
-                </Text>
+                <View style={styles.webActivityLocationRow}>
+                  <LocationIcon size={14} color="#666" />
+                  <Text style={styles.webActivityLocation}>
+                    {center.latitude.toFixed(6)}, {center.longitude.toFixed(6)}
+                  </Text>
+                </View>
               </TouchableOpacity>
             ))}
           </Animated.View>
@@ -285,9 +289,12 @@ const MapScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={styles.activityTitle}>{selectedCenter.name}</Text>
             <Text style={styles.activityType}>{t('youthCenter') || 'Youth Center'}</Text>
-            <Text style={styles.activityDate}>
-              📍 {selectedCenter.latitude.toFixed(6)}, {selectedCenter.longitude.toFixed(6)}
-            </Text>
+            <View style={styles.activityLocationRow}>
+              <LocationIcon size={14} color="#666" />
+              <Text style={styles.activityDate}>
+                {selectedCenter.latitude.toFixed(6)}, {selectedCenter.longitude.toFixed(6)}
+              </Text>
+            </View>
             <TouchableOpacity
               style={styles.detailsButton}
               onPress={() => {
@@ -399,7 +406,44 @@ const MapScreen = ({ navigation }) => {
 
       {/* Map View */}
       <View style={styles.mapContainer}>
-        {location ? (
+        {!MapView || !Marker ? (
+          <View style={styles.mapPlaceholder}>
+            <Text style={styles.mapPlaceholderIcon}>🗺️</Text>
+            <Text style={styles.mapPlaceholderTitle}>
+              {Platform.OS === 'web' 
+                ? t('mapNotSupported') || 'Map not supported on web'
+                : t('mapNotAvailable') || 'Map not available'}
+            </Text>
+            <Text style={styles.mapPlaceholderText}>
+              {Platform.OS === 'web'
+                ? t('mapWebMessage') || 'Please use the mobile app for map features.'
+                : t('mapErrorMessage') || 'react-native-maps is not available. Please rebuild the app with native dependencies.'}
+            </Text>
+            {youthCenters.length > 0 && (
+              <View style={styles.centersListFallback}>
+                <Text style={styles.centersListTitle}>{t('nearbyActivities') || 'Nearby Activities'}</Text>
+                <ScrollView style={styles.centersListScroll}>
+                  {youthCenters.map((center) => (
+                    <TouchableOpacity
+                      key={center.id}
+                      style={styles.centerListItem}
+                      onPress={() => handleMarkerPress(center)}
+                      activeOpacity={0.7}
+                    >
+                      <LocationIcon size={20} color="#FF8A80" />
+                      <View style={styles.centerListItemContent}>
+                        <Text style={styles.centerListItemName}>{center.name}</Text>
+                        <Text style={styles.centerListItemLocation}>
+                          {center.latitude.toFixed(4)}, {center.longitude.toFixed(4)}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </View>
+        ) : location ? (
           <MapView
             provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
             style={styles.map}
@@ -426,10 +470,12 @@ const MapScreen = ({ navigation }) => {
             }}
             onError={(error) => {
               console.error('Map error:', error);
+              setErrorMsg('Map failed to load. Please check your internet connection and try again.');
               Alert.alert(t('error'), 'Map failed to load. Check console for details.');
             }}
             onLoad={() => {
               console.log('Map loaded successfully');
+              setLoading(false);
             }}
           >
             {youthCenters.length > 0 && youthCenters.map((center) => (
@@ -465,9 +511,12 @@ const MapScreen = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={styles.activityTitle}>{selectedCenter.name}</Text>
           <Text style={styles.activityType}>{t('youthCenter') || 'Youth Center'}</Text>
-          <Text style={styles.activityDate}>
-            📍 {selectedCenter.latitude.toFixed(6)}, {selectedCenter.longitude.toFixed(6)}
-          </Text>
+          <View style={styles.activityLocationRow}>
+            <LocationIcon size={14} color="#666" />
+            <Text style={styles.activityDate}>
+              {selectedCenter.latitude.toFixed(6)}, {selectedCenter.longitude.toFixed(6)}
+            </Text>
+          </View>
           <TouchableOpacity
             style={styles.detailsButton}
             onPress={() => {
@@ -600,10 +649,73 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0f0f0',
+    padding: 24,
+  },
+  mapPlaceholderIcon: {
+    fontSize: 64,
+    marginBottom: 16,
+  },
+  mapPlaceholderTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   mapPlaceholderText: {
     marginTop: 10,
     fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
+  centersListFallback: {
+    marginTop: 32,
+    width: '100%',
+    maxHeight: 400,
+  },
+  centersListTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  centersListScroll: {
+    maxHeight: 350,
+  },
+  centerListItem: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  centerListItemContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  centerListItemName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  centerListItemLocation: {
+    fontSize: 12,
     color: '#666',
   },
   scrollView: {
@@ -661,9 +773,20 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 4,
   },
+  webActivityLocationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
   webActivityLocation: {
     fontSize: 12,
     color: '#999',
+    marginLeft: 6,
+  },
+  activityLocationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
   },
   activityCard: {
     position: 'absolute',

@@ -23,6 +23,7 @@ import WaveSeparator from '../components/WaveSeparator';
 import CustomDropdown from '../components/CustomDropdown';
 import { getWilayas, getCommunesByWilaya } from '../utils/wilayaData';
 import Svg, { Path } from 'react-native-svg';
+import { CheckmarkIcon } from '../components/Icons';
 
 // Get maximum date (current year - 6, minimum age 6)
 const getMaxDate = () => {
@@ -288,7 +289,7 @@ const RegisterScreen = ({ navigation }) => {
               ]}
             >
               {currentStep > step ? (
-                <Text style={styles.stepCheckmark}>✓</Text>
+                <CheckmarkIcon size={20} color="#fff" />
               ) : (
                 <Text
                   style={[

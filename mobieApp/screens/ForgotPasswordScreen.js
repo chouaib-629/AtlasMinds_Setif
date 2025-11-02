@@ -145,7 +145,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             ]}
           >
             <View style={styles.successIconContainer}>
-              <Text style={styles.successIcon}>✓</Text>
+              <CheckmarkIcon size={48} color="#4CAF50" />
             </View>
             <Text style={styles.successTitle}>{t('checkEmail')}</Text>
             <Text style={styles.successMessage}>

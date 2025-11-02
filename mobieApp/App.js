@@ -3,9 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { HomeIcon, MapIcon, CalendarIcon, UserIcon, UsersIcon } from './components/Icons';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
@@ -25,19 +26,20 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          const iconSize = 24;
+          const iconColor = focused ? '#007AFF' : '#999';
 
           if (route.name === 'Home') {
-            iconName = focused ? '🏠' : '🏡';
+            return <HomeIcon size={iconSize} color={iconColor} filled={focused} />;
           } else if (route.name === 'Map') {
-            iconName = focused ? '🗺️' : '🗺';
+            return <MapIcon size={iconSize} color={iconColor} />;
           } else if (route.name === 'Events') {
-            iconName = focused ? '📅' : '📆';
+            return <CalendarIcon size={iconSize} color={iconColor} />;
           } else if (route.name === 'Profile') {
-            iconName = focused ? '👤' : '👥';
+            return focused ? <UserIcon size={iconSize} color={iconColor} /> : <UsersIcon size={iconSize} color={iconColor} />;
           }
 
-          return <Text style={{ fontSize: 24 }}>{iconName}</Text>;
+          return null;
         },
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: '#999',

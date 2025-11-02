@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import WaveSeparator from '../components/WaveSeparator';
+import { HandshakeIcon, LightbulbIcon, CalendarIcon, LocationIcon, UsersIcon, ArrowRightIcon } from '../components/Icons';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
@@ -60,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
     {
       id: 1,
       title: t('volunteerNow'),
-      icon: '🤝',
+      icon: HandshakeIcon,
       color: '#FF8A80',
       onPress: () => {
         const parent = navigation.getParent();
@@ -74,14 +75,14 @@ const HomeScreen = ({ navigation }) => {
     {
       id: 2,
       title: t('suggestProject'),
-      icon: '💡',
+      icon: LightbulbIcon,
       color: '#FF8A80',
       onPress: () => {},
     },
     {
       id: 3,
       title: t('discoverActivities'),
-      icon: '📅',
+      icon: CalendarIcon,
       color: '#FF8A80',
       onPress: () => {
         const parent = navigation.getParent();
@@ -95,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
     {
       id: 4,
       title: t('map'),
-      icon: '📍',
+      icon: LocationIcon,
       color: '#FF8A80',
       onPress: () => {
         const parent = navigation.getParent();
@@ -218,17 +219,22 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('discoverActivities')}</Text>
             <View style={styles.quickActionsGrid}>
-              {quickActions.map((action) => (
-                <TouchableOpacity
-                  key={action.id}
-                  style={styles.quickActionCard}
-                  onPress={action.onPress}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.quickActionIcon}>{action.icon}</Text>
-                  <Text style={styles.quickActionTitle}>{action.title}</Text>
-                </TouchableOpacity>
-              ))}
+              {quickActions.map((action) => {
+                const IconComponent = action.icon;
+                return (
+                  <TouchableOpacity
+                    key={action.id}
+                    style={styles.quickActionCard}
+                    onPress={action.onPress}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.quickActionIconContainer}>
+                      <IconComponent size={32} color={action.color} />
+                    </View>
+                    <Text style={styles.quickActionTitle}>{action.title}</Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
 
@@ -280,9 +286,12 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={styles.activityCardCategory}>{activity.category}</Text>
                     <View style={styles.activityCardFooter}>
                       <Text style={styles.activityCardDate}>{activity.date}</Text>
-                      <Text style={styles.activityCardParticipants}>
-                        👥 {activity.participants}
-                      </Text>
+                      <View style={styles.activityCardParticipantsRow}>
+                        <UsersIcon size={14} color="#666" />
+                        <Text style={styles.activityCardParticipants}>
+                          {activity.participants}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -323,10 +332,16 @@ const HomeScreen = ({ navigation }) => {
               >
                 <View style={styles.eventItemContent}>
                   <Text style={styles.eventItemTitle}>{event.title}</Text>
-                  <Text style={styles.eventItemDetail}>📅 {event.date} • {event.time}</Text>
-                  <Text style={styles.eventItemDetail}>📍 {event.location}</Text>
+                  <View style={styles.eventItemDetailRow}>
+                    <CalendarIcon size={14} color="#666" />
+                    <Text style={styles.eventItemDetail}>{event.date} • {event.time}</Text>
+                  </View>
+                  <View style={styles.eventItemDetailRow}>
+                    <LocationIcon size={14} color="#666" />
+                    <Text style={styles.eventItemDetail}>{event.location}</Text>
+                  </View>
                 </View>
-                <Text style={styles.eventItemArrow}>›</Text>
+                <ArrowRightIcon size={24} color="#FF8A80" />
               </TouchableOpacity>
             ))}
           </View>
@@ -486,9 +501,15 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  quickActionIcon: {
-    fontSize: 32,
+  quickActionIconContainer: {
     marginBottom: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  eventItemDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
   },
   quickActionTitle: {
     fontSize: 14,
@@ -554,9 +575,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
   },
+  activityCardParticipantsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   activityCardParticipants: {
     fontSize: 12,
     color: '#666',
+    marginLeft: 4,
   },
   eventItem: {
     flexDirection: 'row',
@@ -580,12 +606,7 @@ const styles = StyleSheet.create({
   eventItemDetail: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 4,
-  },
-  eventItemArrow: {
-    fontSize: 24,
-    color: '#FF8A80',
-    marginLeft: 10,
+    marginLeft: 6,
   },
   myActivitiesCard: {
     backgroundColor: '#F5F5F5',

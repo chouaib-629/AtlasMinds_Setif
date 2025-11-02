@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { CheckmarkIcon } from './Icons';
 
 const CustomDropdown = ({
   label,
@@ -84,7 +85,7 @@ const CustomDropdown = ({
                         {item}
                       </Text>
                       {selectedValue === item && (
-                        <Text style={styles.checkmark}>✓</Text>
+                        <CheckmarkIcon size={18} color="#FF8A80" />
                       )}
                     </TouchableOpacity>
                   )}

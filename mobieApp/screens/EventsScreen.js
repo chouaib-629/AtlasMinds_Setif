@@ -15,6 +15,7 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import WaveSeparator from '../components/WaveSeparator';
+import { CalendarIcon, LocationIcon, UserIcon, UsersIcon } from '../components/Icons';
 
 const EventsScreen = ({ navigation }) => {
   const { t } = useLanguage();
@@ -164,23 +165,35 @@ const EventsScreen = ({ navigation }) => {
 
         <View style={styles.eventDetails}>
           <View style={styles.eventDetailRow}>
-            <Text style={styles.eventDetailLabel}>📅 {t('date')}:</Text>
+            <View style={styles.eventDetailIconContainer}>
+              <CalendarIcon size={16} color="#666" />
+            </View>
+            <Text style={styles.eventDetailLabel}>{t('date')}:</Text>
             <Text style={styles.eventDetailValue}>{item.date} {item.time}</Text>
           </View>
           <View style={styles.eventDetailRow}>
-            <Text style={styles.eventDetailLabel}>📍 {t('location')}:</Text>
+            <View style={styles.eventDetailIconContainer}>
+              <LocationIcon size={16} color="#666" />
+            </View>
+            <Text style={styles.eventDetailLabel}>{t('location')}:</Text>
             <Text style={styles.eventDetailValue}>{item.location}</Text>
           </View>
           <View style={styles.eventDetailRow}>
-            <Text style={styles.eventDetailLabel}>👤 {t('organizer')}:</Text>
+            <View style={styles.eventDetailIconContainer}>
+              <UserIcon size={16} color="#666" />
+            </View>
+            <Text style={styles.eventDetailLabel}>{t('organizer')}:</Text>
             <Text style={styles.eventDetailValue}>{item.organizer}</Text>
           </View>
           <View style={styles.eventDetailRow}>
-            <Text style={styles.eventDetailLabel}>💰 {t('price')}:</Text>
+            <Text style={styles.eventDetailLabel}>{t('price')}:</Text>
             <Text style={styles.eventDetailValue}>{item.price}</Text>
           </View>
           <View style={styles.eventDetailRow}>
-            <Text style={styles.eventDetailLabel}>👥 {t('participants')}:</Text>
+            <View style={styles.eventDetailIconContainer}>
+              <UsersIcon size={16} color="#666" />
+            </View>
+            <Text style={styles.eventDetailLabel}>{t('participants')}:</Text>
             <Text style={styles.eventDetailValue}>{item.participants}/{item.capacity}</Text>
           </View>
         </View>
@@ -482,6 +495,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 8,
     alignItems: 'center',
+  },
+  eventDetailIconContainer: {
+    marginRight: 6,
+    width: 16,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   eventDetailLabel: {
     fontSize: 14,

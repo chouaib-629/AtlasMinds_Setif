@@ -97,13 +97,19 @@ export const authAPI = {
   // Logout
   logout: async () => {
     try {
-      await api.post(API_ENDPOINTS.logout);
+      console.log('Making logout API request to:', `${API_BASE_URL}${API_ENDPOINTS.logout}`);
+      const response = await api.post(API_ENDPOINTS.logout);
+      console.log('Logout API response:', response.data);
+      return response.data;
     } catch (error) {
-      // Even if logout fails on server, clear local storage
-      console.log('Logout error:', error);
-    } finally {
-      await AsyncStorage.removeItem('authToken');
-      await AsyncStorage.removeItem('user');
+      console.error('Logout API error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      // Don't clear storage here - let AuthContext handle it
+      throw error;
     }
   },
 
