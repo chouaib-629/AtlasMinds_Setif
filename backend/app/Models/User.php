@@ -29,6 +29,8 @@ class User extends Authenticatable implements JWTSubject
         'numero_telephone',
         'email',
         'password',
+        'score',
+        'attended_events_count',
     ];
 
     /**
@@ -52,6 +54,8 @@ class User extends Authenticatable implements JWTSubject
             'email_verified_at' => 'datetime',
             'date_de_naissance' => 'date',
             'password' => 'hashed',
+            'score' => 'integer',
+            'attended_events_count' => 'integer',
         ];
     }
 
@@ -73,5 +77,21 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Get all payments made by this user
+     */
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
+
+    /**
+     * Get all event inscriptions for this user
+     */
+    public function inscriptions()
+    {
+        return $this->hasMany(\App\Models\EventInscription::class);
     }
 }

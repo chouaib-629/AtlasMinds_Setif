@@ -46,6 +46,46 @@ Route::prefix('admin')->group(function () {
         Route::get('/me', [\App\Http\Controllers\AdminAuthController::class, 'me']);
         Route::post('/logout', [\App\Http\Controllers\AdminAuthController::class, 'logout']);
         Route::post('/refresh', [\App\Http\Controllers\AdminAuthController::class, 'refresh']);
+
+        // Events routes
+        Route::get('/events', [\App\Http\Controllers\Admin\EventController::class, 'index']);
+        Route::post('/events', [\App\Http\Controllers\Admin\EventController::class, 'store']);
+        Route::get('/events/{id}', [\App\Http\Controllers\Admin\EventController::class, 'show']);
+        Route::put('/events/{id}', [\App\Http\Controllers\Admin\EventController::class, 'update']);
+        Route::delete('/events/{id}', [\App\Http\Controllers\Admin\EventController::class, 'destroy']);
+
+        // Payments routes
+        Route::get('/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index']);
+        Route::get('/payments/{id}', [\App\Http\Controllers\Admin\PaymentController::class, 'show']);
+        Route::patch('/payments/{id}/status', [\App\Http\Controllers\Admin\PaymentController::class, 'updateStatus']);
+
+        // Participants routes (inscriptions - users registered for events)
+        Route::get('/participants', [\App\Http\Controllers\Admin\ParticipantController::class, 'index']);
+        Route::get('/participants/{id}', [\App\Http\Controllers\Admin\ParticipantController::class, 'show']);
+        Route::get('/participants/{id}/attendance', [\App\Http\Controllers\Admin\ParticipantController::class, 'attendance']);
+
+        // Users routes (all users)
+        Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index']);
+        Route::get('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'show']);
+
+        // Leaderboard routes
+        Route::get('/leaderboard', [\App\Http\Controllers\Admin\LeaderboardController::class, 'index']);
+
+        // Chats routes
+        Route::get('/chats', [\App\Http\Controllers\Admin\ChatController::class, 'index']);
+        Route::post('/chats', [\App\Http\Controllers\Admin\ChatController::class, 'store']);
+        Route::put('/chats/{id}', [\App\Http\Controllers\Admin\ChatController::class, 'update']);
+        Route::delete('/chats/{id}', [\App\Http\Controllers\Admin\ChatController::class, 'destroy']);
+
+        // Livestreams routes
+        Route::get('/livestreams', [\App\Http\Controllers\Admin\LivestreamController::class, 'index']);
+        Route::post('/livestreams', [\App\Http\Controllers\Admin\LivestreamController::class, 'store']);
+        Route::put('/livestreams/{id}', [\App\Http\Controllers\Admin\LivestreamController::class, 'update']);
+        Route::delete('/livestreams/{id}', [\App\Http\Controllers\Admin\LivestreamController::class, 'destroy']);
+
+        // Event Inscriptions routes
+        Route::get('/event-inscriptions', [\App\Http\Controllers\Admin\EventInscriptionController::class, 'index']);
+        Route::patch('/event-inscriptions/{id}/status', [\App\Http\Controllers\Admin\EventInscriptionController::class, 'updateStatus']);
     });
 });
 
