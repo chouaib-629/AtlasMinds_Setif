@@ -178,7 +178,7 @@ function AppContent() {
   };
 
   const handleOpenMap = () => {
-    setAppState({ screen: 'main', activeTab: 'insights' });
+    setAppState({ screen: 'main', activeTab: 'map' });
   };
 
   const handleLiveSessionClick = (sessionId: string) => {

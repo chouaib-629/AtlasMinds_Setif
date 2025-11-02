@@ -247,3 +247,38 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+/* Leaflet map styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-marker-icon {
+  z-index: 1000;
+}
+
+/* Ensure Leaflet controls are properly styled */
+.leaflet-control {
+  z-index: 1000;
+}
+
+/* User location marker styling */
+.user-location-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Nearest marker highlighting */
+.nearest-marker {
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}

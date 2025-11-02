@@ -189,6 +189,7 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
               <button
                 onClick={onMapClick}
                 className="relative p-2 rounded-full hover:bg-muted transition-colors flex-shrink-0"
+                title={t('الخريطة', 'Map')}
               >
                 <Map className="w-5 h-5" />
               </button>
