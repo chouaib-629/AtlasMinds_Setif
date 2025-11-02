@@ -1,18 +1,86 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import HomeScreen from './screens/HomeScreen';
+import MapScreen from './screens/MapScreen';
+import EventsScreen from './screens/EventsScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-// Navigation stack for authenticated users
+// Tab Navigator for authenticated users
+const TabNavigator = () => {
+  const { t } = useLanguage();
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused ? '🏠' : '🏡';
+          } else if (route.name === 'Map') {
+            iconName = focused ? '🗺️' : '🗺';
+          } else if (route.name === 'Events') {
+            iconName = focused ? '📅' : '📆';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? '👤' : '👥';
+          }
+
+          return <Text style={{ fontSize: 24 }}>{iconName}</Text>;
+        },
+        tabBarActiveTintColor: '#007AFF',
+        tabBarInactiveTintColor: '#999',
+        headerShown: false,
+        tabBarStyle: {
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+          backgroundColor: '#fff',
+          borderTopWidth: 1,
+          borderTopColor: '#e0e0e0',
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ tabBarLabel: t('home') }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ tabBarLabel: t('map') }}
+      />
+      <Tab.Screen
+        name="Events"
+        component={EventsScreen}
+        options={{ tabBarLabel: t('activities') }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ tabBarLabel: t('profile') }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+// Navigation stack for non-authenticated users
 const AuthStack = () => {
   return (
     <Stack.Navigator
@@ -35,7 +103,7 @@ const AppStack = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="MainTabs" component={TabNavigator} />
     </Stack.Navigator>
   );
 };
