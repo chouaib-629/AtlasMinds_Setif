@@ -64,10 +64,21 @@ class LivestreamController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'stream_url' => 'required|url',
+            'stream_url' => 'nullable|url',
+            'channel_name' => 'nullable|string|max:255',
             'is_live' => 'boolean',
             'event_id' => 'nullable|exists:events,id',
         ]);
+
+        // Check what was provided
+        $streamUrl = $request->input('stream_url');
+        $channelName = $request->input('channel_name');
+        $hasStreamUrl = !empty($streamUrl) && $streamUrl !== null;
+        $hasChannelName = !empty($channelName) && $channelName !== null;
+        
+        // If neither is provided, we'll auto-generate channel_name for Agora mode
+        // This is allowed - validation will pass and we'll create the channel_name after creation
+        // Only validate if validator fails for other reasons
 
         if ($validator->fails()) {
             return response()->json([
@@ -88,20 +99,49 @@ class LivestreamController extends Controller
             }
         }
 
-        $livestream = Livestream::create([
+        // Prepare data for creation - only include fields that are actually provided
+        $livestreamData = [
             'title' => $request->title,
             'description' => $request->description,
-            'stream_url' => $request->stream_url,
             'is_live' => $request->is_live ?? false,
-            'event_id' => $request->event_id,
             'admin_id' => $admin->id,
-        ]);
+        ];
+
+        // Only include event_id if provided
+        if ($request->has('event_id') && $request->event_id) {
+            $livestreamData['event_id'] = $request->event_id;
+        }
+
+        // Set stream_url or channel_name based on what was provided
+        if ($hasStreamUrl) {
+            $livestreamData['stream_url'] = $request->stream_url;
+        }
+        
+        // If channel_name is provided and not empty, use it
+        if ($hasChannelName) {
+            $livestreamData['channel_name'] = $request->channel_name;
+        }
+        // If no stream_url and no channel_name, we'll auto-generate channel_name after creation
+
+        $livestream = Livestream::create($livestreamData);
+
+        // Auto-generate channel_name if we're in Agora mode but no channel_name was provided
+        if (!$livestream->channel_name && !$livestream->stream_url) {
+            $livestream->channel_name = "livestream-{$livestream->id}";
+            $livestream->save();
+        }
+
+        // Load relationships safely (event might be null)
+        $livestream->load('admin');
+        if ($livestream->event_id) {
+            $livestream->load('event.admin');
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Livestream créé avec succès',
             'data' => [
-                'livestream' => $livestream->load(['event.admin', 'admin']),
+                'livestream' => $livestream,
             ],
         ], 201);
     }
@@ -126,7 +166,8 @@ class LivestreamController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'stream_url' => 'sometimes|required|url',
+            'stream_url' => 'sometimes|nullable|url',
+            'channel_name' => 'sometimes|nullable|string|max:255',
             'is_live' => 'boolean',
             'event_id' => 'nullable|exists:events,id',
         ]);
@@ -150,7 +191,7 @@ class LivestreamController extends Controller
             }
         }
 
-        $livestream->update($request->only(['title', 'description', 'stream_url', 'is_live', 'event_id']));
+        $livestream->update($request->only(['title', 'description', 'stream_url', 'channel_name', 'is_live', 'event_id']));
 
         return response()->json([
             'success' => true,

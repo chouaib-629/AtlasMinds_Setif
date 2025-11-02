@@ -32,6 +32,8 @@ export async function analyzeEventWithGemini(eventData: EventData): Promise<Even
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
+  // Use gemini-1.5-flash (fast and free tier) or gemini-pro (more capable)
+  // Check available models: gemini-1.5-flash, gemini-1.5-pro, gemini-pro
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
   // Well-engineered prompt for youth-focused event analysis
@@ -129,9 +131,18 @@ IMPORTANT:
       youthAppealScore: suggestions.youthAppealScore || 5,
       overallFeedback: suggestions.overallFeedback || 'Event analysis completed.',
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error calling Gemini API:', error);
-    throw new Error('Failed to analyze event. Please try again.');
+    // Provide more helpful error messages
+    if (error?.message?.includes('API key')) {
+      throw new Error('Gemini API key is invalid or missing. Please check your configuration.');
+    } else if (error?.message?.includes('model')) {
+      throw new Error('Gemini model is not available. Please try a different model.');
+    } else if (error?.message?.includes('quota') || error?.message?.includes('limit')) {
+      throw new Error('Gemini API quota exceeded. Please try again later.');
+    } else {
+      throw new Error(error?.message || 'Failed to analyze event. Please try again.');
+    }
   }
 }
 

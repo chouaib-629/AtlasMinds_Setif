@@ -14,6 +14,7 @@ class Livestream extends Model
         'title',
         'description',
         'stream_url',
+        'channel_name',
         'is_live',
         'event_id',
         'admin_id',
