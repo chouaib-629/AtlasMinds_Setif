@@ -131,5 +131,55 @@ export const authAPI = {
   },
 };
 
+// Activities API (public, no auth required)
+export const activitiesAPI = {
+  // Get all home activities (education, clubs, direct activities)
+  getHomeActivities: async () => {
+    try {
+      const response = await api.get(API_ENDPOINTS.homeActivities);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching home activities:', error);
+      throw error;
+    }
+  },
+
+  // Get educations
+  getEducations: async (featured = false) => {
+    try {
+      const endpoint = featured ? API_ENDPOINTS.educationsFeatured : API_ENDPOINTS.educations;
+      const response = await api.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching educations:', error);
+      throw error;
+    }
+  },
+
+  // Get clubs
+  getClubs: async (featured = false) => {
+    try {
+      const endpoint = featured ? API_ENDPOINTS.clubsFeatured : API_ENDPOINTS.clubs;
+      const response = await api.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching clubs:', error);
+      throw error;
+    }
+  },
+
+  // Get direct activities
+  getDirectActivities: async (featured = false) => {
+    try {
+      const endpoint = featured ? API_ENDPOINTS.directActivitiesFeatured : API_ENDPOINTS.directActivities;
+      const response = await api.get(endpoint);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching direct activities:', error);
+      throw error;
+    }
+  },
+};
+
 export default api;
 

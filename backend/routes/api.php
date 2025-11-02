@@ -90,6 +90,77 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+// Public routes for mobile app - Education, Clubs, Direct Activities
+Route::get('/educations', [\App\Http\Controllers\Api\EducationController::class, 'index']);
+Route::get('/educations/featured', [\App\Http\Controllers\Api\EducationController::class, 'featured']);
+
+Route::get('/clubs', [\App\Http\Controllers\Api\ClubController::class, 'index']);
+Route::get('/clubs/featured', [\App\Http\Controllers\Api\ClubController::class, 'featured']);
+
+Route::get('/direct-activities', [\App\Http\Controllers\Api\DirectActivityController::class, 'index']);
+Route::get('/direct-activities/featured', [\App\Http\Controllers\Api\DirectActivityController::class, 'featured']);
+
+// Combined endpoint for home screen
+Route::get('/home-activities', function () {
+    $educations = \App\Models\Education::where('is_active', true)
+        ->where('is_featured', true)
+        ->orderBy('date', 'asc')
+        ->limit(3)
+        ->get()
+        ->map(function ($education) {
+            return [
+                'id' => $education->id,
+                'title' => $education->title,
+                'category' => $education->category,
+                'date' => $education->date->format('M d, Y'),
+                'participants' => $education->participants,
+                'image_url' => $education->image_url,
+            ];
+        });
+
+    $clubs = \App\Models\Club::where('is_active', true)
+        ->where('is_featured', true)
+        ->orderBy('date', 'asc')
+        ->limit(3)
+        ->get()
+        ->map(function ($club) {
+            return [
+                'id' => $club->id,
+                'title' => $club->title,
+                'category' => $club->category,
+                'date' => $club->date->format('M d, Y'),
+                'participants' => $club->participants,
+                'image_url' => $club->image_url,
+            ];
+        });
+
+    $directActivities = \App\Models\DirectActivity::where('is_active', true)
+        ->where('is_featured', true)
+        ->orderBy('date', 'asc')
+        ->limit(3)
+        ->get()
+        ->map(function ($activity) {
+            return [
+                'id' => $activity->id,
+                'title' => $activity->title,
+                'category' => $activity->category,
+                'date' => $activity->date->format('M d, Y'),
+                'participants' => $activity->participants,
+                'image_url' => $activity->image_url,
+            ];
+        });
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'educations' => $educations,
+            'clubs' => $clubs,
+            'direct_activities' => $directActivities,
+            'featured_activities' => $educations->concat($clubs)->concat($directActivities)->shuffle()->take(3),
+        ],
+    ]);
+});
+
 // Example public API route
 Route::get('/test', function () {
     return response()->json([
