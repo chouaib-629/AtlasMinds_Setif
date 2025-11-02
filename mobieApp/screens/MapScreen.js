@@ -15,7 +15,7 @@ import {
 import * as Location from 'expo-location';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import WaveSeparator from '../components/WaveSeparator';
+import AppHeader from '../components/AppHeader';
 import { LocationIcon, MapIcon } from '../components/Icons';
 import LeafletMap from '../components/LeafletMap';
 import youthCentersData from '../data/youthCenters.json';
@@ -60,6 +60,7 @@ const MapScreen = ({ navigation }) => {
   const [selectedCenter, setSelectedCenter] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const mapRef = useRef(null);
+  const [notificationCount] = useState(3); // Mock notification count
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -242,40 +243,18 @@ const MapScreen = ({ navigation }) => {
   // Web - show Leaflet map
   if (Platform.OS === 'web') {
     return (
-      <SafeAreaView style={styles.container}>
-        {/* Header with coral background */}
-        <View style={styles.headerSection}>
-          <Animated.View
-            style={[
-              styles.waveContainer,
-              {
-                opacity: waveAnim,
-                transform: [
-                  {
-                    translateY: waveAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [20, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          >
-            <WaveSeparator color="#FFFFFF" />
-          </Animated.View>
-          <Animated.View
-            style={[
-              styles.headerContent,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
-            <Text style={styles.headerTitle}>{t('mapTitle')}</Text>
-            <Text style={styles.headerSubtitle}>{t('mapSubtitle')}</Text>
-          </Animated.View>
-        </View>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {/* App Header */}
+        <AppHeader
+          notificationCount={notificationCount}
+          onNotificationPress={() => {}}
+          onProfilePress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              parent.navigate('Profile');
+            }
+          }}
+        />
 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
@@ -368,7 +347,16 @@ const MapScreen = ({ navigation }) => {
 
   if (errorMsg && !location) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <AppHeader
+          notificationCount={notificationCount}
+          onProfilePress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              parent.navigate('Profile');
+            }
+          }}
+        />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{errorMsg}</Text>
           <TouchableOpacity
@@ -386,23 +374,16 @@ const MapScreen = ({ navigation }) => {
   // Native platforms - show map
   if (!MapView) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.headerSection}>
-          <Animated.View
-            style={[
-              styles.waveContainer,
-              {
-                opacity: waveAnim,
-              },
-            ]}
-          >
-            <WaveSeparator color="#FFFFFF" />
-          </Animated.View>
-          <Animated.View style={styles.headerContent}>
-            <Text style={styles.headerTitle}>{t('mapTitle')}</Text>
-            <Text style={styles.headerSubtitle}>{t('mapSubtitle')}</Text>
-          </Animated.View>
-        </View>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <AppHeader
+          notificationCount={notificationCount}
+          onProfilePress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              parent.navigate('Profile');
+            }
+          }}
+        />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>
             Map requires a custom development build
@@ -419,40 +400,18 @@ const MapScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with coral background */}
-      <View style={styles.headerSection}>
-        <Animated.View
-          style={[
-            styles.waveContainer,
-            {
-              opacity: waveAnim,
-              transform: [
-                {
-                  translateY: waveAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <WaveSeparator color="#FFFFFF" />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.headerContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Text style={styles.headerTitle}>{t('mapTitle')}</Text>
-          <Text style={styles.headerSubtitle}>{t('mapSubtitle')}</Text>
-        </Animated.View>
-      </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* App Header */}
+      <AppHeader
+        notificationCount={notificationCount}
+        onNotificationPress={() => {}}
+        onProfilePress={() => {
+          const parent = navigation.getParent();
+          if (parent) {
+            parent.navigate('Profile');
+          }
+        }}
+      />
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -645,35 +604,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  headerSection: {
-    height: '25%',
-    backgroundColor: '#FF8A80',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  waveContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-  headerContent: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
   },
   loadingContainer: {
     flex: 1,

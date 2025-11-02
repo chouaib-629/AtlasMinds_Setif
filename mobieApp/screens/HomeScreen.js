@@ -8,19 +8,17 @@ import {
   ScrollView,
   Platform,
   Animated,
+  Alert,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import LanguageSwitcher from '../components/LanguageSwitcher';
-import WaveSeparator from '../components/WaveSeparator';
+import AppHeader from '../components/AppHeader';
 import { HandshakeIcon, LightbulbIcon, CalendarIcon, LocationIcon, UsersIcon, ArrowRightIcon } from '../components/Icons';
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useAuth();
-  const { t, language } = useLanguage();
-  const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const [buttonPosition, setButtonPosition] = useState(null);
-  const languageButtonRef = useRef(null);
+  const { t } = useLanguage();
+  const [notificationCount] = useState(3); // Mock notification count
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -151,54 +149,23 @@ const HomeScreen = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with coral background */}
-      <View style={styles.headerSection}>
-        <TouchableOpacity
-          ref={languageButtonRef}
-          style={styles.languageButton}
-          onPress={() => {
-            languageButtonRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              setButtonPosition({ x: pageX, y: pageY, width, height });
-              setLanguageModalVisible(true);
-            });
-          }}
-        >
-          <Text style={styles.languageButtonText}>
-            {language === 'en' ? 'EN' : language === 'fr' ? 'FR' : 'AR'}
-          </Text>
-        </TouchableOpacity>
-        <Animated.View
-          style={[
-            styles.waveContainer,
-            {
-              opacity: waveAnim,
-              transform: [
-                {
-                  translateY: waveAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <WaveSeparator color="#FFFFFF" />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.headerContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Text style={styles.greeting}>{t('welcome')},</Text>
-          <Text style={styles.userName}>{user?.name || 'User'}</Text>
-        </Animated.View>
-      </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* App Header */}
+      <AppHeader
+        notificationCount={notificationCount}
+        onNotificationPress={() => {
+          // Navigate to notifications or show modal
+          Alert.alert(t('notifications') || 'Notifications', `${notificationCount} new notifications`);
+        }}
+        onProfilePress={() => {
+          const parent = navigation.getParent();
+          if (parent) {
+            parent.navigate('Profile');
+          } else {
+            navigation.navigate('Profile');
+          }
+        }}
+      />
 
       {/* White content section */}
       <ScrollView
@@ -383,12 +350,6 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </Animated.View>
       </ScrollView>
-
-      <LanguageSwitcher
-        visible={languageModalVisible}
-        onClose={() => setLanguageModalVisible(false)}
-        buttonPosition={buttonPosition}
-      />
     </SafeAreaView>
   );
 };
@@ -397,54 +358,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  headerSection: {
-    height: '35%',
-    backgroundColor: '#FF8A80',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  waveContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-  languageButton: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 20,
-    right: 20,
-    zIndex: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-  },
-  languageButtonText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#fff',
-    letterSpacing: 0.5,
-  },
-  headerContent: {
-    position: 'absolute',
-    bottom: 80,
-    left: 24,
-    right: 24,
-  },
-  greeting: {
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.9)',
-    marginBottom: 4,
-    fontWeight: '500',
-  },
-  userName: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   scrollView: {
     flex: 1,

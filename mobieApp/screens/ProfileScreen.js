@@ -13,7 +13,7 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import WaveSeparator from '../components/WaveSeparator';
+import AppHeader from '../components/AppHeader';
 import {
   ClipboardIcon,
   HandshakeIcon,
@@ -33,6 +33,7 @@ const ProfileScreen = ({ navigation }) => {
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState(null);
   const languageButtonRef = useRef(null);
+  const [notificationCount] = useState(3); // Mock notification count
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -173,53 +174,13 @@ const ProfileScreen = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with coral background */}
-      <View style={styles.headerSection}>
-        <TouchableOpacity
-          ref={languageButtonRef}
-          style={styles.languageButton}
-          onPress={() => {
-            languageButtonRef.current?.measure((x, y, width, height, pageX, pageY) => {
-              setButtonPosition({ x: pageX, y: pageY, width, height });
-              setLanguageModalVisible(true);
-            });
-          }}
-        >
-          <Text style={styles.languageButtonText}>
-            {language === 'en' ? 'EN' : language === 'fr' ? 'FR' : 'AR'}
-          </Text>
-        </TouchableOpacity>
-        <Animated.View
-          style={[
-            styles.waveContainer,
-            {
-              opacity: waveAnim,
-              transform: [
-                {
-                  translateY: waveAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <WaveSeparator color="#FFFFFF" />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.headerContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Text style={styles.headerTitle}>{t('myProfile')}</Text>
-        </Animated.View>
-      </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* App Header */}
+      <AppHeader
+        notificationCount={notificationCount}
+        onNotificationPress={() => {}}
+        onProfilePress={() => {}}
+      />
 
       {/* White content section */}
       <ScrollView
@@ -385,48 +346,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  headerSection: {
-    height: '25%',
-    backgroundColor: '#FF8A80',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  waveContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-  languageButton: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 20,
-    right: 20,
-    zIndex: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-  },
-  languageButtonText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#fff',
-    letterSpacing: 0.5,
-  },
-  headerContent: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   scrollView: {
     flex: 1,

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
-import WaveSeparator from '../components/WaveSeparator';
+import AppHeader from '../components/AppHeader';
 import { CalendarIcon, LocationIcon, UserIcon, UsersIcon } from '../components/Icons';
 
 const EventsScreen = ({ navigation }) => {
@@ -25,6 +25,7 @@ const EventsScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [registeredEvents, setRegisteredEvents] = useState([]);
+  const [notificationCount] = useState(3); // Mock notification count
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -222,7 +223,16 @@ const EventsScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <AppHeader
+          notificationCount={notificationCount}
+          onProfilePress={() => {
+            const parent = navigation.getParent();
+            if (parent) {
+              parent.navigate('Profile');
+            }
+          }}
+        />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FF8A80" />
           <Text style={styles.loadingText}>{t('loading')}</Text>
@@ -232,39 +242,20 @@ const EventsScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with coral background */}
-      <View style={styles.headerSection}>
-        <Animated.View
-          style={[
-            styles.waveContainer,
-            {
-              opacity: waveAnim,
-              transform: [
-                {
-                  translateY: waveAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <WaveSeparator color="#FFFFFF" />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.headerContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Text style={styles.headerTitle}>{t('eventsTitle')}</Text>
-        </Animated.View>
-      </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* App Header */}
+      <AppHeader
+        notificationCount={notificationCount}
+        onNotificationPress={() => {
+          // Navigate to notifications
+        }}
+        onProfilePress={() => {
+          const parent = navigation.getParent();
+          if (parent) {
+            parent.navigate('Profile');
+          }
+        }}
+      />
 
       {/* White content section */}
       <View style={styles.contentSection}>
@@ -337,30 +328,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  headerSection: {
-    height: '20%',
-    backgroundColor: '#FF8A80',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  waveContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-  headerContent: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   contentSection: {
     flex: 1,

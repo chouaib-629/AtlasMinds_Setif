@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { HomeIcon, MapIcon, CalendarIcon, UserIcon, UsersIcon } from './components/Icons';
@@ -27,7 +27,7 @@ const TabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           const iconSize = 24;
-          const iconColor = focused ? '#007AFF' : '#999';
+          const iconColor = focused ? '#FF8A80' : '#999';
 
           if (route.name === 'Home') {
             return <HomeIcon size={iconSize} color={iconColor} filled={focused} />;
@@ -41,20 +41,38 @@ const TabNavigator = () => {
 
           return null;
         },
-        tabBarActiveTintColor: '#007AFF',
+        tabBarActiveTintColor: '#FF8A80',
         tabBarInactiveTintColor: '#999',
         headerShown: false,
         tabBarStyle: {
-          height: 60,
-          paddingBottom: 8,
+          height: 72,
+          paddingBottom: 12,
           paddingTop: 8,
           backgroundColor: '#fff',
           borderTopWidth: 1,
-          borderTopColor: '#e0e0e0',
+          borderTopColor: '#E0E0E0',
+          ...Platform.select({
+            ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.05,
+              shadowRadius: 4,
+            },
+            android: {
+              elevation: 8,
+            },
+            web: {
+              boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.05)',
+            },
+          }),
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: '600',
+          marginBottom: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
         },
       })}
     >
