@@ -6,6 +6,8 @@ import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/lib/api';
 import { Edit, Trash2, Plus } from 'lucide-react';
+import { analyzeEventWithGemini } from '@/lib/gemini';
+import EventSuggestionsModal from '@/components/Events/EventSuggestionsModal';
 
 type ActivityType = 'events' | 'education' | 'clubs' | 'direct-activities';
 
@@ -73,6 +75,10 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
+  const [suggestions, setSuggestions] = useState<any>(null);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<any>(null);
 
   useEffect(() => {
     loadData();
@@ -157,6 +163,57 @@ export default function EventsPage() {
 
   const handleSubmit = async (formData: any) => {
     try {
+      // For new events only, show Gemini AI suggestions
+      if (!editingItem && activeTab === 'events') {
+        // Show suggestions modal immediately with loading state
+        setPendingFormData(formData);
+        setShowSuggestionsModal(true);
+        setLoadingSuggestions(true);
+        setSuggestions(null);
+        
+        try {
+          const eventData = {
+            title: formData.title,
+            description: formData.description,
+            type: formData.type || 'local',
+            attendance_type: formData.attendance_type,
+            date: formData.date,
+            location: formData.location,
+            price: formData.price,
+            has_price: formData.has_price || false,
+          };
+          const geminiSuggestions = await analyzeEventWithGemini(eventData);
+          setSuggestions(geminiSuggestions);
+          setLoadingSuggestions(false);
+          // Don't close form modal yet - keep it open in background
+          return; // Don't create yet, wait for user to accept/reject suggestions
+        } catch (error: any) {
+          console.error('Gemini analysis error:', error);
+          setLoadingSuggestions(false);
+          // If Gemini fails, close suggestions modal and proceed with original data
+          setShowSuggestionsModal(false);
+          if (error.message?.includes('API key')) {
+            alert('Gemini API key not configured. Creating event without AI analysis.');
+          } else {
+            // Silent fail - just proceed without suggestions
+            console.warn('Proceeding without AI suggestions:', error.message);
+          }
+          // Continue to create event without suggestions
+        }
+      }
+
+      // If we reach here, either it's an update, not an event, or Gemini failed
+      await proceedWithEventCreation(formData);
+    } catch (error) {
+      console.error('Error saving:', error);
+      alert('Failed to save. Please check all required fields.');
+      setLoadingSuggestions(false);
+      setShowSuggestionsModal(false);
+    }
+  };
+
+  const proceedWithEventCreation = async (formData: any) => {
+    try {
       if (editingItem) {
         // Update
         switch (activeTab) {
@@ -192,10 +249,32 @@ export default function EventsPage() {
       }
       setShowModal(false);
       setEditingItem(null);
+      setShowSuggestionsModal(false);
+      setSuggestions(null);
+      setPendingFormData(null);
+      setLoadingSuggestions(false);
       loadData();
     } catch (error) {
       console.error('Error saving:', error);
       alert('Failed to save. Please check all required fields.');
+      setLoadingSuggestions(false);
+    }
+  };
+
+  const handleAcceptSuggestions = () => {
+    if (pendingFormData) {
+      const updatedData = {
+        ...pendingFormData,
+        title: suggestions.title,
+        description: suggestions.description,
+      };
+      proceedWithEventCreation(updatedData);
+    }
+  };
+
+  const handleProceedWithout = () => {
+    if (pendingFormData) {
+      proceedWithEventCreation(pendingFormData);
     }
   };
 
@@ -418,6 +497,22 @@ export default function EventsPage() {
                 setEditingItem(null);
               }}
               onSubmit={handleSubmit}
+            />
+          )}
+
+          {/* Gemini AI Suggestions Modal */}
+          {activeTab === 'events' && (
+            <EventSuggestionsModal
+              isOpen={showSuggestionsModal}
+              onClose={() => {
+                setShowSuggestionsModal(false);
+                setSuggestions(null);
+                setPendingFormData(null);
+              }}
+              suggestions={suggestions}
+              onAccept={handleAcceptSuggestions}
+              onProceedWithout={handleProceedWithout}
+              loading={loadingSuggestions}
             />
           )}
         </div>

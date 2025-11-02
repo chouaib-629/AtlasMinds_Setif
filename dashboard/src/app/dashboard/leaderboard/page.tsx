@@ -137,7 +137,7 @@ export default function LeaderboardPage() {
           {/* Leaderboard Table */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 animate-spin"></div>
             </div>
           ) : leaderboard.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
