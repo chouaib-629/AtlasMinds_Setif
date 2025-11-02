@@ -20,6 +20,7 @@ class Admin extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'is_super_admin',
     ];
 
     /**
@@ -42,6 +43,7 @@ class Admin extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_super_admin' => 'boolean',
         ];
     }
 
