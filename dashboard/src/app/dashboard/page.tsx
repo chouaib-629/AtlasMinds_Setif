@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { apiService } from '@/lib/api';
@@ -58,6 +59,7 @@ const COLORS = {
 
 export default function DashboardPage() {
   const { admin, isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalEvents: 0,
@@ -167,11 +169,11 @@ export default function DashboardPage() {
     });
   }, [events, inscriptions, payments, chats, livestreams, allUsers, participants]);
 
-  // Process chart data
+  // Process chart data with translations
   const eventsOverTime = processEventsOverTime(events);
-  const eventsByType = processEventsByType(events);
+  const eventsByType = processEventsByType(events, t);
   const revenueOverTime = processRevenueOverTime(payments);
-  const inscriptionsByStatus = processInscriptionsByStatus(inscriptions);
+  const inscriptionsByStatus = processInscriptionsByStatus(inscriptions, t);
   const topEvents = getTopEventsByInscriptions(events, inscriptions);
   const participantsByWilaya = processParticipantsByWilaya(participants);
 
@@ -199,7 +201,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <div className="inline-block rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 animate-spin"></div>
-              <p className="mt-4 text-gray-600">Loading dashboard data...</p>
+              <p className="mt-4 text-gray-600">{t('dashboard.loadingDashboardData')}</p>
             </div>
           </div>
         </DashboardLayout>
@@ -214,30 +216,30 @@ export default function DashboardPage() {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              title="Total Events"
+              title={t('dashboard.totalEvents')}
               value={stats.totalEvents}
-              subtitle={isSuperAdmin ? 'All events' : 'Local events'}
+              subtitle={isSuperAdmin ? t('dashboard.allEvents') : t('dashboard.localEvents')}
               icon={Calendar}
               iconColor="text-indigo-600"
             />
             <StatCard
-              title="Participants"
+              title={t('dashboard.participants')}
               value={stats.totalParticipants}
-              subtitle={isSuperAdmin ? 'All participants' : 'House members'}
+              subtitle={isSuperAdmin ? t('dashboard.allParticipants') : t('dashboard.houseMembers')}
               icon={Users}
               iconColor="text-blue-600"
             />
             <StatCard
-              title="Inscriptions"
+              title={t('dashboard.inscriptions')}
               value={stats.totalInscriptions}
-              subtitle={`${stats.pendingInscriptions} pending`}
+              subtitle={`${stats.pendingInscriptions} ${t('common.pending').toLowerCase()}`}
               icon={FileText}
               iconColor="text-green-600"
             />
             <StatCard
-              title="Total Revenue"
+              title={t('dashboard.totalRevenue')}
               value={formatCurrency(stats.totalRevenue)}
-              subtitle="From completed payments"
+              subtitle={t('dashboard.fromCompletedPayments')}
               icon={DollarSign}
               iconColor="text-purple-600"
             />
@@ -246,23 +248,23 @@ export default function DashboardPage() {
           {/* Additional Stats Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatCard
-              title="Active Chats"
+              title={t('dashboard.activeChats')}
               value={stats.activeChats}
-              subtitle="Currently active discussions"
+              subtitle={t('dashboard.currentlyActiveDiscussions')}
               icon={MessageSquare}
               iconColor="text-cyan-600"
             />
             <StatCard
-              title="Live Streams"
+              title={t('dashboard.liveStreams')}
               value={stats.activeLivestreams}
-              subtitle="Currently broadcasting"
+              subtitle={t('dashboard.currentlyBroadcasting')}
               icon={Video}
               iconColor="text-red-600"
             />
             <StatCard
-              title="Approved Registrations"
+              title={t('dashboard.approvedRegistrations')}
               value={stats.approvedInscriptions}
-              subtitle="Ready to attend"
+              subtitle={t('dashboard.readyToAttend')}
               icon={Trophy}
               iconColor="text-yellow-600"
             />
@@ -272,8 +274,8 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Inscriptions Status - Donut Chart */}
             <ChartCard
-              title="Registration Status"
-              subtitle="Event inscriptions breakdown"
+              title={t('dashboard.registrationStatus')}
+              subtitle={t('dashboard.eventInscriptionsBreakdown')}
               icon={FileText}
             >
               <ResponsiveContainer width="100%" height={300}>
@@ -294,15 +296,18 @@ export default function DashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend />
+                  <Legend 
+                    formatter={(value: string, entry: any) => entry.payload.label || value}
+                    wrapperStyle={{ paddingTop: '20px' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </ChartCard>
 
             {/* Events by Type - Pie Chart */}
             <ChartCard
-              title="Events Distribution"
-              subtitle="Events by type breakdown"
+              title={t('dashboard.eventsDistribution')}
+              subtitle={t('dashboard.eventsByTypeBreakdown')}
               icon={BarChart3}
             >
               <ResponsiveContainer width="100%" height={300}>
@@ -322,7 +327,10 @@ export default function DashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend />
+                  <Legend 
+                    formatter={(value: string, entry: any) => entry.payload.name || value}
+                    wrapperStyle={{ paddingTop: '20px' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </ChartCard>
@@ -330,8 +338,8 @@ export default function DashboardPage() {
             {/* Top Events by Inscriptions - Bar Chart */}
             {topEvents.length > 0 && (
               <ChartCard
-                title="Top Events"
-                subtitle="Most popular events by registrations"
+                title={t('dashboard.topEvents')}
+                subtitle={t('dashboard.mostPopularEventsByRegistrations')}
                 icon={Trophy}
               >
                 <ResponsiveContainer width="100%" height={300}>
@@ -355,8 +363,8 @@ export default function DashboardPage() {
             {/* Participants by Wilaya - Bar Chart */}
             {participantsByWilaya.length > 0 && (
               <ChartCard
-                title="Top Wilayas"
-                subtitle="Participant distribution by province"
+                title={t('dashboard.topWilayas')}
+                subtitle={t('dashboard.participantDistributionByProvince')}
                 icon={MapPin}
               >
                 <ResponsiveContainer width="100%" height={300}>
@@ -380,8 +388,8 @@ export default function DashboardPage() {
 
             {/* Revenue Over Time */}
             <ChartCard
-              title="Revenue Trends"
-              subtitle="Payment revenue over time"
+              title={t('dashboard.revenueTrends')}
+              subtitle={t('dashboard.paymentRevenueOverTime')}
               icon={DollarSign}
             >
               <ResponsiveContainer width="100%" height={300}>
@@ -417,8 +425,8 @@ export default function DashboardPage() {
 
             {/* Events Over Time - Area Chart */}
             <ChartCard
-              title="Events Over Time"
-              subtitle="Event creation timeline"
+              title={t('dashboard.eventsOverTime')}
+              subtitle={t('dashboard.eventCreationTimeline')}
               icon={TrendingUp}
             >
               <ResponsiveContainer width="100%" height={300}>

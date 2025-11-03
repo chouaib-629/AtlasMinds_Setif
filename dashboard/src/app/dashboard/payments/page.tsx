@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService, Payment, Event } from '@/lib/api';
 import { DollarSign, CheckCircle, XCircle, Clock, RefreshCw, Filter } from 'lucide-react';
 
 export default function PaymentsPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,8 @@ export default function PaymentsPage() {
   };
 
   const handleStatusUpdate = async (paymentId: number, status: 'completed' | 'failed' | 'refunded') => {
-    if (confirm(`Are you sure you want to mark this payment as ${status}?`)) {
+    const statusText = status === 'completed' ? t('payments.completed') : status === 'failed' ? t('payments.failed') : t('payments.refunded');
+    if (confirm(`${t('payments.confirmStatusUpdate')} ${statusText}?`)) {
       try {
         await apiService.updatePaymentStatus(paymentId, status);
         loadPayments();
@@ -122,10 +125,10 @@ export default function PaymentsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Payment History
+                {t('payments.paymentHistory')}
               </h2>
               <p className="text-gray-600 mt-1">
-                Track and manage payments for symbolic price events
+                {t('payments.subtitle')}
               </p>
             </div>
             <button
@@ -133,7 +136,7 @@ export default function PaymentsPage() {
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              {t('payments.filters')}
             </button>
           </div>
 
@@ -142,7 +145,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Payments</p>
+                  <p className="text-sm text-gray-600">{t('payments.totalPayments')}</p>
                   <p className="text-2xl font-bold text-gray-900 mt-1">
                     {stats.total}
                   </p>
@@ -153,7 +156,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Completed</p>
+                  <p className="text-sm text-gray-600">{t('payments.completed')}</p>
                   <p className="text-2xl font-bold text-green-600 mt-1">
                     {stats.completed}
                   </p>
@@ -164,7 +167,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Pending</p>
+                  <p className="text-sm text-gray-600">{t('payments.pending')}</p>
                   <p className="text-2xl font-bold text-yellow-600 mt-1">
                     {stats.pending}
                   </p>
@@ -175,7 +178,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Failed</p>
+                  <p className="text-sm text-gray-600">{t('payments.failed')}</p>
                   <p className="text-2xl font-bold text-red-600 mt-1">
                     {stats.failed}
                   </p>
@@ -186,7 +189,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Refunded</p>
+                  <p className="text-sm text-gray-600">{t('payments.refunded')}</p>
                   <p className="text-2xl font-bold text-orange-600 mt-1">
                     {stats.refunded}
                   </p>
@@ -197,7 +200,7 @@ export default function PaymentsPage() {
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Revenue</p>
+                  <p className="text-sm text-gray-600">{t('payments.totalRevenue')}</p>
                   <p className="text-2xl font-bold text-indigo-600 mt-1">
                     {(stats.totalAmount || 0).toFixed(2)} DA
                   </p>
@@ -213,14 +216,14 @@ export default function PaymentsPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Event
+                    {t('payments.event')}
                   </label>
                   <select
                     value={filters.event_id}
                     onChange={(e) => setFilters({ ...filters, event_id: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
-                    <option value="">All Events</option>
+                    <option value="">{t('payments.allEvents')}</option>
                     {events.map((event) => (
                       <option key={event.id} value={event.id}>
                         {event.title}
@@ -230,23 +233,23 @@ export default function PaymentsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Status
+                    {t('payments.status')}
                   </label>
                   <select
                     value={filters.status}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
-                    <option value="">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                    <option value="failed">Failed</option>
-                    <option value="refunded">Refunded</option>
+                    <option value="">{t('payments.allStatuses')}</option>
+                    <option value="pending">{t('payments.pending')}</option>
+                    <option value="completed">{t('payments.completed')}</option>
+                    <option value="failed">{t('payments.failed')}</option>
+                    <option value="refunded">{t('payments.refunded')}</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date
+                    {t('payments.startDate')}
                   </label>
                   <input
                     type="date"
@@ -257,7 +260,7 @@ export default function PaymentsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    End Date
+                    {t('payments.endDate')}
                   </label>
                   <input
                     type="date"
@@ -271,7 +274,7 @@ export default function PaymentsPage() {
                 onClick={() => setFilters({ event_id: '', status: '', start_date: '', end_date: '' })}
                 className="mt-4 text-sm text-indigo-600 hover:text-indigo-700"
               >
-                Clear Filters
+                {t('payments.clearFilters')}
               </button>
             </div>
           )}
@@ -284,7 +287,7 @@ export default function PaymentsPage() {
           ) : payments.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
               <DollarSign className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No payments found</p>
+              <p className="text-gray-600">{t('payments.noPaymentsFound')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -293,31 +296,31 @@ export default function PaymentsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Payment ID
+                        {t('payments.paymentId')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Participant
+                        {t('payments.participant')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Event
+                        {t('payments.event')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Amount
+                        {t('payments.amount')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('payments.status')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Payment Method
+                        {t('payments.paymentMethod')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Transaction ID
+                        {t('payments.transactionId')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
+                        {t('payments.date')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('payments.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -357,7 +360,7 @@ export default function PaymentsPage() {
                             className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${getStatusColor(payment.status)}`}
                           >
                             {getStatusIcon(payment.status)}
-                            {payment.status}
+                            {t(`payments.${payment.status}`)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -383,14 +386,14 @@ export default function PaymentsPage() {
                               <button
                                 onClick={() => handleStatusUpdate(payment.id, 'completed')}
                                 className="text-green-600 hover:text-green-900"
-                                title="Mark as Completed"
+                                title={t('payments.markAsCompleted')}
                               >
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleStatusUpdate(payment.id, 'failed')}
                                 className="text-red-600 hover:text-red-900"
-                                title="Mark as Failed"
+                                title={t('payments.markAsFailed')}
                               >
                                 <XCircle className="h-4 w-4" />
                               </button>
@@ -400,7 +403,7 @@ export default function PaymentsPage() {
                             <button
                               onClick={() => handleStatusUpdate(payment.id, 'refunded')}
                               className="text-orange-600 hover:text-orange-900"
-                              title="Mark as Refunded"
+                              title={t('payments.markAsRefunded')}
                             >
                               <RefreshCw className="h-4 w-4" />
                             </button>

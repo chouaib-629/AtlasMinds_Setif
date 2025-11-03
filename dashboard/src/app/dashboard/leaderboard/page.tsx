@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService, LeaderboardEntry } from '@/lib/api';
 import { Medal, Award, Trophy } from 'lucide-react';
 
 export default function LeaderboardPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [scope, setScope] = useState<'global' | 'algeria' | 'wilaya'>(
@@ -59,12 +61,12 @@ export default function LeaderboardPage() {
           {/* Header */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-900">
-              Leaderboard
+              {t('leaderboard.title')}
             </h2>
             <p className="text-gray-600 mt-1">
               {isSuperAdmin
-                ? 'View global, Algeria-wide, or wilaya-specific leaderboards'
-                : 'View leaderboard for your youth house participants'}
+                ? t('leaderboard.subtitleGlobal')
+                : t('leaderboard.subtitleLocal')}
             </p>
           </div>
 
@@ -78,14 +80,14 @@ export default function LeaderboardPage() {
                     onChange={(e) => setScope(e.target.value as 'global' | 'algeria' | 'wilaya')}
                     className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
-                    <option value="global">Global Leaderboard</option>
-                    <option value="algeria">Algeria Leaderboard</option>
-                    <option value="wilaya">Wilaya Leaderboard</option>
+                    <option value="global">{t('leaderboard.globalLeaderboard')}</option>
+                    <option value="algeria">{t('leaderboard.algeriaLeaderboard')}</option>
+                    <option value="wilaya">{t('leaderboard.wilayaLeaderboard')}</option>
                   </select>
                   {scope === 'wilaya' && (
                     <input
                       type="text"
-                      placeholder="Enter Wilaya Name"
+                      placeholder={t('leaderboard.enterWilayaName')}
                       value={wilayaFilter}
                       onChange={(e) => setWilayaFilter(e.target.value)}
                       className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
@@ -124,9 +126,9 @@ export default function LeaderboardPage() {
                       {entry.prenom} {entry.nom}
                     </div>
                     <div className="text-sm opacity-90 mb-3">{entry.wilaya}</div>
-                    <div className="text-2xl font-bold">{entry.score} pts</div>
+                    <div className="text-2xl font-bold">{entry.score} {t('leaderboard.pts')}</div>
                     <div className="text-sm opacity-90 mt-1">
-                      {entry.attended_events_count} events
+                      {entry.attended_events_count} {t('leaderboard.events')}
                     </div>
                   </div>
                 </div>
@@ -137,11 +139,11 @@ export default function LeaderboardPage() {
           {/* Leaderboard Table */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 animate-spin"></div>
+              <div className="inline-block  rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
           ) : leaderboard.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600">No leaderboard data available</p>
+              <p className="text-gray-600">{t('leaderboard.noLeaderboardData')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -150,19 +152,19 @@ export default function LeaderboardPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Rank
+                        {t('leaderboard.rank')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Participant
+                        {t('leaderboard.participant')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Wilaya
+                        {t('leaderboard.wilaya')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Score
+                        {t('leaderboard.score')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Events Attended
+                        {t('leaderboard.eventsAttended')}
                       </th>
                     </tr>
                   </thead>
@@ -189,12 +191,12 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-lg font-semibold text-indigo-600">
-                            {entry.score} pts
+                            {entry.score} {t('leaderboard.pts')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-500">
-                            {entry.attended_events_count} events
+                            {entry.attended_events_count} {t('leaderboard.events')}
                           </div>
                         </td>
                       </tr>

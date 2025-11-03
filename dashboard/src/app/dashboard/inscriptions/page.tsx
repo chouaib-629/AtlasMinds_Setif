@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService, EventInscription } from '@/lib/api';
 import { Check, X } from 'lucide-react';
 
@@ -17,6 +18,7 @@ interface Inscription extends EventInscription {
 
 export default function InscriptionsPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<InscriptionType>('events');
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -125,15 +127,15 @@ export default function InscriptionsPage() {
   const getActivityTitle = (inscription: Inscription) => {
     switch (activeTab) {
       case 'events':
-        return inscription.event?.title || 'N/A';
+        return inscription.event?.title || t('events.notAvailable');
       case 'education':
-        return inscription.education?.title || 'N/A';
+        return inscription.education?.title || t('events.notAvailable');
       case 'clubs':
-        return inscription.club?.title || 'N/A';
+        return inscription.club?.title || t('events.notAvailable');
       case 'direct-activities':
-        return inscription.directActivity?.title || 'N/A';
+        return inscription.directActivity?.title || t('events.notAvailable');
       default:
-        return 'N/A';
+        return t('events.notAvailable');
     }
   };
 
@@ -166,10 +168,10 @@ export default function InscriptionsPage() {
   };
 
   const tabs: { id: InscriptionType; label: string }[] = [
-    { id: 'events', label: 'Events' },
-    { id: 'education', label: 'Education' },
-    { id: 'clubs', label: 'Clubs/Groups' },
-    { id: 'direct-activities', label: 'Activities' },
+    { id: 'events', label: t('inscriptions.events') },
+    { id: 'education', label: t('inscriptions.education') },
+    { id: 'clubs', label: t('inscriptions.clubsGroups') },
+    { id: 'direct-activities', label: t('inscriptions.activities') },
   ];
 
   return (
@@ -180,10 +182,10 @@ export default function InscriptionsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Inscriptions Management
+                {t('inscriptions.management')}
               </h2>
               <p className="text-gray-600 mt-1">
-                Manage participant registrations for all activities
+                {t('inscriptions.subtitle')}
               </p>
             </div>
           </div>
@@ -191,25 +193,25 @@ export default function InscriptionsPage() {
                     {/* Stats Summary */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-sm text-gray-600">{t('inscriptions.total')}</div>
               <div className="text-2xl font-bold text-gray-900">
                 {inscriptions.length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-sm text-gray-600">{t('inscriptions.pending')}</div>
               <div className="text-2xl font-bold text-yellow-600">
                 {inscriptions.filter((i) => i.status === 'pending').length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Approved</div>
+              <div className="text-sm text-gray-600">{t('inscriptions.approved')}</div>
               <div className="text-2xl font-bold text-green-600">
                 {inscriptions.filter((i) => i.status === 'approved').length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Attended</div>
+              <div className="text-sm text-gray-600">{t('inscriptions.attended')}</div>
               <div className="text-2xl font-bold text-blue-600">
                 {inscriptions.filter((i) => i.status === 'attended').length}
               </div>
@@ -249,7 +251,12 @@ export default function InscriptionsPage() {
                 onChange={(e) => setActivityFilter(e.target.value ? Number(e.target.value) : '')}
                 className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               >
-                <option value="">All {activeTab === 'events' ? 'Events' : activeTab === 'education' ? 'Educations' : activeTab === 'clubs' ? 'Clubs' : 'Activities'}</option>
+                <option value="">
+                  {activeTab === 'events' ? t('inscriptions.allEvents') : 
+                   activeTab === 'education' ? t('inscriptions.allEducations') : 
+                   activeTab === 'clubs' ? t('inscriptions.allClubs') : 
+                   t('inscriptions.allActivities')}
+                </option>
                 {activities.map((activity) => (
                   <option key={activity.id} value={activity.id}>
                     {activity.title}
@@ -261,11 +268,11 @@ export default function InscriptionsPage() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               >
-                <option value="">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="attended">Attended</option>
+                <option value="">{t('inscriptions.allStatuses')}</option>
+                <option value="pending">{t('common.pending')}</option>
+                <option value="approved">{t('common.approved')}</option>
+                <option value="rejected">{t('common.rejected')}</option>
+                <option value="attended">{t('common.attended')}</option>
               </select>
             </div>
           </div>
@@ -277,7 +284,7 @@ export default function InscriptionsPage() {
             </div>
           ) : inscriptions.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600">No inscriptions found</p>
+              <p className="text-gray-600">{t('inscriptions.noInscriptionsFound')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -286,19 +293,19 @@ export default function InscriptionsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Participant
+                        {t('inscriptions.participant')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Activity
+                        {t('inscriptions.activity')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('common.status')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Registered
+                        {t('inscriptions.registered')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('common.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -332,7 +339,7 @@ export default function InscriptionsPage() {
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(inscription.status)}`}
                           >
-                            {inscription.status}
+                            {t(`common.${inscription.status}`)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -348,14 +355,14 @@ export default function InscriptionsPage() {
                                 className="flex items-center gap-1 text-green-600 hover:text-green-900"
                               >
                                 <Check className="h-4 w-4" />
-                                Approve
+                                {t('inscriptions.approve')}
                               </button>
                               <button
                                 onClick={() => handleStatusUpdate(inscription.id, 'rejected')}
                                 className="flex items-center gap-1 text-red-600 hover:text-red-900"
                               >
                                 <X className="h-4 w-4" />
-                                Reject
+                                {t('inscriptions.reject')}
                               </button>
                             </div>
                           )}
@@ -364,7 +371,7 @@ export default function InscriptionsPage() {
                               onClick={() => handleStatusUpdate(inscription.id, 'attended')}
                               className="flex items-center gap-1 text-blue-600 hover:text-blue-900"
                             >
-                              Mark Attended
+                              {t('inscriptions.markAsAttended')}
                             </button>
                           )}
                           {inscription.status !== 'pending' && inscription.status !== 'approved' && (

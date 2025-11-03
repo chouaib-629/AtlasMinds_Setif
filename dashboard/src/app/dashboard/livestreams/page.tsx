@@ -4,12 +4,17 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import frTranslations from '@/locales/fr';
+import arTranslations from '@/locales/ar';
+import enTranslations from '@/locales/en';
 import { apiService, Livestream, Event } from '@/lib/api';
 import { Edit, Trash2, Radio, Video, Copy, Check, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function LivestreamsPage() {
   const { isSuperAdmin } = useAuth();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [livestreams, setLivestreams] = useState<Livestream[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
@@ -86,7 +91,7 @@ export default function LivestreamsPage() {
       } else {
         // Validate that stream_url is provided
         if (!formData.stream_url || formData.stream_url.trim() === '') {
-          alert('Please provide a Stream URL or use Agora streaming.');
+          alert(t('livestreams.pleaseProvideUrl'));
           return;
         }
         data.stream_url = formData.stream_url;
@@ -102,7 +107,7 @@ export default function LivestreamsPage() {
         : await apiService.createLivestream(data);
 
       if (!response.success) {
-        alert(response.message || 'Failed to save livestream. Please check the form and try again.');
+        alert(response.message || t('livestreams.failedToSave'));
         return;
       }
 
@@ -120,13 +125,13 @@ export default function LivestreamsPage() {
       loadLivestreams();
     } catch (error: any) {
       console.error('Error saving livestream:', error);
-      const errorMessage = error?.message || error?.response?.data?.message || 'Error saving livestream. Please check the form and try again.';
+      const errorMessage = error?.message || error?.response?.data?.message || t('livestreams.errorSaving');
       alert(errorMessage);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this livestream?')) {
+    if (confirm(t('livestreams.deleteConfirm'))) {
       try {
         await apiService.deleteLivestream(id);
         loadLivestreams();
@@ -152,7 +157,7 @@ export default function LivestreamsPage() {
 
   const handleGenerateTokens = async (livestream: Livestream) => {
     if (!livestream.channel_name) {
-      alert('This livestream does not have a channel name. Please update it to use Agora.');
+      alert(t('livestreams.noChannelName'));
       return;
     }
 
@@ -178,11 +183,11 @@ export default function LivestreamsPage() {
         setSelectedLivestream(livestream);
         setShowTokenModal(true);
       } else {
-        alert(`Failed to generate tokens: ${response.message || 'Please check your Agora configuration.'}`);
+        alert(`${t('livestreams.failedToGenerateTokens')}: ${response.message || t('livestreams.checkAgoraConfig')}`);
       }
     } catch (error) {
       console.error('Error generating tokens:', error);
-      alert('Error generating tokens. Please check your Agora configuration.');
+      alert(t('livestreams.errorGeneratingTokens'));
     }
   };
 
@@ -204,10 +209,10 @@ export default function LivestreamsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Livestreams Management
+                {t('livestreams.management')}
               </h2>
               <p className="text-gray-600 mt-1">
-                Create and manage livestreams for events and activities
+                {t('livestreams.subtitle')}
               </p>
             </div>
             <button
@@ -226,7 +231,7 @@ export default function LivestreamsPage() {
               }}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              + Create Livestream
+              + {t('livestreams.createLivestream')}
             </button>
           </div>
 
@@ -237,7 +242,7 @@ export default function LivestreamsPage() {
             </div>
           ) : livestreams.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600">No livestreams found</p>
+              <p className="text-gray-600">{t('livestreams.noLivestreamsFound')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -260,7 +265,7 @@ export default function LivestreamsPage() {
                           }`}
                         >
                           {livestream.is_live && <Radio className="h-3 w-3 fill-current" />}
-                          {livestream.is_live ? 'LIVE' : 'Offline'}
+                          {livestream.is_live ? t('livestreams.live') : t('livestreams.offline')}
                         </span>
                       </div>
                     </div>
@@ -270,14 +275,14 @@ export default function LivestreamsPage() {
                           <button
                             onClick={() => router.push(`/dashboard/stream/${livestream.id}`)}
                             className="text-red-600 hover:text-red-700 p-1"
-                            title="Go Live / Host Stream"
+                            title={t('livestreams.goLive')}
                           >
                             <Play className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleGenerateTokens(livestream)}
                             className="text-green-600 hover:text-green-700 p-1"
-                            title="Get Agora Tokens"
+                            title={t('livestreams.getAgoraTokens')}
                           >
                             <Video className="h-4 w-4" />
                           </button>
@@ -286,14 +291,14 @@ export default function LivestreamsPage() {
                       <button
                         onClick={() => openEditModal(livestream)}
                         className="text-indigo-600 hover:text-indigo-700 p-1"
-                        title="Edit"
+                        title={t('livestreams.edit')}
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(livestream.id)}
                         className="text-red-600 hover:text-red-700 p-1"
-                        title="Delete"
+                        title={t('livestreams.delete')}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -308,18 +313,18 @@ export default function LivestreamsPage() {
                     {livestream.channel_name ? (
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-gray-500">Agora Channel:</span>
+                          <span className="text-gray-500">{t('livestreams.agoraChannel')}</span>
                           <span className="text-indigo-600 font-mono text-xs">
                             {livestream.channel_name}
                           </span>
                         </div>
                         <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">
-                          Agora Stream
+                          {t('livestreams.agoraStream')}
                         </span>
                       </div>
                     ) : livestream.stream_url ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-500">URL:</span>
+                        <span className="text-gray-500">{t('livestreams.url')}</span>
                         <a
                           href={livestream.stream_url}
                           target="_blank"
@@ -332,7 +337,7 @@ export default function LivestreamsPage() {
                     ) : null}
                     {livestream.event_id && (
                       <p className="text-xs text-gray-500">
-                        Event ID: {livestream.event_id}
+                        {t('livestreams.eventId')}: {livestream.event_id}
                       </p>
                     )}
                   </div>
@@ -343,15 +348,15 @@ export default function LivestreamsPage() {
 
           {/* Modal */}
           {showModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-slate-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-[100]">
               <div className="bg-white rounded-lg p-6 w-full max-w-md">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  {editingLivestream ? 'Edit Livestream' : 'Create Livestream'}
+                  {editingLivestream ? t('livestreams.editLivestream') : t('livestreams.createLivestream')}
                 </h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Title
+                      {t('livestreams.titleLabel')}
                     </label>
                     <input
                       type="text"
@@ -363,7 +368,7 @@ export default function LivestreamsPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
+                      {t('livestreams.descriptionLabel')}
                     </label>
                     <textarea
                       value={formData.description}
@@ -381,30 +386,30 @@ export default function LivestreamsPage() {
                       className="mr-2"
                     />
                     <label htmlFor="use_agora" className="text-sm text-gray-700">
-                      Use Agora (Real-time streaming)
+                      {t('livestreams.useAgora')}
                     </label>
                   </div>
 
                   {formData.use_agora ? (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Channel Name (leave empty for auto-generation)
+                        {t('livestreams.channelNameLabel')}
                       </label>
                       <input
                         type="text"
                         value={formData.channel_name}
                         onChange={(e) => setFormData({ ...formData, channel_name: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                        placeholder="livestream-1 (auto-generated if empty)"
+                        placeholder={t('livestreams.channelNamePlaceholder')}
                       />
                       <p className="text-xs text-gray-500 mt-1">
-                        Channel name for Agora. Will be auto-generated if not provided.
+                        {t('livestreams.channelNameHint')}
                       </p>
                     </div>
                   ) : (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Stream URL
+                        {t('livestreams.streamUrlLabel')}
                       </label>
                       <input
                         type="url"
@@ -412,20 +417,20 @@ export default function LivestreamsPage() {
                         value={formData.stream_url}
                         onChange={(e) => setFormData({ ...formData, stream_url: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
-                        placeholder="https://..."
+                        placeholder={t('livestreams.streamUrlPlaceholder')}
                       />
                     </div>
                   )}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Event (Optional)
+                      {t('livestreams.eventOptional')}
                     </label>
                     <select
                       value={formData.event_id}
                       onChange={(e) => setFormData({ ...formData, event_id: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                     >
-                      <option value="">No Event</option>
+                      <option value="">{t('livestreams.noEvent')}</option>
                       {events.map((event) => (
                         <option key={event.id} value={event.id}>
                           {event.title}
@@ -442,7 +447,7 @@ export default function LivestreamsPage() {
                       className="mr-2"
                     />
                     <label htmlFor="is_live" className="text-sm text-gray-700">
-                      Currently Live
+                      {t('livestreams.currentlyLive')}
                     </label>
                   </div>
                   <div className="flex gap-3">
@@ -450,7 +455,7 @@ export default function LivestreamsPage() {
                       type="submit"
                       className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                     >
-                      {editingLivestream ? 'Update' : 'Create'}
+                      {editingLivestream ? t('livestreams.update') : t('livestreams.create')}
                     </button>
                     <button
                       type="button"
@@ -460,7 +465,7 @@ export default function LivestreamsPage() {
                       }}
                       className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300"
                     >
-                      Cancel
+                      {t('livestreams.cancel')}
                     </button>
                   </div>
                 </form>
@@ -470,11 +475,11 @@ export default function LivestreamsPage() {
 
           {/* Agora Tokens Modal */}
           {showTokenModal && agoraTokens && selectedLivestream && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-slate-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-[100]">
               <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    Agora Tokens for: {selectedLivestream.title}
+                    {t('livestreams.agoraTokensFor')} {selectedLivestream.title}
                   </h3>
                   <button
                     onClick={() => {
@@ -491,15 +496,14 @@ export default function LivestreamsPage() {
                 <div className="space-y-4">
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                     <p className="text-sm text-yellow-800">
-                      <strong>Important:</strong> Keep these tokens secure. They are valid for 24 hours.
-                      Use these credentials to initialize your Agora client on the host device.
+                      <strong>{t('livestreams.important')}</strong> {t('livestreams.tokensSecure')}
                     </p>
                   </div>
 
                   {/* App ID */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      App ID
+                      {t('livestreams.appId')}
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -511,7 +515,7 @@ export default function LivestreamsPage() {
                       <button
                         onClick={() => copyToClipboard(agoraTokens.appId || '', 'appId')}
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
-                        title="Copy"
+                        title={t('livestreams.copy')}
                       >
                         {copiedField === 'appId' ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -525,7 +529,7 @@ export default function LivestreamsPage() {
                   {/* Channel Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Channel Name
+                      {t('livestreams.channelName')}
                     </label>
                     <div className="flex items-center gap-2">
                       <input
@@ -537,7 +541,7 @@ export default function LivestreamsPage() {
                       <button
                         onClick={() => copyToClipboard(agoraTokens.channelName || '', 'channelName')}
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
-                        title="Copy"
+                        title={t('livestreams.copy')}
                       >
                         {copiedField === 'channelName' ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -551,7 +555,7 @@ export default function LivestreamsPage() {
                   {/* RTC Token */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      RTC Token (for video streaming)
+                      {t('livestreams.rtcToken')}
                     </label>
                     <div className="flex items-center gap-2">
                       <textarea
@@ -563,7 +567,7 @@ export default function LivestreamsPage() {
                       <button
                         onClick={() => copyToClipboard(agoraTokens.rtcToken || '', 'rtcToken')}
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
-                        title="Copy"
+                        title={t('livestreams.copy')}
                       >
                         {copiedField === 'rtcToken' ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -577,7 +581,7 @@ export default function LivestreamsPage() {
                   {/* RTM Token */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      RTM Token (for chat/messaging)
+                      {t('livestreams.rtmToken')}
                     </label>
                     <div className="flex items-center gap-2">
                       <textarea
@@ -589,7 +593,7 @@ export default function LivestreamsPage() {
                       <button
                         onClick={() => copyToClipboard(agoraTokens.rtmToken || '', 'rtmToken')}
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
-                        title="Copy"
+                        title={t('livestreams.copy')}
                       >
                         {copiedField === 'rtmToken' ? (
                           <Check className="h-4 w-4 text-green-600" />
@@ -602,14 +606,19 @@ export default function LivestreamsPage() {
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
-                      <strong>Usage Instructions:</strong>
+                      <strong>{t('livestreams.usageInstructions')}</strong>
                     </p>
                     <ul className="text-sm text-blue-700 mt-2 list-disc list-inside space-y-1">
-                      <li>Use these tokens to initialize the Agora RTC and RTM SDKs</li>
-                      <li>RTC Token: For video/audio streaming (role: broadcaster)</li>
-                      <li>RTM Token: For chat and messaging functionality</li>
-                      <li>Set channelProfile to LiveBroadcasting in RTC SDK</li>
-                      <li>Set clientRole to Broadcaster for host, Audience for viewers</li>
+                      {(() => {
+                        const translations = language === 'ar' ? arTranslations : language === 'en' ? enTranslations : frTranslations;
+                        const instructions = translations.livestreams?.usageInstructionsList;
+                        if (Array.isArray(instructions)) {
+                          return instructions.map((instruction: string, index: number) => (
+                            <li key={index}>{instruction}</li>
+                          ));
+                        }
+                        return null;
+                      })()}
                     </ul>
                   </div>
 
@@ -621,7 +630,7 @@ export default function LivestreamsPage() {
                     }}
                     className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                   >
-                    Close
+                    {t('livestreams.close')}
                   </button>
                 </div>
               </div>

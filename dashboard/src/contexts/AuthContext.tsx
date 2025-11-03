@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { apiService, Admin, LoginCredentials } from '@/lib/api';
 
 interface AuthContextType {
@@ -20,39 +20,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const hasInitialized = useRef(false);
+  const isLoadingRef = useRef(false);
 
-  // Load token from localStorage on mount
+  // Load token from localStorage on mount (only once)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !hasInitialized.current) {
+      hasInitialized.current = true;
       const savedToken = localStorage.getItem('admin_token');
       if (savedToken) {
         setToken(savedToken);
+        isLoadingRef.current = true;
+      } else {
+        // No token, set loading to false immediately
+        setIsLoading(false);
+        isLoadingRef.current = false;
       }
     }
   }, []);
 
   // Load admin profile when token exists
   useEffect(() => {
+    let isMounted = true;
+    
     const loadAdmin = async () => {
       if (token) {
         try {
           const response = await apiService.getAdminProfile();
+          if (!isMounted) return;
+          
           if (response.success && response.data) {
             setAdmin(response.data.admin);
           } else {
             // Token might be invalid, clear it
             localStorage.removeItem('admin_token');
             setToken(null);
+            setAdmin(null);
           }
         } catch (error) {
+          if (!isMounted) return;
           localStorage.removeItem('admin_token');
           setToken(null);
+          setAdmin(null);
         }
+      } else {
+        // No token, ensure admin is null
+        setAdmin(null);
       }
-      setIsLoading(false);
+      
+      if (isMounted && isLoadingRef.current) {
+        setIsLoading(false);
+        isLoadingRef.current = false;
+      }
     };
 
     loadAdmin();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [token]);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
@@ -105,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [token]);
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     admin,
     token,
     isLoading,
@@ -114,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     refreshAdmin,
-  };
+  }), [admin, token, isLoading, login, logout, refreshAdmin]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

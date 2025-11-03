@@ -43,7 +43,7 @@ export function processEventsOverTime(events: Event[]): TimeSeriesData[] {
 /**
  * Process events by type distribution
  */
-export function processEventsByType(events: Event[]): ChartDataPoint[] {
+export function processEventsByType(events: Event[], t?: (key: string) => string): ChartDataPoint[] {
   const types = ['national', 'local', 'online', 'hybrid'];
   const colors = {
     national: '#8b5cf6',
@@ -58,7 +58,7 @@ export function processEventsByType(events: Event[]): ChartDataPoint[] {
   }, {} as Record<string, number>);
 
   return types.map((type) => ({
-    name: type.charAt(0).toUpperCase() + type.slice(1),
+    name: t ? t(`events.${type}`) : type.charAt(0).toUpperCase() + type.slice(1),
     value: distribution[type] || 0,
     fill: colors[type as keyof typeof colors],
   }));
@@ -67,7 +67,7 @@ export function processEventsByType(events: Event[]): ChartDataPoint[] {
 /**
  * Process inscriptions by status
  */
-export function processInscriptionsByStatus(inscriptions: EventInscription[]): DistributionData[] {
+export function processInscriptionsByStatus(inscriptions: EventInscription[], t?: (key: string) => string): DistributionData[] {
   const statusColors = {
     pending: '#f59e0b',
     approved: '#10b981',
@@ -82,7 +82,7 @@ export function processInscriptionsByStatus(inscriptions: EventInscription[]): D
 
   const total = inscriptions.length;
   return Object.entries(distribution).map(([status, value]) => ({
-    label: status.charAt(0).toUpperCase() + status.slice(1),
+    label: t ? t(`common.${status}`) : status.charAt(0).toUpperCase() + status.slice(1),
     value,
     percentage: total > 0 ? (value / total) * 100 : 0,
     color: statusColors[status as keyof typeof statusColors] || '#6b7280',

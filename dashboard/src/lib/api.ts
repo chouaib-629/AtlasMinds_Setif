@@ -233,14 +233,17 @@ class ApiService {
           // Clear invalid token
           if (typeof window !== 'undefined') {
             localStorage.removeItem('admin_token');
-            // Redirect to login after a short delay
-            setTimeout(() => {
-              window.location.href = '/login';
-            }, 2000);
+            // Only redirect to login if we're not already on the login page
+            const currentPath = window.location.pathname;
+            if (!currentPath.includes('/login')) {
+              setTimeout(() => {
+                window.location.href = '/login';
+              }, 2000);
+            }
           }
           return {
             success: false,
-            message: data.message || 'Your session has expired. Please log in again. Redirecting to login...',
+            message: data.message || 'Your session has expired. Please log in again.',
             errors: data.errors,
           };
         }

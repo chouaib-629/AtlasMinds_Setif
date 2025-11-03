@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService } from '@/lib/api';
 import { User, Edit2, Save, X, Lock, Eye, EyeOff, Mail, Shield, Calendar } from 'lucide-react';
 
 export default function ProfilePage() {
   const { admin, isSuperAdmin, refreshAdmin } = useAuth();
+  const { t } = useLanguage();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -84,7 +86,7 @@ export default function ProfilePage() {
       });
 
       if (response.success) {
-        setSuccess('Profile updated successfully!');
+        setSuccess(t('profile.profileUpdated'));
         setIsEditingProfile(false);
         await refreshAdmin();
         if (response.data?.admin) {
@@ -94,10 +96,10 @@ export default function ProfilePage() {
           });
         }
       } else {
-        setError(response.message || 'Failed to update profile');
+        setError(response.message || t('profile.failedToUpdateProfile'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : t('profile.anErrorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -110,13 +112,13 @@ export default function ProfilePage() {
     setSuccess(null);
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError('New password and confirmation do not match');
+      setError(t('profile.passwordMismatch'));
       setLoading(false);
       return;
     }
 
     if (passwordData.newPassword.length < 8) {
-      setError('New password must be at least 8 characters long');
+      setError(t('profile.passwordTooShort'));
       setLoading(false);
       return;
     }
@@ -129,7 +131,7 @@ export default function ProfilePage() {
       );
 
       if (response.success) {
-        setSuccess('Password changed successfully!');
+        setSuccess(t('profile.passwordChanged'));
         setIsChangingPassword(false);
         setPasswordData({
           currentPassword: '',
@@ -137,10 +139,10 @@ export default function ProfilePage() {
           confirmPassword: '',
         });
       } else {
-        setError(response.message || 'Failed to change password');
+        setError(response.message || t('profile.failedToChangePassword'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : t('profile.anErrorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -162,8 +164,8 @@ export default function ProfilePage() {
         <div className="space-y-6">
           {/* Header */}
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">Profile Settings</h2>
-            <p className="text-sm text-gray-500 mt-1">Manage your account information and security</p>
+            <h2 className="text-2xl font-semibold text-gray-900">{t('profile.title')}</h2>
+            <p className="text-sm text-gray-500 mt-1">{t('profile.subtitle')}</p>
           </div>
 
           {/* Success/Error Messages */}
@@ -216,7 +218,7 @@ export default function ProfilePage() {
                         : 'bg-blue-500/20 text-white border border-white/30'
                     }`}
                   >
-                    {isSuperAdmin ? 'Super Admin' : 'Admin'}
+                    {isSuperAdmin ? t('common.superAdmin') : t('common.admin')}
                   </span>
                 </div>
                 <div className="p-6 space-y-4">
@@ -228,7 +230,7 @@ export default function ProfilePage() {
                     <div className="flex items-center text-gray-600">
                       <Calendar className="h-5 w-5 mr-3 text-gray-400" />
                       <span className="text-sm">
-                        Joined {new Date(admin.created_at).toLocaleDateString('en-US', {
+                        {t('profile.joined')} {new Date(admin.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'short',
                         })}
@@ -246,7 +248,7 @@ export default function ProfilePage() {
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <User className="h-5 w-5 text-indigo-600" />
-                    Profile Information
+                    {t('profile.profileInformation')}
                   </h3>
                   {!isEditingProfile && (
                     <button
@@ -254,7 +256,7 @@ export default function ProfilePage() {
                       className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
                     >
                       <Edit2 className="h-4 w-4" />
-                      Edit
+                      {t('profile.edit')}
                     </button>
                   )}
                 </div>
@@ -264,7 +266,7 @@ export default function ProfilePage() {
                     <form onSubmit={handleSaveProfile} className="space-y-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Full Name
+                          {t('profile.fullName')}
                         </label>
                         <input
                           type="text"
@@ -277,7 +279,7 @@ export default function ProfilePage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Address
+                          {t('profile.emailAddress')}
                         </label>
                         <input
                           type="email"
@@ -295,7 +297,7 @@ export default function ProfilePage() {
                           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                         >
                           <Save className="h-4 w-4" />
-                          {loading ? 'Saving...' : 'Save Changes'}
+                          {loading ? t('profile.saving') : t('profile.saveChanges')}
                         </button>
                         <button
                           type="button"
@@ -304,7 +306,7 @@ export default function ProfilePage() {
                           className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
                         >
                           <X className="h-4 w-4" />
-                          Cancel
+                          {t('profile.cancel')}
                         </button>
                       </div>
                     </form>
@@ -313,25 +315,25 @@ export default function ProfilePage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
-                            Nom
+                            {t('profile.nom')}
                           </label>
                           <p className="text-sm font-medium text-gray-900">{nom || '-'}</p>
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
-                            Prénom
+                            {t('profile.prenom')}
                           </label>
                           <p className="text-sm font-medium text-gray-900">{prenom || '-'}</p>
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
-                            Email
+                            {t('profile.email')}
                           </label>
                           <p className="text-sm font-medium text-gray-900">{admin?.email || '-'}</p>
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
-                            Role
+                            {t('profile.role')}
                           </label>
                           <span
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -340,7 +342,7 @@ export default function ProfilePage() {
                                 : 'bg-blue-100 text-blue-800'
                             }`}
                           >
-                            {isSuperAdmin ? 'Super Admin' : 'Admin'}
+                            {isSuperAdmin ? t('common.superAdmin') : t('common.admin')}
                           </span>
                         </div>
                       </div>
@@ -354,7 +356,7 @@ export default function ProfilePage() {
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <Lock className="h-5 w-5 text-indigo-600" />
-                    Security
+                    {t('profile.security')}
                   </h3>
                   {!isChangingPassword && (
                     <button
@@ -362,7 +364,7 @@ export default function ProfilePage() {
                       className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
                     >
                       <Edit2 className="h-4 w-4" />
-                      Change Password
+                      {t('profile.changePassword')}
                     </button>
                   )}
                 </div>
@@ -372,7 +374,7 @@ export default function ProfilePage() {
                     <form onSubmit={handleChangePassword} className="space-y-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Current Password
+                          {t('profile.currentPassword')}
                         </label>
                         <div className="relative">
                           <input
@@ -402,7 +404,7 @@ export default function ProfilePage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          New Password
+                          {t('profile.newPassword')}
                         </label>
                         <div className="relative">
                           <input
@@ -429,12 +431,12 @@ export default function ProfilePage() {
                             )}
                           </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters long</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('profile.passwordMinLength')}</p>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Confirm New Password
+                          {t('profile.confirmNewPassword')}
                         </label>
                         <div className="relative">
                           <input
@@ -470,7 +472,7 @@ export default function ProfilePage() {
                           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                         >
                           <Save className="h-4 w-4" />
-                          {loading ? 'Changing...' : 'Change Password'}
+                          {loading ? t('profile.changing') : t('profile.changePasswordButton')}
                         </button>
                         <button
                           type="button"
@@ -479,7 +481,7 @@ export default function ProfilePage() {
                           className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
                         >
                           <X className="h-4 w-4" />
-                          Cancel
+                          {t('profile.cancel')}
                         </button>
                       </div>
                     </form>
@@ -488,8 +490,8 @@ export default function ProfilePage() {
                   <div className="p-6">
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Password</p>
-                        <p className="text-xs text-gray-500 mt-1">Last updated when you changed your password</p>
+                        <p className="text-sm font-medium text-gray-900">{t('profile.password')}</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('profile.passwordLastUpdated')}</p>
                       </div>
                       <Shield className="h-8 w-8 text-gray-400" />
                     </div>

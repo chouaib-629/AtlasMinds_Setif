@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService } from '@/lib/api';
 import { Edit, Trash2, Plus } from 'lucide-react';
 import { analyzeEventWithGemini } from '@/lib/gemini';
@@ -67,6 +68,7 @@ interface DirectActivity extends BaseActivity {
 
 export default function EventsPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<ActivityType>('events');
   const [events, setEvents] = useState<Event[]>([]);
   const [educations, setEducations] = useState<Education[]>([]);
@@ -123,11 +125,11 @@ export default function EventsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const itemType = activeTab === 'events' ? 'event' : 
-                     activeTab === 'education' ? 'education' :
-                     activeTab === 'clubs' ? 'club' : 'direct activity';
+    const itemTypeKey = activeTab === 'events' ? 'event' : 
+                        activeTab === 'education' ? 'educationItem' :
+                        activeTab === 'clubs' ? 'club' : 'activity';
     
-    if (confirm(`Are you sure you want to delete this ${itemType}?`)) {
+    if (confirm(`${t('events.deleteConfirm')} ${t(`events.${itemTypeKey}`, itemTypeKey)}?`)) {
       try {
         switch (activeTab) {
           case 'events':
@@ -146,7 +148,7 @@ export default function EventsPage() {
         loadData();
       } catch (error) {
         console.error('Error deleting:', error);
-        alert('Failed to delete. Please try again.');
+        alert(t('events.failedToDelete'));
       }
     }
   };
@@ -193,7 +195,7 @@ export default function EventsPage() {
           // If Gemini fails, close suggestions modal and proceed with original data
           setShowSuggestionsModal(false);
           if (error.message?.includes('API key')) {
-            alert('Gemini API key not configured. Creating event without AI analysis.');
+            alert(t('events.geminiApiNotConfigured'));
           } else {
             // Silent fail - just proceed without suggestions
             console.warn('Proceeding without AI suggestions:', error.message);
@@ -206,7 +208,7 @@ export default function EventsPage() {
       await proceedWithEventCreation(formData);
     } catch (error) {
       console.error('Error saving:', error);
-      alert('Failed to save. Please check all required fields.');
+      alert(t('events.failedToSave'));
       setLoadingSuggestions(false);
       setShowSuggestionsModal(false);
     }
@@ -256,7 +258,7 @@ export default function EventsPage() {
       loadData();
     } catch (error) {
       console.error('Error saving:', error);
-      alert('Failed to save. Please check all required fields.');
+      alert(t('events.failedToSave'));
       setLoadingSuggestions(false);
     }
   };
@@ -292,10 +294,10 @@ export default function EventsPage() {
   };
 
   const tabs = [
-    { id: 'events' as ActivityType, label: 'Events' },
-    { id: 'education' as ActivityType, label: 'Education' },
-    { id: 'clubs' as ActivityType, label: 'Clubs/Groups' },
-    { id: 'direct-activities' as ActivityType, label: 'Activities' },
+    { id: 'events' as ActivityType, label: t('events.title') },
+    { id: 'education' as ActivityType, label: t('events.education', 'Education') },
+    { id: 'clubs' as ActivityType, label: t('events.clubs', 'Clubs/Groups') },
+    { id: 'direct-activities' as ActivityType, label: t('events.activities', 'Activities') },
   ];
 
   return (
@@ -306,10 +308,10 @@ export default function EventsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Activities Management
+                {t('events.activitiesManagement')}
               </h2>
               <p className="text-gray-600 mt-1">
-                Manage events, education, clubs, and activities
+                {t('events.manageEventsEducationClubs')}
               </p>
             </div>
             <button
@@ -317,7 +319,10 @@ export default function EventsPage() {
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <Plus className="h-5 w-5" />
-              Create {activeTab === 'events' ? 'Event' : activeTab === 'education' ? 'Education' : activeTab === 'clubs' ? 'Club' : 'Activity'}
+              {activeTab === 'events' ? t('events.createEvent') : 
+               activeTab === 'education' ? t('events.createEducation') : 
+               activeTab === 'clubs' ? t('events.createClub') : 
+               t('events.createActivity')}
             </button>
           </div>
 
@@ -349,7 +354,7 @@ export default function EventsPage() {
             </div>
           ) : getItems().length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600">No items found</p>
+              <p className="text-gray-600">{t('events.noItemsFound')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -358,24 +363,24 @@ export default function EventsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Title
+                        {t('events.titleCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date & Time
+                        {t('events.dateTimeCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
+                        {t('events.locationCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        {t('events.statusCol')}
                       </th>
                       {activeTab !== 'events' && (
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Participants
+                          {t('events.participantsCol')}
                         </th>
                       )}
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('events.actionsCol')}
                       </th>
                     </tr>
                   </thead>
@@ -404,7 +409,7 @@ export default function EventsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {item.location || 'N/A'}
+                            {item.location || t('events.notAvailable')}
                           </div>
                           {item.center_name && (
                             <div className="text-xs text-gray-500">
@@ -416,10 +421,12 @@ export default function EventsPage() {
                           {activeTab === 'events' ? (
                             <div className="flex flex-col gap-1">
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs w-fit">
-                                {item.type}
+                                {t(`events.${item.type}`, item.type)}
                               </span>
                               <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs w-fit">
-                                {item.attendance_type}
+                                {item.attendance_type === 'in-person' ? t('events.inPerson') : 
+                                 item.attendance_type === 'online' ? t('events.online') : 
+                                 t('events.hybridAttendance')}
                               </span>
                             </div>
                           ) : (
@@ -430,7 +437,7 @@ export default function EventsPage() {
                                     ? 'bg-red-100 text-red-800' 
                                     : 'bg-yellow-100 text-yellow-800'
                                 }`}>
-                                  {item.status}
+                                  {item.status === 'live' ? t('events.live') : t('events.upcoming')}
                                 </span>
                               )}
                               <span className={`px-2 py-1 rounded text-xs w-fit ${
@@ -438,11 +445,11 @@ export default function EventsPage() {
                                   ? 'bg-green-100 text-green-800' 
                                   : 'bg-gray-100 text-gray-800'
                               }`}>
-                                {item.is_active ? 'Active' : 'Inactive'}
+                                {item.is_active ? t('events.active') : t('events.inactive')}
                               </span>
                               {item.is_featured && (
                                 <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs w-fit">
-                                  Featured
+                                  {t('events.featured')}
                                 </span>
                               )}
                             </div>
@@ -455,7 +462,7 @@ export default function EventsPage() {
                             </div>
                             {item.level && (
                               <div className="text-xs text-gray-500">
-                                Level: {item.level}
+                                {t('events.level')}: {item.level}
                               </div>
                             )}
                           </td>
@@ -465,14 +472,14 @@ export default function EventsPage() {
                             <button
                               onClick={() => openEditModal(item)}
                               className="text-indigo-600 hover:text-indigo-900"
-                              title="Edit"
+                              title={t('common.edit')}
                             >
                               <Edit className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleDelete(item.id)}
                               className="text-red-600 hover:text-red-900"
-                              title="Delete"
+                              title={t('common.delete')}
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -531,6 +538,7 @@ interface ActivityFormModalProps {
 }
 
 function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSubmit }: ActivityFormModalProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<any>(() => {
     if (editingItem) {
       // Format date for datetime-local input
@@ -636,10 +644,18 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-slate-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">
-          {editingItem ? 'Edit' : 'Create'} {activeTab === 'events' ? 'Event' : activeTab === 'education' ? 'Education' : activeTab === 'clubs' ? 'Club' : 'Activity'}
+          {editingItem ? 
+            (activeTab === 'events' ? t('events.editEvent') : 
+             activeTab === 'education' ? t('events.editEducation') : 
+             activeTab === 'clubs' ? t('events.editClub') : 
+             t('events.editActivity')) :
+            (activeTab === 'events' ? t('events.createEvent') : 
+             activeTab === 'education' ? t('events.createEducation') : 
+             activeTab === 'clubs' ? t('events.createClub') : 
+             t('events.createActivity'))}
         </h3>
         
         <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -647,7 +663,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {/* Title */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Title *
+                {t('events.eventTitle')} *
               </label>
               <input
                 type="text"
@@ -661,7 +677,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {/* Description */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description *
+                {t('events.eventDescription')} *
               </label>
               <textarea
                 required
@@ -676,7 +692,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {activeTab === 'events' && isSuperAdmin && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Type *
+                  {t('events.eventType')} *
                 </label>
                 <select
                   required
@@ -684,10 +700,10 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 >
-                  <option value="national">National</option>
-                  <option value="local">Local</option>
-                  <option value="online">Online</option>
-                  <option value="hybrid">Hybrid</option>
+                  <option value="national">{t('events.national')}</option>
+                  <option value="local">{t('events.local')}</option>
+                  <option value="online">{t('events.online')}</option>
+                  <option value="hybrid">{t('events.hybrid')}</option>
                 </select>
               </div>
             )}
@@ -696,7 +712,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {activeTab !== 'events' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category
+                  {t('events.category')}
                 </label>
                 <input
                   type="text"
@@ -710,7 +726,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {/* Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date & Time *
+                {t('events.eventDate')} *
               </label>
               <input
                 type="datetime-local"
@@ -733,7 +749,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {activeTab !== 'events' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Time
+                  {t('events.time')}
                 </label>
                 <input
                   type="time"
@@ -747,7 +763,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {/* Location */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
+                {t('events.location')}
               </label>
               <input
                 type="text"
@@ -760,7 +776,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
             {/* Attendance Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Attendance Type *
+                {t('events.attendanceType')} *
               </label>
               <select
                 required
@@ -768,9 +784,9 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 onChange={(e) => setFormData({ ...formData, attendance_type: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               >
-                {isSuperAdmin && <option value="online">Online</option>}
-                {isSuperAdmin && <option value="hybrid">Hybrid</option>}
-                <option value="in-person">In-Person</option>
+                {isSuperAdmin && <option value="online">{t('events.online')}</option>}
+                {isSuperAdmin && <option value="hybrid">{t('events.hybrid')}</option>}
+                <option value="in-person">{t('events.inPerson')}</option>
               </select>
             </div>
 
@@ -780,7 +796,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Organizer */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Organizer
+                    {t('events.organizer')}
                   </label>
                   <input
                     type="text"
@@ -793,7 +809,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Organizer Contact */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Organizer Contact
+                    {t('events.organizerContact')}
                   </label>
                   <input
                     type="text"
@@ -806,7 +822,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Center ID */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Center ID
+                    {t('events.centerId')}
                   </label>
                   <input
                     type="number"
@@ -819,7 +835,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Center Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Center Name
+                    {t('events.centerName')}
                   </label>
                   <input
                     type="text"
@@ -832,7 +848,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Capacity */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Capacity
+                    {t('events.capacity')}
                   </label>
                   <input
                     type="number"
@@ -846,7 +862,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Participants (readonly if editing) */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Participants
+                    {t('events.participants')}
                   </label>
                   <input
                     type="number"
@@ -857,14 +873,14 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                     readOnly={!!editingItem}
                   />
                   {editingItem && (
-                    <p className="text-xs text-gray-500 mt-1">Auto-calculated from inscriptions</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('events.autoCalculated')}</p>
                   )}
                 </div>
 
                 {/* Duration */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Duration (e.g., "6 أسابيع")
+                    {t('events.duration')}
                   </label>
                   <input
                     type="text"
@@ -878,14 +894,14 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {(activeTab === 'education' || activeTab === 'clubs') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Level
+                      {t('events.level')}
                     </label>
                     <select
                       value={formData.level || ''}
                       onChange={(e) => setFormData({ ...formData, level: e.target.value || null })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                     >
-                      <option value="">Select Level</option>
+                      <option value="">{t('events.selectLevel')}</option>
                       <option value="مبتدئ">مبتدئ</option>
                       <option value="متوسط">متوسط</option>
                       <option value="متقدم">متقدم</option>
@@ -896,22 +912,22 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {/* Status */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Status
+                    {t('events.status')}
                   </label>
                   <select
                     value={formData.status || 'upcoming'}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                   >
-                    <option value="upcoming">Upcoming</option>
-                    <option value="live">Live</option>
+                    <option value="upcoming">{t('events.upcoming')}</option>
+                    <option value="live">{t('events.live')}</option>
                   </select>
                 </div>
 
                 {/* Image URL */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Image URL
+                    {t('events.imageUrl')}
                   </label>
                   <input
                     type="url"
@@ -925,7 +941,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {activeTab === 'direct-activities' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Votes
+                      {t('events.votes')}
                     </label>
                     <input
                       type="number"
@@ -941,7 +957,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                 {activeTab === 'direct-activities' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Target Audience
+                      {t('events.targetAudience')}
                     </label>
                     <input
                       type="text"
@@ -962,7 +978,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                     className="mr-2"
                   />
                   <label htmlFor="is_featured" className="text-sm text-gray-700">
-                    Featured
+                    {t('events.featured')}
                   </label>
                 </div>
 
@@ -976,7 +992,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                     className="mr-2"
                   />
                   <label htmlFor="is_active" className="text-sm text-gray-700">
-                    Active
+                    {t('events.active')}
                   </label>
                 </div>
               </>
@@ -999,7 +1015,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                   className="mr-2"
                 />
                 <label htmlFor="has_price" className="text-sm text-gray-700">
-                  This {activeTab === 'events' ? 'event' : 'activity'} has a price
+                  {t('events.hasPrice')}
                 </label>
               </div>
               {formData.has_price && (
@@ -1009,7 +1025,7 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
                   step="0.01"
                   value={formData.price || ''}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="Enter price in DA"
+                  placeholder={t('events.enterPriceInDA')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 />
               )}
@@ -1021,14 +1037,14 @@ function ActivityFormModal({ activeTab, isSuperAdmin, editingItem, onClose, onSu
               type="submit"
               className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
             >
-              {editingItem ? 'Update' : 'Create'}
+              {editingItem ? t('events.update') : t('events.create')}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300"
             >
-              Cancel
+              {t('events.cancel')}
             </button>
           </div>
         </form>

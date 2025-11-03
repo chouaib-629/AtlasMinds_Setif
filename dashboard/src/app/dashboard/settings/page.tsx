@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService } from '@/lib/api';
 import {
   Settings as SettingsIcon,
@@ -19,6 +20,7 @@ import {
 
 export default function SettingsPage() {
   const { admin, isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +102,7 @@ export default function SettingsPage() {
       }
     } catch (err) {
       console.error('Error loading settings:', err);
-      setError('Failed to load settings. Using default values.');
+      setError(t('settings.failedToLoadSettings'));
     } finally {
       setLoading(false);
     }
@@ -144,14 +146,14 @@ export default function SettingsPage() {
       const response = await apiService.updateAdminSettings(apiSettings);
 
       if (response.success) {
-        setSuccess('Settings saved successfully!');
+        setSuccess(t('settings.settingsSavedSuccessfully'));
         setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError(response.message || 'Failed to save settings. Please try again.');
+        setError(response.message || t('settings.failedToSaveSettings'));
         setTimeout(() => setError(null), 5000);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save settings. Please try again.');
+      setError(err instanceof Error ? err.message : t('settings.failedToSaveSettings'));
       setTimeout(() => setError(null), 5000);
     } finally {
       setSaving(false);
@@ -159,7 +161,7 @@ export default function SettingsPage() {
   };
 
   const handleReset = () => {
-    if (confirm('Are you sure you want to reset all settings to default values?')) {
+    if (confirm(t('settings.resetConfirm'))) {
       const defaultSettings = {
         siteName: 'Algeria Youth Network',
         siteDescription: 'Admin dashboard for youth centers management',
@@ -192,7 +194,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <Loader2 className="h-8 w-8 animate-spin text-indigo-600 mx-auto mb-4" />
-              <p className="text-gray-600">Loading settings...</p>
+              <p className="text-gray-600">{t('settings.loading')}</p>
             </div>
           </div>
         </DashboardLayout>
@@ -207,8 +209,8 @@ export default function SettingsPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-semibold text-gray-900">Settings</h2>
-              <p className="text-sm text-gray-500 mt-1">Manage your dashboard preferences and configuration</p>
+              <h2 className="text-2xl font-semibold text-gray-900">{t('settings.title')}</h2>
+              <p className="text-sm text-gray-500 mt-1">{t('settings.subtitle')}</p>
             </div>
           </div>
 
@@ -237,12 +239,12 @@ export default function SettingsPage() {
               <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center gap-2">
                   <SettingsIcon className="h-5 w-5 text-indigo-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">General Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('settings.generalSettings')}</h3>
                 </div>
                 <div className="p-6 space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Site Name
+                      {t('settings.siteName')}
                     </label>
                     <input
                       type="text"
@@ -254,7 +256,7 @@ export default function SettingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Site Description
+                      {t('settings.siteDescription')}
                     </label>
                     <textarea
                       value={settings.siteDescription}
@@ -267,7 +269,7 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Timezone
+                        {t('settings.timezone')}
                       </label>
                       <select
                         value={settings.timezone}
@@ -281,7 +283,7 @@ export default function SettingsPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Language
+                        {t('settings.language')}
                       </label>
                       <select
                         value={settings.language}
@@ -297,7 +299,7 @@ export default function SettingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Date Format
+                      {t('settings.dateFormat')}
                     </label>
                     <select
                       value={settings.dateFormat}
@@ -316,13 +318,13 @@ export default function SettingsPage() {
               <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center gap-2">
                   <Bell className="h-5 w-5 text-indigo-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('settings.notifications')}</h3>
                 </div>
                 <div className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Email Notifications</label>
-                      <p className="text-xs text-gray-500 mt-1">Receive notifications via email</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.emailNotifications')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.emailNotificationsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -337,8 +339,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Push Notifications</label>
-                      <p className="text-xs text-gray-500 mt-1">Receive browser push notifications</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.pushNotifications')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.pushNotificationsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -353,8 +355,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Event Reminders</label>
-                      <p className="text-xs text-gray-500 mt-1">Get notified before events start</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.eventReminders')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.eventRemindersDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -369,8 +371,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">New Inscription Alerts</label>
-                      <p className="text-xs text-gray-500 mt-1">Notify when new inscriptions are created</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.newInscriptionAlerts')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.newInscriptionAlertsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -385,8 +387,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Payment Alerts</label>
-                      <p className="text-xs text-gray-500 mt-1">Notify when payments are received</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.paymentAlerts')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.paymentAlertsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -405,12 +407,12 @@ export default function SettingsPage() {
               <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center gap-2">
                   <Database className="h-5 w-5 text-indigo-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">System Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('settings.systemSettings')}</h3>
                 </div>
                 <div className="p-6 space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Items Per Page
+                      {t('settings.itemsPerPage')}
                     </label>
                     <select
                       value={settings.itemsPerPage}
@@ -426,8 +428,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Auto Refresh</label>
-                      <p className="text-xs text-gray-500 mt-1">Automatically refresh dashboard data</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.autoRefresh')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.autoRefreshDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -443,7 +445,7 @@ export default function SettingsPage() {
                   {settings.autoRefresh && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Refresh Interval (seconds)
+                        {t('settings.refreshInterval')}
                       </label>
                       <input
                         type="number"
@@ -458,8 +460,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <label className="text-sm font-medium text-gray-900">Enable Analytics</label>
-                      <p className="text-xs text-gray-500 mt-1">Track and analyze dashboard usage</p>
+                      <label className="text-sm font-medium text-gray-900">{t('settings.enableAnalytics')}</label>
+                      <p className="text-xs text-gray-500 mt-1">{t('settings.enableAnalyticsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -479,12 +481,12 @@ export default function SettingsPage() {
                 <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center gap-2">
                     <Shield className="h-5 w-5 text-indigo-600" />
-                    <h3 className="text-lg font-semibold text-gray-900">Security Settings</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{t('settings.securitySettings')}</h3>
                   </div>
                   <div className="p-6 space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Session Timeout (minutes)
+                        {t('settings.sessionTimeout')}
                       </label>
                       <input
                         type="number"
@@ -498,8 +500,8 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <label className="text-sm font-medium text-gray-900">Require Strong Password</label>
-                        <p className="text-xs text-gray-500 mt-1">Enforce password complexity rules</p>
+                        <label className="text-sm font-medium text-gray-900">{t('settings.requireStrongPassword')}</label>
+                        <p className="text-xs text-gray-500 mt-1">{t('settings.requireStrongPasswordDesc')}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -514,8 +516,8 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <label className="text-sm font-medium text-gray-900">Two-Factor Authentication</label>
-                        <p className="text-xs text-gray-500 mt-1">Add an extra layer of security</p>
+                        <label className="text-sm font-medium text-gray-900">{t('settings.twoFactorAuth')}</label>
+                        <p className="text-xs text-gray-500 mt-1">{t('settings.twoFactorAuthDesc')}</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -545,12 +547,12 @@ export default function SettingsPage() {
                     {saving ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Saving...
+                        {t('settings.saving')}
                       </>
                     ) : (
                       <>
                         <Save className="h-4 w-4" />
-                        Save Settings
+                        {t('settings.saveSettings')}
                       </>
                     )}
                   </button>
@@ -559,7 +561,7 @@ export default function SettingsPage() {
                     disabled={saving}
                     className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm disabled:opacity-50"
                   >
-                    Reset to Defaults
+                    {t('settings.resetToDefaults')}
                   </button>
                 </div>
               </div>
@@ -569,9 +571,9 @@ export default function SettingsPage() {
                 <div className="flex items-start gap-3">
                   <Globe className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-semibold text-blue-900 mb-1">About Settings</h4>
+                    <h4 className="text-sm font-semibold text-blue-900 mb-1">{t('settings.aboutSettings')}</h4>
                     <p className="text-xs text-blue-700">
-                      Your settings are saved securely in the database. Changes are automatically synced across all your sessions.
+                      {t('settings.aboutSettingsDesc')}
                     </p>
                   </div>
                 </div>

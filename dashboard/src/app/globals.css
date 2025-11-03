@@ -102,3 +102,46 @@ th {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .ml-64 {
+  margin-left: 0;
+  margin-right: 16rem; /* 64 * 0.25rem */
+}
+
+[dir="rtl"] .mr-3 {
+  margin-right: 0;
+  margin-left: 0.75rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Fix for sidebar in RTL */
+[dir="rtl"] .fixed.inset-y-0.left-0 {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .ml-64 {
+  margin-left: 0;
+}
+
+[dir="rtl"] .mr-64 {
+  margin-right: 0;
+  margin-left: 16rem;
+}

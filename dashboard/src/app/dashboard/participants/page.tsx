@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService, Participant } from '@/lib/api';
 import { X } from 'lucide-react';
 
@@ -16,6 +17,7 @@ interface ActivityParticipant extends Participant {
 
 export default function ParticipantsPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<ActivityType>('events');
   const [participants, setParticipants] = useState<ActivityParticipant[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -98,7 +100,7 @@ export default function ParticipantsPage() {
         attended_events_count: user.attended_events_count || 0,
         inscription_id: inscription.id,
         event_id: activity.id,
-        event_title: activity.title || 'N/A',
+        event_title: activity.title || t('events.notAvailable'),
         activity_type: type,
         activity_category: activity.category,
         inscription_status: inscription.status,
@@ -157,10 +159,10 @@ export default function ParticipantsPage() {
   };
 
   const tabs = [
-    { id: 'events' as ActivityType, label: 'Events' },
-    { id: 'education' as ActivityType, label: 'Education' },
-    { id: 'clubs' as ActivityType, label: 'Clubs/Groups' },
-    { id: 'direct-activities' as ActivityType, label: 'Activities' },
+    { id: 'events' as ActivityType, label: t('participants.events') },
+    { id: 'education' as ActivityType, label: t('participants.education') },
+    { id: 'clubs' as ActivityType, label: t('participants.clubsGroups') },
+    { id: 'direct-activities' as ActivityType, label: t('participants.activities') },
   ];
 
   return (
@@ -171,10 +173,10 @@ export default function ParticipantsPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Participants
+                {t('participants.title')}
               </h2>
               <p className="text-gray-600 mt-1">
-                View participants registered for activities
+                {t('participants.subtitle')}
               </p>
             </div>
           </div>
@@ -182,25 +184,25 @@ export default function ParticipantsPage() {
                     {/* Stats Summary */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Total Participants</div>
+              <div className="text-sm text-gray-600">{t('participants.totalParticipants')}</div>
               <div className="text-2xl font-bold text-gray-900">
                 {participants.length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Approved</div>
+              <div className="text-sm text-gray-600">{t('common.approved')}</div>
               <div className="text-2xl font-bold text-green-600">
                 {participants.filter((p) => p.inscription_status === 'approved').length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Pending</div>
+              <div className="text-sm text-gray-600">{t('common.pending')}</div>
               <div className="text-2xl font-bold text-yellow-600">
                 {participants.filter((p) => p.inscription_status === 'pending').length}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow p-4">
-              <div className="text-sm text-gray-600">Attended</div>
+              <div className="text-sm text-gray-600">{t('common.attended')}</div>
               <div className="text-2xl font-bold text-blue-600">
                 {participants.filter((p) => p.inscription_status === 'attended').length}
               </div>
@@ -236,14 +238,22 @@ export default function ParticipantsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Filter by {activeTab === 'events' ? 'Event' : activeTab === 'education' ? 'Education' : activeTab === 'clubs' ? 'Club' : 'Activity'}
+                  {activeTab === 'events' ? t('participants.filterByEvent') : 
+                   activeTab === 'education' ? t('participants.filterByEducation') : 
+                   activeTab === 'clubs' ? t('participants.filterByClub') : 
+                   t('participants.filterByActivity')}
                 </label>
                 <select
                   value={filters.activity_id}
                   onChange={(e) => setFilters({ ...filters, activity_id: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 >
-                  <option value="">All {activeTab === 'events' ? 'Events' : activeTab === 'education' ? 'Educations' : activeTab === 'clubs' ? 'Clubs' : 'Activities'}</option>
+                  <option value="">
+                    {activeTab === 'events' ? t('participants.allEvents') : 
+                     activeTab === 'education' ? t('participants.allEducations') : 
+                     activeTab === 'clubs' ? t('participants.allClubs') : 
+                     t('participants.allActivities')}
+                  </option>
                   {activities.map((activity) => (
                     <option key={activity.id} value={activity.id}>
                       {activity.title}
@@ -253,11 +263,11 @@ export default function ParticipantsPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Filter by Wilaya
+                  {t('participants.filterByWilaya')}
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Wilaya"
+                  placeholder={t('participants.enterWilaya')}
                   value={filters.wilaya}
                   onChange={(e) => setFilters({ ...filters, wilaya: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
@@ -268,7 +278,7 @@ export default function ParticipantsPage() {
               onClick={() => setFilters({ activity_id: '', wilaya: '' })}
               className="mt-4 text-sm text-indigo-600 hover:text-indigo-700"
             >
-              Clear Filters
+              {t('participants.clearFilters')}
             </button>
           </div>
 
@@ -279,7 +289,7 @@ export default function ParticipantsPage() {
             </div>
           ) : participants.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-600">No participants found</p>
+              <p className="text-gray-600">{t('participants.noParticipantsFound')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -288,22 +298,22 @@ export default function ParticipantsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Participant
+                        {t('participants.participantCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Activity
+                        {t('participants.activityCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
+                        {t('participants.locationCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Registration Status
+                        {t('participants.registrationStatus')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Score
+                        {t('participants.scoreCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('participants.actionsCol')}
                       </th>
                     </tr>
                   </thead>
@@ -320,7 +330,7 @@ export default function ParticipantsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {participant.event_title || 'N/A'}
+                            {participant.event_title || t('events.notAvailable')}
                           </div>
                           {participant.activity_category && (
                             <div className="text-xs text-gray-500">
@@ -329,7 +339,7 @@ export default function ParticipantsPage() {
                           )}
                           {participant.activity_type && (
                             <div className="text-xs text-gray-500">
-                              Type: {participant.activity_type}
+                              {t('participants.type')}: {participant.activity_type}
                             </div>
                           )}
                         </td>
@@ -342,12 +352,12 @@ export default function ParticipantsPage() {
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(participant.inscription_status)}`}
                           >
-                            {participant.inscription_status || 'N/A'}
+                            {participant.inscription_status ? t(`common.${participant.inscription_status}`) : t('events.notAvailable')}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-semibold text-indigo-600">
-                            {participant.score} pts
+                            {participant.score} {t('participants.points')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -355,7 +365,7 @@ export default function ParticipantsPage() {
                             onClick={() => setSelectedParticipant(participant)}
                             className="text-indigo-600 hover:text-indigo-900"
                           >
-                            View Details
+                            {t('participants.viewDetails')}
                           </button>
                         </td>
                       </tr>
@@ -368,11 +378,11 @@ export default function ParticipantsPage() {
 
           {/* Participant Details Modal */}
           {selectedParticipant && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 bg-slate-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
               <div className="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    Participant Details: {selectedParticipant.prenom} {selectedParticipant.nom}
+                    {t('participants.participantDetails')}: {selectedParticipant.prenom} {selectedParticipant.nom}
                   </h3>
                   <button
                     onClick={() => setSelectedParticipant(null)}
@@ -385,53 +395,53 @@ export default function ParticipantsPage() {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="text-sm text-gray-600">{t('participants.email')}</p>
                     <p className="font-semibold text-gray-900">
                       {selectedParticipant.email}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600">Location</p>
+                    <p className="text-sm text-gray-600">{t('participants.location')}</p>
                     <p className="font-semibold text-gray-900">
                       {selectedParticipant.commune}, {selectedParticipant.wilaya}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600">Total Score</p>
+                    <p className="text-sm text-gray-600">{t('participants.totalScore')}</p>
                     <p className="font-semibold text-indigo-600">
-                      {selectedParticipant.score} points
+                      {selectedParticipant.score} {t('participants.points')}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-600">Events Attended</p>
+                    <p className="text-sm text-gray-600">{t('participants.eventsAttended')}</p>
                     <p className="font-semibold text-gray-900">
-                      {selectedParticipant.attended_events_count} events
+                      {selectedParticipant.attended_events_count} {t('participants.eventsCount')}
                     </p>
                   </div>
                   {selectedParticipant.event_title && (
                     <>
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <p className="text-sm text-gray-600">Registered Activity</p>
+                        <p className="text-sm text-gray-600">{t('participants.registeredActivity')}</p>
                         <p className="font-semibold text-gray-900">
                           {selectedParticipant.event_title}
                         </p>
                         {selectedParticipant.activity_category && (
                           <p className="text-xs text-gray-500 mt-1">
-                            Category: {selectedParticipant.activity_category}
+                            {t('participants.category')}: {selectedParticipant.activity_category}
                           </p>
                         )}
                         {selectedParticipant.activity_type && (
                           <p className="text-xs text-gray-500">
-                            Type: {selectedParticipant.activity_type}
+                            {t('participants.type')}: {selectedParticipant.activity_type}
                           </p>
                         )}
                       </div>
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <p className="text-sm text-gray-600">Registration Status</p>
+                        <p className="text-sm text-gray-600">{t('participants.registrationStatus')}</p>
                         <span
                           className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(selectedParticipant.inscription_status)}`}
                         >
-                          {selectedParticipant.inscription_status || 'N/A'}
+                          {selectedParticipant.inscription_status ? t(`common.${selectedParticipant.inscription_status}`) : t('events.notAvailable')}
                         </span>
                       </div>
                     </>

@@ -114,12 +114,6 @@ export function InterestsModal({ open, onClose, onComplete }: InterestsModalProp
                 {t('الحد الأدنى: 3', 'Minimum: 3', 'Minimum: 3')}
               </span>
             </div>
-            {selectedInterests.length >= 3 && (
-              <div className="mt-2 flex items-center gap-2 text-primary text-sm">
-                <Check className="w-4 h-4" />
-                <span>{t('ممتاز! يمكنك المتابعة', 'Great! You can continue', 'Super! Vous pouvez continuer')}</span>
-              </div>
-            )}
           </div>
 
           {/* Interests Grid */}

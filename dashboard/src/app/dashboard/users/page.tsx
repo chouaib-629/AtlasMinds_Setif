@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/Layout/DashboardLayout';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiService, User } from '@/lib/api';
 import { X, User as UserIcon } from 'lucide-react';
 
 export default function UsersPage() {
   const { isSuperAdmin } = useAuth();
+  const { t } = useLanguage();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -47,10 +49,10 @@ export default function UsersPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                All Users
+                {t('users.title')}
               </h2>
               <p className="text-gray-600 mt-1">
-                View all registered users from the mobile app
+                {t('users.subtitle')}
               </p>
             </div>
           </div>
@@ -60,11 +62,11 @@ export default function UsersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Filter by Wilaya
+                  {t('users.filterByWilaya')}
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Wilaya"
+                  placeholder={t('users.enterWilaya')}
                   value={filters.wilaya}
                   onChange={(e) => setFilters({ ...filters, wilaya: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -72,11 +74,11 @@ export default function UsersPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Filter by Commune
+                  {t('users.filterByCommune')}
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Commune"
+                  placeholder={t('users.enterCommune')}
                   value={filters.commune}
                   onChange={(e) => setFilters({ ...filters, commune: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -87,7 +89,7 @@ export default function UsersPage() {
               onClick={() => setFilters({ wilaya: '', commune: '' })}
               className="mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              + Clear Filters
+              {t('users.clearFilters')}
             </button>
           </div>
 
@@ -99,7 +101,7 @@ export default function UsersPage() {
           ) : users.length === 0 ? (
             <div className="bg-white rounded-lg shadow border border-gray-200 p-12 text-center">
               <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No users found</p>
+              <p className="text-gray-600">{t('users.noUsersFound')}</p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
@@ -108,25 +110,25 @@ export default function UsersPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
+                        {t('users.nameCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
+                        {t('users.emailCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Phone
+                        {t('users.phoneCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
+                        {t('users.locationCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Score
+                        {t('users.scoreCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Events Attended
+                        {t('users.eventsAttendedCol')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        {t('users.actionsCol')}
                       </th>
                     </tr>
                   </thead>
@@ -155,7 +157,7 @@ export default function UsersPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-semibold text-indigo-600">
-                            {user.score} pts
+                            {user.score} {t('users.points')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -168,7 +170,7 @@ export default function UsersPage() {
                             onClick={() => setSelectedUser(user)}
                             className="text-indigo-600 hover:text-indigo-900 font-medium"
                           >
-                            View Details
+                            {t('users.viewDetails')}
                           </button>
                         </td>
                       </tr>
@@ -181,11 +183,11 @@ export default function UsersPage() {
 
           {/* User Details Modal */}
           {selectedUser && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-slate-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-[100]">
               <div className="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-xl">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    User Details: {selectedUser.prenom} {selectedUser.nom}
+                    {t('users.userDetails')}: {selectedUser.prenom} {selectedUser.nom}
                   </h3>
                   <button
                     onClick={() => setSelectedUser(null)}
@@ -198,53 +200,53 @@ export default function UsersPage() {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="text-sm text-gray-600">{t('users.email')}</p>
                     <p className="font-semibold text-gray-900">
                       {selectedUser.email}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Phone</p>
+                    <p className="text-sm text-gray-600">{t('users.phone')}</p>
                     <p className="font-semibold text-gray-900">
-                      {selectedUser.numero_telephone || 'N/A'}
+                      {selectedUser.numero_telephone || t('events.notAvailable')}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Date of Birth</p>
+                    <p className="text-sm text-gray-600">{t('users.dateOfBirth')}</p>
                     <p className="font-semibold text-gray-900">
                       {selectedUser.date_de_naissance
                         ? new Date(selectedUser.date_de_naissance).toLocaleDateString()
-                        : 'N/A'}
+                        : t('events.notAvailable')}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Location</p>
+                    <p className="text-sm text-gray-600">{t('users.location')}</p>
                     <p className="font-semibold text-gray-900">
                       {selectedUser.commune}, {selectedUser.wilaya}
                     </p>
                   </div>
                   {selectedUser.adresse && (
                     <div className="bg-gray-50 rounded-lg p-4 col-span-2 border border-gray-200">
-                      <p className="text-sm text-gray-600">Address</p>
+                      <p className="text-sm text-gray-600">{t('users.address')}</p>
                       <p className="font-semibold text-gray-900">
                         {selectedUser.adresse}
                       </p>
                     </div>
                   )}
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Total Score</p>
+                    <p className="text-sm text-gray-600">{t('users.totalScore')}</p>
                     <p className="font-semibold text-indigo-600">
-                      {selectedUser.score} points
+                      {selectedUser.score} {t('users.points')}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Events Attended</p>
+                    <p className="text-sm text-gray-600">{t('users.eventsAttended')}</p>
                     <p className="font-semibold text-gray-900">
-                      {selectedUser.attended_events_count} events
+                      {selectedUser.attended_events_count} {t('users.eventsCount')}
                     </p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                    <p className="text-sm text-gray-600">Registered</p>
+                    <p className="text-sm text-gray-600">{t('users.registered')}</p>
                     <p className="font-semibold text-gray-900">
                       {new Date(selectedUser.created_at).toLocaleDateString()}
                     </p>
