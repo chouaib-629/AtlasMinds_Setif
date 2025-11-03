@@ -11,6 +11,9 @@ export const API_ENDPOINTS = {
     refresh: '/admin/refresh',
     forgotPassword: '/admin/forgot-password',
     resetPassword: '/admin/reset-password',
+    updateProfile: '/admin/profile',
+    changePassword: '/admin/change-password',
+    settings: '/admin/settings',
   },
 };
 

@@ -128,6 +128,10 @@ Route::prefix('admin')->group(function () {
         Route::get('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'show']);
         Route::put('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'update']);
         Route::delete('/direct-activities/{id}', [\App\Http\Controllers\Admin\DirectActivityController::class, 'destroy']);
+
+        // Settings routes
+        Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index']);
+        Route::put('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update']);
     });
 });
 

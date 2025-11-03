@@ -310,6 +310,37 @@ class ApiService {
     });
   }
 
+  async updateAdminProfile(data: { name?: string; email?: string }): Promise<ApiResponse<AuthResponse>> {
+    return this.request<AuthResponse>(API_ENDPOINTS.admin.updateProfile, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<ApiResponse> {
+    return this.request(API_ENDPOINTS.admin.changePassword, {
+      method: 'POST',
+      body: JSON.stringify({
+        current_password: currentPassword,
+        password,
+        password_confirmation: passwordConfirmation,
+      }),
+    });
+  }
+
+  async getAdminSettings(): Promise<ApiResponse<{ settings: any }>> {
+    return this.request<{ settings: any }>(API_ENDPOINTS.admin.settings, {
+      method: 'GET',
+    });
+  }
+
+  async updateAdminSettings(settings: any): Promise<ApiResponse<{ settings: any }>> {
+    return this.request<{ settings: any }>(API_ENDPOINTS.admin.settings, {
+      method: 'PUT',
+      body: JSON.stringify(settings),
+    });
+  }
+
   // Events Methods
   async getEvents(params?: { type?: string; attendance_type?: string }): Promise<ApiResponse<{ events: Event[] }>> {
     const queryParams = new URLSearchParams();

@@ -76,4 +76,12 @@ class Admin extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(\App\Models\Event::class);
     }
+
+    /**
+     * Get the settings for this admin
+     */
+    public function settings()
+    {
+        return $this->hasOne(AdminSetting::class);
+    }
 }
