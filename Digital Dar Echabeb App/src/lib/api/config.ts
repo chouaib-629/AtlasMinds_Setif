@@ -48,5 +48,18 @@ export const API_ENDPOINTS = {
     CLUB: '/clubs',
     DIRECT_ACTIVITY: '/direct-activities',
   },
+  
+  // Livestreams
+  LIVESTREAMS: {
+    BASE: '/livestreams',
+    GET_ALL: '/livestreams',
+    GET_ONE: (id: string) => `/livestreams/${id}`,
+  },
+  
+  // Agora
+  AGORA: {
+    TOKENS: '/agora/tokens',
+    CONFIG: '/agora/config',
+  },
 };
 

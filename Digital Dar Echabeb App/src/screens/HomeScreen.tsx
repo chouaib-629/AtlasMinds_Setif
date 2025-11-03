@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../lib/context';
 import { mockActivities } from '../lib/data';
 import { homeService, HomeEvent, LearningProgram, CommunityProject } from '../lib/api';
+import { livestreamService, Livestream } from '../lib/api/livestreams';
 import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
@@ -13,26 +14,32 @@ interface HomeScreenProps {
   onNotificationsClick: () => void;
   onMapClick: () => void;
   onCenterClick: (centerId: string) => void;
+  onLivestreamClick?: (livestreamId: string) => void;
 }
 
-export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick }: HomeScreenProps) {
+export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick, onLivestreamClick }: HomeScreenProps) {
   const { t, language } = useApp();
   const [eventsData, setEventsData] = useState<HomeEvent[]>([]);
   const [learningData, setLearningData] = useState<LearningProgram[]>([]);
   const [communityData, setCommunityData] = useState<CommunityProject[]>([]);
+  const [livestreams, setLivestreams] = useState<Livestream[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch home data from API
+  // Fetch home data and livestreams from API
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const data = await homeService.getHomeData();
-        setEventsData(data.events || []);
-        setLearningData(data.learning || []);
-        setCommunityData(data.community || []);
+        const [homeData, livestreamsData] = await Promise.all([
+          homeService.getHomeData().catch(() => ({ events: [], learning: [], community: [] })),
+          livestreamService.getAllLivestreams().catch(() => []),
+        ]);
+        setEventsData(homeData.events || []);
+        setLearningData(homeData.learning || []);
+        setCommunityData(homeData.community || []);
+        setLivestreams(livestreamsData || []);
       } catch (err) {
         console.error('Failed to fetch home data:', err);
         setError(err instanceof Error ? err.message : 'Failed to load home data');
@@ -40,12 +47,25 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
         setEventsData([]);
         setLearningData([]);
         setCommunityData([]);
+        setLivestreams([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchHomeData();
+    
+    // Refresh livestreams every 30 seconds
+    const interval = setInterval(async () => {
+      try {
+        const livestreamsData = await livestreamService.getAllLivestreams();
+        setLivestreams(livestreamsData || []);
+      } catch (err) {
+        console.error('Failed to refresh livestreams:', err);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Use API data, with empty arrays as fallback
@@ -142,9 +162,78 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
             </Button>
           </div>
           
-          {displayEvents.length > 0 ? (
+          {(displayEvents.length > 0 || livestreams.length > 0) ? (
           <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
             <div className="flex gap-4 pb-4 w-max sm:w-full">
+              {/* Show livestreams first */}
+              {livestreams.map((livestream) => {
+                // Check if this livestream corresponds to "ندوة القيادة الشبابية" (Youth Leadership Seminar)
+                const isYouthLeadership = livestream.title?.includes('القيادة الشبابية') || 
+                                         livestream.title?.includes('Youth Leadership') ||
+                                         livestream.event_title?.includes('القيادة الشبابية') ||
+                                         livestream.event_title?.includes('Youth Leadership');
+                
+                return (
+                  <Card 
+                    key={`livestream-${livestream.id}`} 
+                    className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => {
+                      if (onLivestreamClick) {
+                        onLivestreamClick(livestream.id.toString());
+                      } else {
+                        // Fallback: navigate to virtual hall with event ID if available
+                        const activityId = livestream.event_id?.toString() || livestream.id.toString();
+                        onActivityClick(activityId);
+                      }
+                    }}
+                  >
+                    <div className="relative h-48">
+                      <div className="w-full h-full bg-gradient-to-br from-red-600 to-purple-600 flex items-center justify-center">
+                        <Video className="w-16 h-16 text-white/80" />
+                      </div>
+                      {/* Dark gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                      
+                      {/* Live Badge */}
+                      <div className="absolute top-3 right-3 flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-full text-sm animate-pulse">
+                        <div className="w-2 h-2 bg-white rounded-full" />
+                        {t('مباشر', 'LIVE')}
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                        <h3 className="mb-1.5">{livestream.title || t('ندوة القيادة الشبابية', 'Youth Leadership Seminar')}</h3>
+                        {livestream.description && (
+                          <p className="text-sm opacity-90 mb-2 line-clamp-2">
+                            {livestream.description}
+                          </p>
+                        )}
+                        {livestream.event_title && (
+                          <p className="text-xs opacity-75 mb-2">
+                            {livestream.event_title}
+                          </p>
+                        )}
+                        <div className="flex items-center justify-between mt-2">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (onLivestreamClick) {
+                                onLivestreamClick(livestream.id.toString());
+                              }
+                            }}
+                            className="flex items-center gap-1 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full transition-colors"
+                          >
+                            <Video className="w-3 h-3" />
+                            {t('شاهد الآن', 'Watch Now')}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+              
+              {/* Then show regular events */}
               {displayEvents.map((event) => (
                 <Card 
                   key={event.id} 

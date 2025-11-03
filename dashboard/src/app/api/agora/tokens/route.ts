@@ -22,7 +22,14 @@ export async function POST(request: NextRequest) {
     if (!configValidation.valid) {
       return NextResponse.json(
         { success: false, message: configValidation.message },
-        { status: 500 }
+        { 
+          status: 500,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        }
       );
     }
 
@@ -34,14 +41,28 @@ export async function POST(request: NextRequest) {
     if (!channelName) {
       return NextResponse.json(
         { success: false, message: 'channelName is required' },
-        { status: 400 }
+        { 
+          status: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        }
       );
     }
 
     if (!userId) {
       return NextResponse.json(
         { success: false, message: 'userId is required' },
-        { status: 400 }
+        { 
+          status: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        }
       );
     }
 
@@ -83,6 +104,12 @@ export async function POST(request: NextRequest) {
         role,
         expirationTimestamp,
       },
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
     });
   } catch (error) {
     console.error('Error generating tokens:', error);
@@ -91,9 +118,28 @@ export async function POST(request: NextRequest) {
         success: false,
         message: error instanceof Error ? error.message : 'Failed to generate tokens',
       },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }
     );
   }
+}
+
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
 
 
