@@ -29,6 +29,7 @@ export interface ActivityDetail {
   target_audience?: string;
   is_registered?: boolean;
   registration_status?: 'pending' | 'approved' | 'rejected' | 'attended';
+  allowsSubmissions?: boolean;
 }
 
 export const activitiesService = {
@@ -38,7 +39,13 @@ export const activitiesService = {
    */
   async getActivityDetail(activityId: string): Promise<ActivityDetail> {
     // Parse activity ID to get type and ID
-    const [typePrefix, id] = activityId.split('_');
+    const parts = activityId.split('_');
+    if (parts.length < 2) {
+      throw new Error(`Invalid activity ID format: ${activityId}. Expected format: "{type}_{id}"`);
+    }
+    
+    const typePrefix = parts[0];
+    const id = parts.slice(1).join('_'); // Handle IDs that might contain underscores
     
     let endpoint = '';
     
@@ -47,17 +54,23 @@ export const activitiesService = {
       endpoint = `${API_ENDPOINTS.ACTIVITIES.EDUCATION}/${id}`;
     } else if (typePrefix === 'club') {
       endpoint = `${API_ENDPOINTS.ACTIVITIES.CLUB}/${id}`;
-    } else if (typePrefix === 'direct_activity' || typePrefix === 'community') {
+    } else if (typePrefix === 'direct_activity' || typePrefix === 'community' || typePrefix === 'direct') {
       endpoint = `${API_ENDPOINTS.ACTIVITIES.DIRECT_ACTIVITY}/${id}`;
     } else {
       throw new Error(`Unknown activity type: ${typePrefix}`);
     }
     
-    const response = await apiClient.get<ApiResponse<ActivityDetail>>(endpoint);
-    if (response.data.success && response.data.data) {
-      return response.data.data;
+    try {
+      const response = await apiClient.get<ApiResponse<ActivityDetail>>(endpoint);
+      if (response.data.success && response.data.data) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || 'Failed to fetch activity details');
+    } catch (error) {
+      // Log the error for debugging
+      console.error(`[ActivityService] Failed to fetch activity ${activityId}:`, error);
+      throw error;
     }
-    throw new Error(response.data.message || 'Failed to fetch activity details');
   },
 
   /**

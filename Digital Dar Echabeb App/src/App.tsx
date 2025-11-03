@@ -134,6 +134,7 @@ function AppContent() {
   };
 
   const handleActivityClick = (activityId: string) => {
+    console.log('[App] handleActivityClick called with activityId:', activityId);
     setAppState({ screen: 'activity-detail', activityId });
   };
 
@@ -293,7 +294,7 @@ function AppContent() {
           </>
         )}
 
-        {appState.screen === 'activity-detail' && (
+        {appState.screen === 'activity-detail' && appState.activityId && (
           <ActivityDetailScreen
             activityId={appState.activityId}
             onBack={() => handleBackToMain('home')}
