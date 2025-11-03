@@ -711,6 +711,7 @@ export default function YouthCentresPage() {
             </div>
           )}
 
+          {selectedCentre && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Youth Centre Overview Card */}
             <div className="lg:col-span-1">
@@ -1123,15 +1124,15 @@ export default function YouthCentresPage() {
                         </div>
                       </div>
 
-                      {(selectedCentre.available_formations?.length > 0 || selectedCentre.available_activities?.length > 0) && (
+                      {((selectedCentre.available_formations?.length ?? 0) > 0 || (selectedCentre.available_activities?.length ?? 0) > 0) && (
                         <div className="pt-4 border-t border-gray-200">
-                          {selectedCentre.available_formations?.length > 0 && (
+                          {(selectedCentre.available_formations?.length ?? 0) > 0 && (
                             <div className="mb-4">
                               <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
                                 {t('youthCentres.formations')}
                               </label>
                               <div className="flex flex-wrap gap-2">
-                                {selectedCentre.available_formations.map((formation, idx) => (
+                                {(selectedCentre.available_formations || []).map((formation, idx) => (
                                   <span
                                     key={idx}
                                     className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
@@ -1142,13 +1143,13 @@ export default function YouthCentresPage() {
                               </div>
                             </div>
                           )}
-                          {selectedCentre.available_activities?.length > 0 && (
+                          {(selectedCentre.available_activities?.length ?? 0) > 0 && (
                             <div>
                               <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
                                 {t('youthCentres.activities')}
                               </label>
                               <div className="flex flex-wrap gap-2">
-                                {selectedCentre.available_activities.map((activity, idx) => (
+                                {(selectedCentre.available_activities || []).map((activity, idx) => (
                                   <span
                                     key={idx}
                                     className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full"
@@ -1289,6 +1290,7 @@ export default function YouthCentresPage() {
               )}
             </div>
           </div>
+          )}
         </div>
       </DashboardLayout>
     </ProtectedRoute>

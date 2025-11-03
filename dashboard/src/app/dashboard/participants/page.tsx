@@ -80,7 +80,7 @@ export default function ParticipantsPage() {
   };
 
   const transformInscriptions = (inscriptions: any[], type: string): ActivityParticipant[] => {
-    return inscriptions.map((inscription) => {
+    const transformed: (ActivityParticipant | null)[] = inscriptions.map((inscription) => {
       const user = inscription.user || {};
       const activity = inscription.education || inscription.club || inscription.directActivity || {};
       
@@ -106,7 +106,9 @@ export default function ParticipantsPage() {
         inscription_status: inscription.status,
         created_at: inscription.created_at,
       };
-    }).filter((p): p is ActivityParticipant => p !== null);
+    });
+    
+    return transformed.filter((p): p is ActivityParticipant => p !== null);
   };
 
   const loadActivities = async () => {

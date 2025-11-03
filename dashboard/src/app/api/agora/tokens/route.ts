@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
       channelName,
       uid,
       rtcRole,
+      expirationTimestamp,
       expirationTimestamp
     );
 

@@ -6,11 +6,13 @@ import { Sparkles, X, CheckCircle2, TrendingUp, Lightbulb, Target, MessageSquare
 interface EventSuggestions {
   title: string;
   description: string;
+  originalTitle?: string;
+  originalDescription?: string;
   marketingTips: string[];
   engagementStrategies: string[];
   improvements: string[];
   youthAppealScore: number;
-  originalYouthAppealScore: number;
+  originalYouthAppealScore?: number;
   overallFeedback: string;
 }
 
@@ -172,7 +174,7 @@ export default function EventSuggestionsModal({
                       </div>
                       <div className="bg-white p-3 rounded border border-blue-300 min-h-[60px]">
                         <p className="text-gray-900 font-medium text-sm">
-                          {suggestions.originalTitle || 'N/A'}
+                          {suggestions?.originalTitle || 'N/A'}
                         </p>
                       </div>
                     </div>
@@ -209,7 +211,7 @@ export default function EventSuggestionsModal({
                       </div>
                       <div className="bg-white p-3 rounded border border-blue-300 min-h-[120px]">
                         <p className="text-gray-700 text-sm whitespace-pre-wrap">
-                          {suggestions.originalDescription || 'N/A'}
+                          {suggestions?.originalDescription || 'N/A'}
                         </p>
                       </div>
                     </div>

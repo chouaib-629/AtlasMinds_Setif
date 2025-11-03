@@ -5,9 +5,11 @@
 // - Physical Device: use your computer's local IP (e.g., 'http://192.168.1.100:8000/api')
 //   To find your IP: ifconfig (Mac/Linux) or ipconfig (Windows)
 
+// PRODUCTION: Update this to your production API URL
+// Example: 'https://api.yourdomain.com/api'
 export const API_BASE_URL = __DEV__ 
   ? 'http://localhost:8000/api'  // Development - update this if testing on physical device
-  : 'https://your-production-url.com/api'; // Production URL
+  : 'https://api.yourdomain.com/api'; // Production URL - UPDATE THIS BEFORE BUILDING FOR PRODUCTION
 
 export const API_ENDPOINTS = {
   register: '/register',
