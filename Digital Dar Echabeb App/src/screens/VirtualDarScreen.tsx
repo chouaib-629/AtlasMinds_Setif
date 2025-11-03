@@ -82,7 +82,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       capacity: 200,
       registered: 145,
       status: 'upcoming',
-      thumbnail: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop',
     },
     {
       id: 'v2',
@@ -96,7 +96,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       capacity: 100,
       registered: 87,
       status: 'upcoming',
-      thumbnail: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop',
     },
     {
       id: 'v3',
@@ -110,7 +110,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       capacity: 150,
       registered: 150,
       status: 'live',
-      thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop',
       viewers: 132,
     },
     {
@@ -125,7 +125,35 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       capacity: 80,
       registered: 45,
       status: 'upcoming',
-      thumbnail: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
+    },
+    {
+      id: 'v5',
+      title: 'ورشة التصوير الفوتوغرافي',
+      description: 'تعلم فن التصوير الاحترافي والتحرير',
+      category: 'learning',
+      instructor: 'أ. نور الدين',
+      date: '2025-11-18',
+      time: '14:00',
+      duration: 150,
+      capacity: 60,
+      registered: 52,
+      status: 'upcoming',
+      thumbnail: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=300&fit=crop',
+    },
+    {
+      id: 'v6',
+      title: 'ندوة ريادة الأعمال',
+      description: 'كيفية بدء مشروعك الخاص وتحويل الفكرة إلى واقع',
+      category: 'social',
+      instructor: 'د. فاطمة الزهراء',
+      date: '2025-11-22',
+      time: '17:00',
+      duration: 90,
+      capacity: 120,
+      registered: 98,
+      status: 'upcoming',
+      thumbnail: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=300&fit=crop',
     },
   ];
 
@@ -141,7 +169,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       downloads: 1420,
       description: 'دليل شامل لبدء مشروعك الخاص',
       price: 'مجاني',
-      thumbnail: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200',
+      thumbnail: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=300&fit=crop',
     },
     {
       id: 'b2',
@@ -154,7 +182,20 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       downloads: 2100,
       description: 'تعلم البرمجة من الصفر',
       price: 'مجاني',
-      thumbnail: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=200',
+      thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop',
+    },
+    {
+      id: 'b3',
+      title: 'فنون التواصل الفعال',
+      type: 'book',
+      category: 'social',
+      author: 'د. خالد الأمين',
+      pages: 220,
+      rating: 4.7,
+      downloads: 1680,
+      description: 'تعلم مهارات التواصل والقيادة',
+      price: 'مجاني',
+      thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=200&h=300&fit=crop',
     },
     {
       id: 'c1',
@@ -168,7 +209,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       enrolled: 890,
       description: 'تعلم فن التصوير الاحترافي',
       price: 'مجاني',
-      thumbnail: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=200',
+      thumbnail: 'https://images.unsplash.com/photo-1492446841529-9a0e75e79c84?w=200&h=300&fit=crop',
     },
     {
       id: 'c2',
@@ -182,7 +223,34 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       enrolled: 1250,
       description: 'استراتيجيات التسويق الحديثة',
       price: 'مجاني',
-      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200',
+      thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&h=300&fit=crop',
+    },
+    {
+      id: 'c3',
+      title: 'دورة تصميم الويب المتقدمة',
+      type: 'course',
+      category: 'technology',
+      instructor: 'م. أمين حسان',
+      duration: '16 ساعة',
+      lessons: 32,
+      rating: 4.8,
+      enrolled: 1560,
+      description: 'تعلم تصميم مواقع ويب حديثة واحترافية',
+      price: 'مجاني',
+      thumbnail: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=200&h=300&fit=crop',
+    },
+    {
+      id: 'b4',
+      title: 'الإدارة المالية الشخصية',
+      type: 'book',
+      category: 'entrepreneurship',
+      author: 'د. نور الدين',
+      pages: 195,
+      rating: 4.5,
+      downloads: 980,
+      description: 'كيفية إدارة أموالك بذكاء',
+      price: 'مجاني',
+      thumbnail: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=200&h=300&fit=crop',
     },
   ];
 
@@ -193,7 +261,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       duration: '6 أسابيع',
       level: 'متقدم',
       participants: 245,
-      thumbnail: 'https://images.unsplash.com/photo-1759523146335-0069847ceb16?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop',
     },
     {
       id: 's2',
@@ -201,7 +269,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       duration: '4 أسابيع',
       level: 'مبتدئ',
       participants: 389,
-      thumbnail: 'https://images.unsplash.com/photo-1545886082-e66c6b9e011a?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop',
     },
     {
       id: 's3',
@@ -209,7 +277,31 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       duration: '8 أسابيع',
       level: 'متوسط',
       participants: 167,
-      thumbnail: 'https://images.unsplash.com/photo-1758599669406-d5179ccefcb9?w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop',
+    },
+    {
+      id: 's4',
+      title: 'التفكير النقدي وحل المشكلات',
+      duration: '5 أسابيع',
+      level: 'متوسط',
+      participants: 298,
+      thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop',
+    },
+    {
+      id: 's5',
+      title: 'الإبداع والابتكار',
+      duration: '4 أسابيع',
+      level: 'مبتدئ',
+      participants: 412,
+      thumbnail: 'https://images.unsplash.com/photo-1488998427799-e3362cec87c3?w=400&h=300&fit=crop',
+    },
+    {
+      id: 's6',
+      title: 'القيادة الرقمية',
+      duration: '6 أسابيع',
+      level: 'متقدم',
+      participants: 203,
+      thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
     },
   ];
 
@@ -301,7 +393,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
       return matchesSearch && matchesCategory;
     });
 
-  const topSuggestions = sortedSuggestions.slice(0, 3);
+  const topSuggestions = sortedSuggestions.slice(0, 5);
 
   const findNearestCenter = () => {
     // Sort centers by distance
@@ -613,7 +705,7 @@ export function VirtualDarScreen({ onActivityClick, onJoinSession, onCenterClick
               </div>
             </div>
             <div className="space-y-2">
-              {mockCenters.slice(0, 3).map((center) => (
+              {mockCenters.slice(0, 5).map((center) => (
                 <Card key={center.id} className="p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">

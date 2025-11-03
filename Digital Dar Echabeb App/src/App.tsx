@@ -8,10 +8,11 @@ import { AuthScreen } from './screens/AuthScreen';
 import { InterestsSelectionScreen } from './screens/InterestsSelectionScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { InsightsScreen } from './screens/InsightsScreen';
-import { LeaderboardScreen } from './screens/LeaderboardScreen';
+import { VirtualDarScreen } from './screens/VirtualDarScreen';
 import { CenterDetailScreen } from './screens/CenterDetailScreen';
 import { MapScreen } from './screens/MapScreen';
 import { ActivityDetailScreen } from './screens/ActivityDetailScreen';
+import { ClubDetailScreen } from './screens/ClubDetailScreen';
 import { QuestScreen } from './screens/QuestScreen';
 import { RewardsScreen } from './screens/RewardsScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
@@ -47,6 +48,7 @@ type AppState =
   | { screen: 'chat-room'; channelId: string }
   | { screen: 'create-club' }
   | { screen: 'center-detail'; centerId: string }
+  | { screen: 'club-detail'; clubId: string }
   | { screen: 'appointment-booking'; centerId: string; centerName: string }
   | { screen: 'appointment-confirmation'; appointmentId: string };
 
@@ -258,6 +260,9 @@ function AppContent() {
                 onLivestreamClick={(livestreamId) => {
                   setAppState({ screen: 'virtual-hall', activityId: livestreamId });
                 }}
+                onClubClick={(clubId) => {
+                  setAppState({ screen: 'club-detail', clubId });
+                }}
               />
             )}
             {appState.activeTab === 'insights' && (
@@ -268,8 +273,15 @@ function AppContent() {
                 onChatsClick={handleOpenChats}
               />
             )}
-            {appState.activeTab === 'leaderboard' && (
-              <LeaderboardScreen />
+            {appState.activeTab === 'virtual-dar' && (
+              <VirtualDarScreen
+                onActivityClick={handleActivityClick}
+                onJoinSession={(sessionId) => {
+                  // Handle join session if needed
+                  console.log('Join session:', sessionId);
+                }}
+                onCenterClick={handleCenterClick}
+              />
             )}
             {appState.activeTab === 'map' && (
               <MapScreen onCenterClick={handleCenterClick} />
@@ -355,6 +367,14 @@ function AppContent() {
             onBack={() => handleBackToMain('insights')}
             onActivityClick={handleActivityClick}
             onBookAppointment={handleBookAppointment}
+          />
+        )}
+
+        {appState.screen === 'club-detail' && (
+          <ClubDetailScreen
+            clubId={appState.clubId}
+            onBack={() => handleBackToMain('home')}
+            onCenterClick={handleCenterClick}
           />
         )}
 

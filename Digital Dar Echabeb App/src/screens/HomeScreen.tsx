@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../lib/context';
-import { mockActivities } from '../lib/data';
+import { mockActivities, mockClubs } from '../lib/data';
 import { homeService, HomeEvent, LearningProgram, CommunityProject } from '../lib/api';
 import { livestreamService, Livestream } from '../lib/api/livestreams';
-import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb } from 'lucide-react';
+import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb, Heart, Shield } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
@@ -15,9 +15,10 @@ interface HomeScreenProps {
   onMapClick: () => void;
   onCenterClick: (centerId: string) => void;
   onLivestreamClick?: (livestreamId: string) => void;
+  onClubClick?: (clubId: string) => void;
 }
 
-export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick, onLivestreamClick }: HomeScreenProps) {
+export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick, onLivestreamClick, onClubClick }: HomeScreenProps) {
   const { t, language } = useApp();
   const [eventsData, setEventsData] = useState<HomeEvent[]>([]);
   const [learningData, setLearningData] = useState<LearningProgram[]>([]);
@@ -492,6 +493,151 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
               {t('لا توجد مشاريع مجتمعية متاحة حالياً', 'No community projects available at the moment')}
             </div>
           )}
+        </div>
+        )}
+
+        {/* Section 4: Support & Rehabilitation Clubs */}
+        {!isLoading && (
+        <div>
+          <div className="flex items-center justify-between px-4 mb-3">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <Shield className="w-5 h-5 text-orange-500 flex-shrink-0" />
+              <span>{t('أندية الدعم والتأهيل', 'Support & Rehabilitation Clubs', 'Clubs de Soutien et Réhabilitation')}</span>
+            </h2>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="flex-shrink-0"
+            >
+              {t('المزيد', 'More')}
+              <ChevronRight className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
+            </Button>
+          </div>
+          
+          <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
+            <div className="flex gap-4 pb-4 w-max sm:w-full">
+              {mockClubs.filter(club => club.category?.startsWith('support')).slice(0, 5).map((club) => (
+                <Card 
+                  key={club.id} 
+                  className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => onClubClick?.(club.id)}
+                >
+                  <div className="relative h-48">
+                    <img 
+                      src={club.coverImage || 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=400&fit=crop'} 
+                      alt={club.name}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    
+                    {/* Category Badge */}
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-orange-500 text-white">
+                        {club.category === 'support-addiction' ? t('إدمان', 'Addiction') :
+                         club.category === 'support-disability' ? t('إعاقة', 'Disability') :
+                         club.category === 'support-mental-health' ? t('صحة نفسية', 'Mental Health') :
+                         club.category === 'support-vocational' ? t('مهني', 'Vocational') :
+                         t('دعم', 'Support')}
+                      </Badge>
+                    </div>
+
+                    {club.visibility === 'private' && (
+                      <div className="absolute top-3 left-3">
+                        <Badge variant="outline" className="bg-black/50 text-white border-white/30">
+                          <Users className="w-3 h-3 mr-1" />
+                          {t('خاص', 'Private')}
+                        </Badge>
+                      </div>
+                    )}
+                    
+                    {/* Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                      <h3 className="mb-1.5 line-clamp-2">{club.name}</h3>
+                      <p className="text-xs opacity-90 mb-2 line-clamp-2">
+                        {club.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-xs opacity-80">
+                          <Users className="w-3 h-3" />
+                          <span>{club.memberCount} {t('عضو', 'members')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+        )}
+
+        {/* Section 5: Community Clubs */}
+        {!isLoading && (
+        <div>
+          <div className="flex items-center justify-between px-4 mb-3">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <UsersIcon className="w-5 h-5 text-blue-500 flex-shrink-0" />
+              <span>{t('الأندية المجتمعية', 'Community Clubs', 'Clubs Communautaires')}</span>
+            </h2>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="flex-shrink-0"
+            >
+              {t('المزيد', 'More')}
+              <ChevronRight className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
+            </Button>
+          </div>
+          
+          <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
+            <div className="flex gap-4 pb-4 w-max sm:w-full">
+              {mockClubs.filter(club => !club.category?.startsWith('support')).slice(0, 5).map((club) => (
+                <Card 
+                  key={club.id} 
+                  className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => onClubClick?.(club.id)}
+                >
+                  <div className="relative h-48">
+                    <img 
+                      src={club.coverImage || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=400&fit=crop'} 
+                      alt={club.name}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    
+                    {/* Category Badge */}
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-blue-500 text-white">
+                        {club.category === 'culture-books' ? t('ثقافة', 'Culture') :
+                         club.category === 'technology-robotics' ? t('تكنولوجيا', 'Technology') :
+                         club.category === 'politics-youth' ? t('سياسة', 'Politics') :
+                         club.category === 'arts-photography' ? t('فنون', 'Arts') :
+                         club.category === 'entrepreneurship' ? t('ريادة', 'Entrepreneurship') :
+                         club.category === 'environment-sustainability' ? t('بيئة', 'Environment') :
+                         t('نادي', 'Club')}
+                      </Badge>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                      <h3 className="mb-1.5 line-clamp-2">{club.name}</h3>
+                      <p className="text-xs opacity-90 mb-2 line-clamp-2">
+                        {club.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-xs opacity-80">
+                          <Users className="w-3 h-3" />
+                          <span>{club.memberCount} {t('عضو', 'members')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
         )}
       </div>

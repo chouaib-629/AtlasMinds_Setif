@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Lightbulb, Trophy, User } from 'lucide-react';
+import { Home, Lightbulb, Building, User } from 'lucide-react';
 import { useApp } from '../lib/context';
 
 interface BottomNavProps {
@@ -13,7 +13,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const tabs = [
     { id: 'home', icon: Home, label: t('الرئيسية', 'Home', 'Accueil') },
     { id: 'insights', icon: Lightbulb, label: t('رؤى', 'Insights', 'Aperçus') },
-    { id: 'leaderboard', icon: Trophy, label: t('لوحة المتصدرين', 'Leaderboard', 'Classement') },
+    { id: 'virtual-dar', icon: Building, label: t('الدار الافتراضية', 'Virtual Dar', 'Dar Virtuel') },
     { id: 'profile', icon: User, label: t('ملف', 'Profile', 'Profil') },
   ];
 
