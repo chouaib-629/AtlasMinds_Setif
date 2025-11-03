@@ -29,8 +29,6 @@ export default function SettingsPage() {
   // Settings state
   const [settings, setSettings] = useState({
     // General Settings
-    siteName: 'Algeria Youth Network',
-    siteDescription: 'Admin dashboard for youth centers management',
     timezone: 'Africa/Algiers',
     language: 'fr',
     dateFormat: 'DD/MM/YYYY',
@@ -73,8 +71,6 @@ export default function SettingsPage() {
         setSettings((prev) => ({
           ...prev,
           // General settings
-          siteName: apiSettings.site_name || prev.siteName,
-          siteDescription: apiSettings.site_description || prev.siteDescription,
           timezone: apiSettings.timezone || prev.timezone,
           language: apiSettings.language || prev.language,
           dateFormat: apiSettings.date_format || prev.dateFormat,
@@ -116,8 +112,6 @@ export default function SettingsPage() {
     try {
       // Format settings for API
       const apiSettings = {
-        site_name: settings.siteName,
-        site_description: settings.siteDescription,
         timezone: settings.timezone,
         language: settings.language,
         date_format: settings.dateFormat,
@@ -163,8 +157,6 @@ export default function SettingsPage() {
   const handleReset = () => {
     if (confirm(t('settings.resetConfirm'))) {
       const defaultSettings = {
-        siteName: 'Algeria Youth Network',
-        siteDescription: 'Admin dashboard for youth centers management',
         timezone: 'Africa/Algiers',
         language: 'fr',
         dateFormat: 'DD/MM/YYYY',
@@ -242,30 +234,6 @@ export default function SettingsPage() {
                   <h3 className="text-lg font-semibold text-gray-900">{t('settings.generalSettings')}</h3>
                 </div>
                 <div className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('settings.siteName')}
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.siteName}
-                      onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('settings.siteDescription')}
-                    </label>
-                    <textarea
-                      value={settings.siteDescription}
-                      onChange={(e) => setSettings({ ...settings, siteDescription: e.target.value })}
-                      rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                  </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">

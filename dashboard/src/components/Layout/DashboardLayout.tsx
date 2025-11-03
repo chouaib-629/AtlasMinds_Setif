@@ -21,6 +21,7 @@ import {
   UserPlus,
   Settings,
   Globe,
+  Building2,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -112,6 +113,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleUsersClick = () => {
     setIsDropdownOpen(false);
     router.push('/dashboard/users');
+  };
+
+  const handleYouthCentreClick = () => {
+    setIsDropdownOpen(false);
+    router.push('/dashboard/youth-centres');
+  };
+
+  const handleManageYouthCentresClick = () => {
+    setIsDropdownOpen(false);
+    router.push('/dashboard/manage-youth-centres');
   };
 
   const handleLanguageChange = async (newLanguage: 'fr' | 'ar' | 'en') => {
@@ -328,8 +339,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         language === 'ar' ? 'flex-row-reverse pl-4 pr-4' : 'px-4'
                       }`}
                     >
-                      <User className={`h-4 w-4 text-gray-500 ${language === 'ar' ? 'ml-3' : 'mr-3'}`} />
-                      <span className="flex-1">{t('nav.profile')}</span>
+                      <User className={`h-4 w-4 text-gray-500`} />
+                      <span className={`ml-3`}>{t('nav.profile')}</span>
                     </button>
                     <button
                       onClick={handleUsersClick}
@@ -337,16 +348,36 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         language === 'ar' ? 'flex-row-reverse pl-4 pr-4' : 'px-4'
                       }`}
                     >
-                      <Users className={`h-4 w-4 text-gray-500 ${language === 'ar' ? 'ml-3' : 'mr-3'}`} />
-                      <span className="flex-1">{t('nav.users')}</span>
+                      <Users className={`h-4 w-4 text-gray-500`} />
+                      <span className='ml-3'>{t('nav.users')}</span>
                     </button>
+                    <button
+                      onClick={handleYouthCentreClick}
+                      className={`w-full flex items-center py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors ${
+                        language === 'ar' ? 'flex-row-reverse pl-4 pr-4' : 'px-4'
+                      }`}
+                    >
+                      <Building2 className={`h-4 w-4 text-gray-500`} />
+                      <span className='ml-3'>{t('nav.youthCentre')}</span>
+                    </button>
+                    {isSuperAdmin && (
+                      <button
+                        onClick={handleManageYouthCentresClick}
+                        className={`w-full flex items-center py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors ${
+                          language === 'ar' ? 'flex-row-reverse pl-4 pr-4' : 'px-4'
+                        }`}
+                      >
+                        <Users className={`h-4 w-4 text-gray-500`} />
+                        <span className='ml-3'>{t('nav.manageYouthCentres')}</span>
+                      </button>
+                    )}
                     
                     {/* Language Selector */}
                     <div className="border-t border-gray-200 my-1"></div>
                     <div className={`py-2 ${language === 'ar' ? 'pl-4 pr-4' : 'px-4'}`}>
                       <div className={`flex items-center mb-2 ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
-                        <Globe className={`h-4 w-4 text-gray-500 ${language === 'ar' ? 'ml-2' : 'mr-2'}`} />
-                        <span className="text-xs font-medium text-gray-500 uppercase">{t('nav.language')}</span>
+                        <Globe className={`h-4 w-4 text-gray-500`} />
+                        <span className="text-xs font-medium text-gray-500 uppercase ml-3">{t('nav.language')}</span>
                       </div>
                       <div className="grid grid-cols-3 gap-1">
                         {languages.map((lang) => (

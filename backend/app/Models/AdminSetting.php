@@ -11,8 +11,6 @@ class AdminSetting extends Model
 
     protected $fillable = [
         'admin_id',
-        'site_name',
-        'site_description',
         'timezone',
         'language',
         'date_format',

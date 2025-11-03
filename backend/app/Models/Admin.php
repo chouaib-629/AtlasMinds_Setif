@@ -21,6 +21,7 @@ class Admin extends Authenticatable implements JWTSubject
         'email',
         'password',
         'is_super_admin',
+        'youth_centre_id',
     ];
 
     /**
@@ -83,5 +84,13 @@ class Admin extends Authenticatable implements JWTSubject
     public function settings()
     {
         return $this->hasOne(AdminSetting::class);
+    }
+
+    /**
+     * Get the youth centre this admin belongs to (null for super admins)
+     */
+    public function youthCentre()
+    {
+        return $this->belongsTo(YouthCentre::class);
     }
 }

@@ -132,6 +132,17 @@ Route::prefix('admin')->group(function () {
         // Settings routes
         Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index']);
         Route::put('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update']);
+
+        // Youth Centres routes
+        Route::get('/youth-centres', [\App\Http\Controllers\Admin\YouthCentreController::class, 'index']);
+        Route::post('/youth-centres', [\App\Http\Controllers\Admin\YouthCentreController::class, 'store']);
+        Route::get('/youth-centres/{id}', [\App\Http\Controllers\Admin\YouthCentreController::class, 'show']);
+        Route::put('/youth-centres/{id}', [\App\Http\Controllers\Admin\YouthCentreController::class, 'update']);
+        Route::delete('/youth-centres/{id}', [\App\Http\Controllers\Admin\YouthCentreController::class, 'destroy']);
+        Route::get('/youth-centres/{id}/admins', [\App\Http\Controllers\Admin\YouthCentreController::class, 'getAdmins']);
+        Route::post('/youth-centres/{id}/admins/assign', [\App\Http\Controllers\Admin\YouthCentreController::class, 'assignAdmin']);
+        Route::post('/youth-centres/{id}/admins/remove', [\App\Http\Controllers\Admin\YouthCentreController::class, 'removeAdmin']);
+        Route::get('/youth-centres/admins/unassigned', [\App\Http\Controllers\Admin\YouthCentreController::class, 'getUnassignedAdmins']);
     });
 });
 

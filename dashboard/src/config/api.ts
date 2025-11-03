@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
     updateProfile: '/admin/profile',
     changePassword: '/admin/change-password',
     settings: '/admin/settings',
+    youthCentres: '/admin/youth-centres',
   },
 };
 

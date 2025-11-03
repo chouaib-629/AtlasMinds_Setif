@@ -67,8 +67,6 @@ class SettingsController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
-                'site_name' => 'nullable|string|max:255',
-                'site_description' => 'nullable|string',
                 'timezone' => 'nullable|string',
                 'language' => 'nullable|string|in:fr,ar,en',
                 'date_format' => 'nullable|string|in:DD/MM/YYYY,MM/DD/YYYY,YYYY-MM-DD',
@@ -88,8 +86,6 @@ class SettingsController extends Controller
             $settings = AdminSetting::updateOrCreate(
                 ['admin_id' => $admin->id],
                 [
-                    'site_name' => $request->input('site_name'),
-                    'site_description' => $request->input('site_description'),
                     'timezone' => $request->input('timezone', 'Africa/Algiers'),
                     'language' => $request->input('language', 'fr'),
                     'date_format' => $request->input('date_format', 'DD/MM/YYYY'),
@@ -123,8 +119,6 @@ class SettingsController extends Controller
     private function getDefaultSettings($admin)
     {
         return [
-            'site_name' => 'Algeria Youth Network',
-            'site_description' => 'Admin dashboard for youth centers management',
             'timezone' => 'Africa/Algiers',
             'language' => 'fr',
             'date_format' => 'DD/MM/YYYY',
@@ -164,8 +158,6 @@ class SettingsController extends Controller
         }
 
         return [
-            'site_name' => $settings->site_name,
-            'site_description' => $settings->site_description,
             'timezone' => $settings->timezone,
             'language' => $settings->language,
             'date_format' => $settings->date_format,

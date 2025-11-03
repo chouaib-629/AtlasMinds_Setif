@@ -12,8 +12,32 @@ export interface Admin {
   name: string;
   email: string;
   is_super_admin: boolean;
+  youth_centre_id?: number;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface YouthCentre {
+  id: number;
+  name: string;
+  image?: string;
+  location: string;
+  number_of_places: number;
+  available_formations?: string[];
+  available_activities?: string[];
+  description?: string;
+  phone_number?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  wilaya?: string;
+  commune?: string;
+  latitude?: number;
+  longitude?: number;
+  is_active: boolean;
+  admins_count?: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface LoginCredentials {
@@ -174,47 +198,93 @@ class ApiService {
       let data: any = {};
       try {
         const text = await response.text();
-        if (text.trim() === '') {
-          // Empty response - might be valid for some endpoints
+        const trimmedText = text.trim();
+        
+        // Check for empty or whitespace-only responses
+        if (trimmedText === '' || trimmedText.length === 0) {
+          // Empty response - might be valid for some endpoints (like DELETE)
           data = {};
         } else {
-          // Try to parse as JSON
-          try {
-            data = JSON.parse(text);
-          } catch (jsonError) {
-            // If content-type says JSON but parsing fails, or if it's HTML
-            console.error('JSON Parse Error:', jsonError);
-            console.error('Response text:', text.substring(0, 500));
+          // Check if response looks like HTML before trying to parse JSON
+          const firstChar = trimmedText.charAt(0);
+          const startsWithHtml = trimmedText.startsWith('<!DOCTYPE') || 
+                                trimmedText.startsWith('<html') ||
+                                trimmedText.startsWith('<?xml');
+          
+          if (startsWithHtml) {
+            // It's HTML/XML, not JSON - server error page
+            console.error('Server returned HTML/XML instead of JSON');
+            console.error('Response preview:', trimmedText.substring(0, 200));
             console.error('Content-Type:', contentType);
             console.error('Status:', response.status);
             
-            // Check if it's an HTML error page
-            if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
               // Check if it's an authentication error (401/403)
               if (response.status === 401 || response.status === 403) {
                 // Clear invalid token
                 if (typeof window !== 'undefined') {
                   localStorage.removeItem('admin_token');
-                  // Redirect to login after a short delay
+                const currentPath = window.location.pathname;
+                if (!currentPath.includes('/login')) {
                   setTimeout(() => {
                     window.location.href = '/login';
                   }, 2000);
                 }
+                }
                 return {
                   success: false,
-                  message: 'Your session has expired. Please log in again. Redirecting to login...',
+                message: 'Your session has expired. Please log in again.',
                 };
               }
+            
+            // Handle 500 errors (Internal Server Error)
+            if (response.status === 500) {
               return {
                 success: false,
-                message: `Server returned HTML error page (${response.status}). This usually means an authentication or server configuration error. Please check your login status.`,
+                message: 'Server error occurred. Please check that the database tables are created and the backend is configured correctly. If you just added the youth centres feature, make sure to run the migrations.',
               };
             }
             
-            // Otherwise return the raw text (first 500 chars)
+            // Handle other server errors
             return {
               success: false,
-              message: `Invalid JSON response from server (${response.status}): ${text.substring(0, 500)}`,
+              message: `Server error (${response.status}). The server returned an HTML error page instead of JSON. This usually indicates a backend configuration issue or missing database tables.`,
+            };
+          }
+          
+          // Check if the first character suggests it might not be JSON
+          // Valid JSON starts with {, [, ", or a number
+          const isValidJsonStart = firstChar === '{' || 
+                                   firstChar === '[' || 
+                                   firstChar === '"' ||
+                                   /[0-9-]/.test(firstChar);
+          
+          if (!isValidJsonStart && !/^\s*[{\[]/.test(trimmedText)) {
+            // Doesn't look like JSON
+            console.error('Response does not appear to be JSON');
+            console.error('Response preview:', trimmedText.substring(0, 200));
+            console.error('Content-Type:', contentType);
+            console.error('Status:', response.status);
+            
+            return {
+              success: false,
+              message: `Server returned non-JSON response (${response.status}): ${trimmedText.substring(0, 200)}`,
+            };
+          }
+          
+          // Try to parse as JSON
+          try {
+            data = JSON.parse(trimmedText);
+          } catch (jsonError) {
+            // JSON parsing failed
+            console.error('JSON Parse Error:', jsonError);
+            console.error('Response preview:', trimmedText.substring(0, 500));
+            console.error('Content-Type:', contentType);
+            console.error('Status:', response.status);
+            
+            // Return a user-friendly error message
+            return {
+              success: false,
+              message: `Invalid JSON response from server (${response.status}). ${trimmedText.length > 0 ? `Response: ${trimmedText.substring(0, 200)}` : 'Empty or invalid response.'}`,
             };
           }
         }
@@ -223,7 +293,7 @@ class ApiService {
         console.error('Error reading response:', textError);
         return {
           success: false,
-          message: `Failed to read server response (${response.status})`,
+          message: `Failed to read server response (${response.status}): ${textError instanceof Error ? textError.message : 'Unknown error'}`,
         };
       }
 
@@ -236,9 +306,9 @@ class ApiService {
             // Only redirect to login if we're not already on the login page
             const currentPath = window.location.pathname;
             if (!currentPath.includes('/login')) {
-              setTimeout(() => {
-                window.location.href = '/login';
-              }, 2000);
+            setTimeout(() => {
+              window.location.href = '/login';
+            }, 2000);
             }
           }
           return {
@@ -714,6 +784,261 @@ class ApiService {
 
   async deleteDirectActivity(id: number): Promise<ApiResponse> {
     return this.request(`/admin/direct-activities/${id}`, { method: 'DELETE' });
+  }
+
+  // Youth Centres Methods
+  async getYouthCentres(): Promise<ApiResponse<{ youth_centres: YouthCentre[] }>> {
+    return this.request(API_ENDPOINTS.admin.youthCentres, { method: 'GET' });
+  }
+
+  async getYouthCentre(id: number): Promise<ApiResponse<{ youth_centre: YouthCentre }>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/${id}`, { method: 'GET' });
+  }
+
+  async createYouthCentre(data: FormData | Partial<YouthCentre>): Promise<ApiResponse<{ youth_centre: YouthCentre }>> {
+    const isFormData = data instanceof FormData;
+    
+    if (isFormData) {
+      // For FormData, we need to use fetch directly to avoid setting Content-Type header
+      const token = this.getToken();
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      // Don't set Content-Type - browser will set it with boundary
+      
+      try {
+        const response = await fetch(getApiUrl(API_ENDPOINTS.admin.youthCentres), {
+          method: 'POST',
+          headers,
+          body: data,
+        });
+
+        // Parse response similar to the main request method
+        const contentType = response.headers.get('content-type');
+        let responseData: any = {};
+        
+        try {
+          const text = await response.text();
+          if (text.trim() === '') {
+            responseData = {};
+          } else {
+            try {
+              responseData = JSON.parse(text);
+            } catch (jsonError) {
+              console.error('JSON Parse Error in createYouthCentre:', jsonError);
+              console.error('Response text:', text.substring(0, 500));
+              
+              if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                if (response.status === 401 || response.status === 403) {
+                  if (typeof window !== 'undefined') {
+                    localStorage.removeItem('admin_token');
+                    const currentPath = window.location.pathname;
+                    if (!currentPath.includes('/login')) {
+                      setTimeout(() => {
+                        window.location.href = '/login';
+                      }, 2000);
+                    }
+                  }
+                  return {
+                    success: false,
+                    message: 'Your session has expired. Please log in again.',
+                  };
+                }
+                return {
+                  success: false,
+                  message: `Server returned HTML error page (${response.status}). Please check your login status.`,
+                };
+              }
+              
+              return {
+                success: false,
+                message: `Invalid JSON response from server (${response.status}): ${text.substring(0, 500)}`,
+              };
+            }
+          }
+        } catch (textError) {
+          console.error('Error reading response:', textError);
+          return {
+            success: false,
+            message: `Failed to read server response (${response.status})`,
+          };
+        }
+
+        if (!response.ok) {
+          // Handle authentication errors
+          if (response.status === 401 || response.status === 403) {
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('admin_token');
+              const currentPath = window.location.pathname;
+              if (!currentPath.includes('/login')) {
+                setTimeout(() => {
+                  window.location.href = '/login';
+                }, 2000);
+              }
+            }
+          }
+          return {
+            success: false,
+            message: responseData.message || `Failed to create youth centre (${response.status})`,
+            errors: responseData.errors,
+          };
+        }
+
+        return {
+          success: true,
+          data: responseData.data,
+          message: responseData.message,
+        };
+      } catch (error) {
+        console.error('Error creating youth centre:', error);
+        return {
+          success: false,
+          message: error instanceof Error ? error.message : 'An error occurred while creating the youth centre',
+        };
+      }
+    } else {
+      return this.request(API_ENDPOINTS.admin.youthCentres, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    }
+  }
+
+  async updateYouthCentre(id: number, data: FormData | Partial<YouthCentre>): Promise<ApiResponse<{ youth_centre: YouthCentre }>> {
+    const isFormData = data instanceof FormData;
+    
+    if (isFormData) {
+      // For FormData, we need to use fetch directly to avoid setting Content-Type header
+      const token = this.getToken();
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      // Don't set Content-Type - browser will set it with boundary
+      
+      try {
+        const response = await fetch(getApiUrl(`${API_ENDPOINTS.admin.youthCentres}/${id}`), {
+          method: 'PUT',
+          headers,
+          body: data,
+        });
+
+        // Parse response similar to the main request method
+        const contentType = response.headers.get('content-type');
+        let responseData: any = {};
+        
+        try {
+          const text = await response.text();
+          if (text.trim() === '') {
+            responseData = {};
+          } else {
+            try {
+              responseData = JSON.parse(text);
+            } catch (jsonError) {
+              console.error('JSON Parse Error in updateYouthCentre:', jsonError);
+              console.error('Response text:', text.substring(0, 500));
+              
+              if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                if (response.status === 401 || response.status === 403) {
+                  if (typeof window !== 'undefined') {
+                    localStorage.removeItem('admin_token');
+                    const currentPath = window.location.pathname;
+                    if (!currentPath.includes('/login')) {
+                      setTimeout(() => {
+                        window.location.href = '/login';
+                      }, 2000);
+                    }
+                  }
+                  return {
+                    success: false,
+                    message: 'Your session has expired. Please log in again.',
+                  };
+                }
+                return {
+                  success: false,
+                  message: `Server returned HTML error page (${response.status}). Please check your login status.`,
+                };
+              }
+              
+              return {
+                success: false,
+                message: `Invalid JSON response from server (${response.status}): ${text.substring(0, 500)}`,
+              };
+            }
+          }
+        } catch (textError) {
+          console.error('Error reading response:', textError);
+          return {
+            success: false,
+            message: `Failed to read server response (${response.status})`,
+          };
+        }
+
+        if (!response.ok) {
+          // Handle authentication errors
+          if (response.status === 401 || response.status === 403) {
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('admin_token');
+              const currentPath = window.location.pathname;
+              if (!currentPath.includes('/login')) {
+                setTimeout(() => {
+                  window.location.href = '/login';
+                }, 2000);
+              }
+            }
+          }
+          return {
+            success: false,
+            message: responseData.message || `Failed to update youth centre (${response.status})`,
+            errors: responseData.errors,
+          };
+        }
+
+        return {
+          success: true,
+          data: responseData.data,
+          message: responseData.message,
+        };
+      } catch (error) {
+        console.error('Error updating youth centre:', error);
+        return {
+          success: false,
+          message: error instanceof Error ? error.message : 'An error occurred while updating the youth centre',
+        };
+      }
+    } else {
+      return this.request(`${API_ENDPOINTS.admin.youthCentres}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    }
+  }
+
+  async deleteYouthCentre(id: number): Promise<ApiResponse<void>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/${id}`, { method: 'DELETE' });
+  }
+
+  async getYouthCentreAdmins(id: number): Promise<ApiResponse<{ admins: Admin[] }>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/${id}/admins`, { method: 'GET' });
+  }
+
+  async assignAdminToYouthCentre(youthCentreId: number, adminId: number): Promise<ApiResponse<{ admin: Admin }>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/${youthCentreId}/admins/assign`, {
+      method: 'POST',
+      body: JSON.stringify({ admin_id: adminId }),
+    });
+  }
+
+  async removeAdminFromYouthCentre(youthCentreId: number, adminId: number): Promise<ApiResponse<void>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/${youthCentreId}/admins/remove`, {
+      method: 'POST',
+      body: JSON.stringify({ admin_id: adminId }),
+    });
+  }
+
+  async getUnassignedAdmins(): Promise<ApiResponse<{ admins: Admin[] }>> {
+    return this.request(`${API_ENDPOINTS.admin.youthCentres}/admins/unassigned`, { method: 'GET' });
   }
 }
 

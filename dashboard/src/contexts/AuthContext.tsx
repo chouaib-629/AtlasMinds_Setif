@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       if (isMounted && isLoadingRef.current) {
-        setIsLoading(false);
+      setIsLoading(false);
         isLoadingRef.current = false;
       }
     };
