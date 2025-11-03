@@ -261,3 +261,33 @@ export interface AdminKPI {
   pendingApprovals: number;
   activeVolunteers: number;
 }
+
+export interface PlantingZone {
+  id: string;
+  name: string;
+  location: string;
+  peopleNeeded: number;
+  peopleRegistered: number;
+  treesPlanted?: number;
+  status: 'open' | 'full' | 'completed';
+  coordinates?: { lat: number; lng: number };
+  description?: string;
+}
+
+export interface VolunteeringProject {
+  id: string;
+  title: string;
+  description: string;
+  category: 'environmental' | 'community' | 'education' | 'health' | 'social';
+  coverImage?: string;
+  treesPlanted?: number;
+  totalTrees?: number;
+  totalParticipants?: number;
+  startDate?: string;
+  endDate?: string;
+  status: 'active' | 'upcoming' | 'completed';
+  zones: PlantingZone[];
+  organizer?: string;
+  organizerContact?: string;
+  wilaya?: string;
+}

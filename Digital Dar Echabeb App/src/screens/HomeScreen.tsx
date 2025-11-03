@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../lib/context';
-import { mockActivities, mockClubs } from '../lib/data';
+import { mockActivities, mockClubs, mockVolunteeringProjects } from '../lib/data';
 import { homeService, HomeEvent, LearningProgram, CommunityProject } from '../lib/api';
 import { livestreamService, Livestream } from '../lib/api/livestreams';
-import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb, Heart, Shield } from 'lucide-react';
+import { Bell, Search, Map, Video, Calendar, Clock, Users, BookOpen, MessageCircle, ChevronRight, GraduationCap, Users as UsersIcon, Lightbulb, Heart, Shield, Sprout, TreePine } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
@@ -16,9 +16,10 @@ interface HomeScreenProps {
   onCenterClick: (centerId: string) => void;
   onLivestreamClick?: (livestreamId: string) => void;
   onClubClick?: (clubId: string) => void;
+  onVolunteeringClick?: (projectId: string) => void;
 }
 
-export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick, onLivestreamClick, onClubClick }: HomeScreenProps) {
+export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, onCenterClick, onLivestreamClick, onClubClick, onVolunteeringClick }: HomeScreenProps) {
   const { t, language } = useApp();
   const [eventsData, setEventsData] = useState<HomeEvent[]>([]);
   const [learningData, setLearningData] = useState<LearningProgram[]>([]);
@@ -631,6 +632,83 @@ export function HomeScreen({ onActivityClick, onNotificationsClick, onMapClick, 
                           <Users className="w-3 h-3" />
                           <span>{club.memberCount} {t('عضو', 'members')}</span>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+        )}
+
+        {/* Section 6: Volunteering */}
+        {!isLoading && (
+        <div>
+          <div className="flex items-center justify-between px-4 mb-3">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <Sprout className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span>{t('التطوع', 'Volunteering', 'Bénévolat')}</span>
+            </h2>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="flex-shrink-0"
+            >
+              {t('المزيد', 'More')}
+              <ChevronRight className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
+            </Button>
+          </div>
+          
+          <div className="w-full overflow-x-auto scroll-smooth px-4 -mx-4 sm:mx-0">
+            <div className="flex gap-4 pb-4 w-max sm:w-full">
+              {mockVolunteeringProjects.slice(0, 5).map((project) => (
+                <Card 
+                  key={project.id} 
+                  className="inline-block w-[280px] sm:w-[320px] flex-shrink-0 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => onVolunteeringClick?.(project.id)}
+                >
+                  <div className="relative h-48">
+                    <img 
+                      src={project.coverImage || 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=400&fit=crop'} 
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    
+                    {/* Status Badge */}
+                    <div className="absolute top-3 right-3">
+                      <Badge className={
+                        project.status === 'active' ? 'bg-green-600 text-white' :
+                        project.status === 'upcoming' ? 'bg-blue-500 text-white' :
+                        'bg-gray-500 text-white'
+                      }>
+                        {project.status === 'active' ? t('نشط', 'Active', 'Actif') :
+                         project.status === 'upcoming' ? t('قادم', 'Upcoming', 'À venir') :
+                         t('منتهي', 'Completed', 'Terminé')}
+                      </Badge>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                      <h3 className="mb-1.5 line-clamp-2 font-semibold">{project.title}</h3>
+                      <p className="text-xs opacity-90 mb-2 line-clamp-2">
+                        {project.description}
+                      </p>
+                      <div className="flex items-center justify-between text-xs">
+                        {project.treesPlanted !== undefined && (
+                          <div className="flex items-center gap-1 opacity-80">
+                            <TreePine className="w-3 h-3" />
+                            <span>{project.treesPlanted.toLocaleString()} {t('شجرة', 'trees', 'arbres')}</span>
+                          </div>
+                        )}
+                        {project.totalParticipants && (
+                          <div className="flex items-center gap-1 opacity-80">
+                            <Users className="w-3 h-3" />
+                            <span>{project.totalParticipants} {t('متطوع', 'volunteers', 'bénévoles')}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

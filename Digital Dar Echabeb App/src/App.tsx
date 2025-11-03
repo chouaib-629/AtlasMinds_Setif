@@ -26,6 +26,7 @@ import { ChatRoomScreen } from './screens/ChatRoomScreen';
 import { CreateClubScreen } from './screens/CreateClubScreen';
 import { AppointmentBookingScreen, AppointmentConfirmationScreen } from './screens/AppointmentBookingScreen';
 import { CentralAdminScreen } from './screens/CentralAdminScreen';
+import { VolunteeringDetailScreen } from './screens/VolunteeringDetailScreen';
 import { QRTicket } from './components/QRTicket';
 import { InterestsModal } from './components/InterestsModal';
 import { Toaster } from './components/ui/sonner';
@@ -50,7 +51,8 @@ type AppState =
   | { screen: 'center-detail'; centerId: string }
   | { screen: 'club-detail'; clubId: string }
   | { screen: 'appointment-booking'; centerId: string; centerName: string }
-  | { screen: 'appointment-confirmation'; appointmentId: string };
+  | { screen: 'appointment-confirmation'; appointmentId: string }
+  | { screen: 'volunteering-detail'; projectId: string };
 
 function AppContent() {
   const { isAuthenticated, user, isLoading, refreshUser } = useAuth();
@@ -264,6 +266,9 @@ function AppContent() {
                 onClubClick={(clubId) => {
                   setAppState({ screen: 'club-detail', clubId });
                 }}
+                onVolunteeringClick={(projectId) => {
+                  setAppState({ screen: 'volunteering-detail', projectId });
+                }}
               />
             )}
             {appState.activeTab === 'insights' && (
@@ -392,6 +397,14 @@ function AppContent() {
           <AppointmentConfirmationScreen
             appointmentId={appState.appointmentId}
             onBack={() => handleBackToMain('home')}
+          />
+        )}
+
+        {appState.screen === 'volunteering-detail' && (
+          <VolunteeringDetailScreen
+            projectId={appState.projectId}
+            onBack={() => handleBackToMain('home')}
+            onCenterClick={handleCenterClick}
           />
         )}
 
