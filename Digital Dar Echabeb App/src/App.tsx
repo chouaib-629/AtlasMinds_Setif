@@ -255,6 +255,9 @@ function AppContent() {
                 onNotificationsClick={handleOpenNotifications}
                 onMapClick={handleOpenMap}
                 onCenterClick={handleCenterClick}
+                onLivestreamClick={(livestreamId) => {
+                  setAppState({ screen: 'virtual-hall', activityId: livestreamId });
+                }}
               />
             )}
             {appState.activeTab === 'insights' && (

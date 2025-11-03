@@ -5,4 +5,5 @@ export * from './auth';
 export * from './home';
 export * from './activities';
 export * from './leaderboard';
+export * from './livestreams';
 
