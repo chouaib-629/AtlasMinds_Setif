@@ -162,6 +162,14 @@ Route::get('/direct-activities/{id}', [\App\Http\Controllers\Api\DirectActivityC
 // Home screen endpoint
 Route::get('/home', [\App\Http\Controllers\Api\HomeController::class, 'index']);
 
+// Livestreams endpoints (public for mobile app)
+Route::get('/livestreams', [\App\Http\Controllers\Api\LivestreamController::class, 'index']);
+Route::get('/livestreams/{id}', [\App\Http\Controllers\Api\LivestreamController::class, 'show']);
+
+// Agora token endpoints (public for mobile app)
+Route::post('/agora/tokens', [\App\Http\Controllers\Api\AgoraTokenController::class, 'generateTokens']);
+Route::get('/agora/config', [\App\Http\Controllers\Api\AgoraTokenController::class, 'getConfig']);
+
 // Example public API route
 Route::get('/test', function () {
     return response()->json([
